@@ -1,5 +1,5 @@
 # 2024_Season
-ChainLynx 8248's code for FRC season Crescendo. 
+ChainLynx 8248's code for FRC season Crescendo.
 
 ## How to contribute
 1. Review the ChainLynx [version control protocol](https://docs.google.com/document/d/10GD4STW2zy4QXOs9LaycuV0hquJWVFU1Jdk_vsisjoo/edit) before creating any new branches/features.
