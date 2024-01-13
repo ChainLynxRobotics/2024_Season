@@ -15,6 +15,10 @@ public class RobotConfig {
         public static final double kMaxAngularSpeed =
             kMaxAngularSpeedBase * kMaxAngularSpeedScaleFactor; // radians per second
 
+        public static final double kFrontLeftChassisAngularOffset = 0.0;
+        public static final double kFrontRightChassisAngularOffset = 0.0;
+        public static final double kBackLeftChassisAngularOffset = 0.0;
+        public static final double kBackRightChassisAngularOffset = 0.0;
         //scaling factor for the alternative turning mode
         public static final int altTurnSmoothing = 20;
 
