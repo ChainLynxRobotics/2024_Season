@@ -1,10 +1,10 @@
-package frc.robot.subsystems.drive;
+package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DriveSubsystem extends SubsystemBase {
+public class Shooter extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public DriveSubsystem() {
+  public Shooter() {
     
   }
 
