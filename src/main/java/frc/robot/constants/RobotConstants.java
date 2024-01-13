@@ -14,6 +14,8 @@ public final class RobotConstants {
     public static final class DriveConstants {
         //placeholder CAN IDs, fix these later
 
+        public static final double kDriveDeadband = 0.06;
+
         public static final int kFrontLeftDrivingCanId = -1;
         public static final int kFrontLeftTurningCanId = -2;
 
