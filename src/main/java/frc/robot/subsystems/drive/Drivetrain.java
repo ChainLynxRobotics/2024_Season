@@ -60,22 +60,22 @@ public class Drivetrain extends SubsystemBase {
     m_frontLeft = new MAXSwerveModule(
     DriveConstants.kFrontLeftDrivingCanId,
     DriveConstants.kFrontLeftTurningCanId,
-    DriveConfig.kFrontLeftChassisAngularOffset);
+    DriveConstants.kFrontLeftChassisAngularOffset);
 
     m_frontRight = new MAXSwerveModule(
     DriveConstants.kFrontRightDrivingCanId,
     DriveConstants.kFrontRightTurningCanId,
-    DriveConfig.kFrontRightChassisAngularOffset);
+    DriveConstants.kFrontRightChassisAngularOffset);
 
     m_rearLeft = new MAXSwerveModule(
     DriveConstants.kRearLeftDrivingCanId,
     DriveConstants.kRearLeftTurningCanId,
-    DriveConfig.kBackLeftChassisAngularOffset);
+    DriveConstants.kBackLeftChassisAngularOffset);
 
     m_rearRight = new MAXSwerveModule(
     DriveConstants.kRearRightDrivingCanId,
     DriveConstants.kRearRightTurningCanId,
-    DriveConfig.kBackRightChassisAngularOffset);
+    DriveConstants.kBackRightChassisAngularOffset);
 
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
 
