@@ -22,11 +22,6 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 
 public class Drivetrain extends SubsystemBase {
-<<<<<<< HEAD
-  /** Creates a new ExampleSubsystem. */
-  public Drivetrain() {}
-=======
-
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft;
   private final MAXSwerveModule m_frontRight;
@@ -55,7 +50,7 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
-
+  /** Creates a new ExampleSubsystem. */
   public Drivetrain() {
     m_frontLeft = new MAXSwerveModule(
     DriveConstants.kFrontLeftDrivingCanId,
@@ -100,7 +95,6 @@ public class Drivetrain extends SubsystemBase {
     powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
   }
->>>>>>> 4cb4d8d (implemented drivetrain subsystem and basic drive command functionality from last year)
 
   @Override
   public void periodic() {
@@ -257,7 +251,7 @@ public class Drivetrain extends SubsystemBase {
         ySpeedCommanded = ySpeed;
         currentRotation = rot;
     }
-    
+
     // Adjust input based on max speed
     double xSpeedDelivered =
         xSpeedCommanded * DriveConfig.kMaxSpeedMetersPerSecond;
