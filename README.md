@@ -1,4 +1,7 @@
 # 2024_Season
+
+[![CI](https://github.com/ChainLynxRobotics/2024_Season/actions/workflows/main.yml/badge.svg)](https://github.com/ChainLynxRobotics/2024_Season/actions/workflows/main.yml)
+
 ChainLynx 8248's code for FRC season Crescendo.
 
 ## How to contribute
