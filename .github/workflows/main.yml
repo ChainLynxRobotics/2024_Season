@@ -33,10 +33,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # Update all vendordeps
-    - name: Update dependencies
-      run: ./updatevendordeps.sh
-
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build

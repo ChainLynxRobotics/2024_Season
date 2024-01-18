@@ -1,13 +1,9 @@
 package frc.robot.constants;
+
 /**
- * Hardware config settings (e.g. motor controller port assignments). For software constants @see RobotConfig" 
+ * Software/hardware constants (e.g. CAN IDs, gear ratios, field measurements, etc.). 
+ * For software configs @see RobotConfig 
  */
 public final class RobotConstants {
 
-    /**
-     * Drivetrain configs
-     */
-    public static final class DriveConstants {
-
-    }
 }
