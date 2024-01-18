@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public Climber() {
-    
-  }
+  public Climber() {}
 
   @Override
   public void periodic() {

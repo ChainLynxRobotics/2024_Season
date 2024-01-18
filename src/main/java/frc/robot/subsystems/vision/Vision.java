@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public Vision() {
-    
-  }
+  public Vision() {}
 
   @Override
   public void periodic() {
