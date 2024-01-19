@@ -30,4 +30,32 @@ public class Intake extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
+  /**
+   * This code runs the intake
+   *
+   * @param motorOutput The speed the roller motors are set to
+   */
+  public void run(double motorOutput) {
+    this.m_rollerLeaderMotor.set(motorOutput);
+  }
+
+  /**
+   * This code runs the intake at a default speed The motor can be reversed by inputing a true as
+   * its parameter
+   *
+   * @param isReversed The input to reverse the motor speed
+   */
+  public void run(boolean isReversed) {
+    if (isReversed) {
+      run(-IntakeConstants.kDefaultSpeed);
+    } else {
+      run(-IntakeConstants.kDefaultSpeed);
+    }
+  }
+
+  // Stops the motor
+  public void stop() {
+    this.m_rollerLeaderMotor.stopMotor();
+  }
 }
