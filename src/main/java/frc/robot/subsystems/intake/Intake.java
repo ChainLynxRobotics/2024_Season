@@ -49,8 +49,9 @@ public class Intake extends SubsystemBase {
   public void run(boolean isReversed) {
     if (isReversed) {
       run(-IntakeConstants.kDefaultSpeed);
-      }
-      run(IntakeConstants.kDefaultSpeed);
+      return;
+    }
+    run(IntakeConstants.kDefaultSpeed);
   }
 
   // Stops the motor
