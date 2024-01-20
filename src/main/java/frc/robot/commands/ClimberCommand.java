@@ -45,7 +45,7 @@ public class ClimberCommand extends Command {
   @Override
   public boolean isFinished() {
     double error = SmartDashboard.getNumber("SetPoint", 0) - m_subsystem.getEncoderPosition();
-    return Math.abs(error) <= RobotConstants.ClimberConstants.setPointTolerance;
+    return Math.abs(error) <= RobotConstants.ClimberConstants.kSetPointTolerance;
   }
 
 }

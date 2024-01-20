@@ -18,8 +18,8 @@ public class Climber extends SubsystemBase {
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
   public Climber() {
-    leaderController = new CANSparkMax(ClimberConstants.controllerID1, MotorType.kBrushless);
-    followerController = new CANSparkMax(ClimberConstants.controllerID2, MotorType.kBrushless);
+    leaderController = new CANSparkMax(ClimberConstants.kControllerID1, MotorType.kBrushless);
+    followerController = new CANSparkMax(ClimberConstants.kControllerID2, MotorType.kBrushless);
 
     followerController.follow(leaderController);
 
@@ -55,11 +55,11 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
+    double p = SmartDashboard.getNumber("Climber P Gain", 0);
+    double i = SmartDashboard.getNumber("Climber I Gain", 0);
+    double d = SmartDashboard.getNumber("Climber D Gain", 0);
+    double iz = SmartDashboard.getNumber("Climber I Zone", 0);
+    double ff = SmartDashboard.getNumber("Climber Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
     double rotations = SmartDashboard.getNumber("Set Rotations", 0);
