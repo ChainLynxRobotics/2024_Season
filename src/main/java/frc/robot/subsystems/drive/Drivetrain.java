@@ -23,9 +23,12 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class Drivetrain extends SubsystemBase {
 <<<<<<< HEAD
+<<<<<<< HEAD
   /** Creates a new ExampleSubsystem. */
   public Drivetrain() {}
 =======
+=======
+>>>>>>> 37bc96638394bd148711f1a2a0130e6c3545d9c8
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft;
