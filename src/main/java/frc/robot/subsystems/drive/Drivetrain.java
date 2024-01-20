@@ -53,31 +53,31 @@ public class Drivetrain extends SubsystemBase {
 
   /** constructs a new Drivatrain object */
   public Drivetrain() {
-    m_frontLeft =
+    this.m_frontLeft =
         new MAXSwerveModule(
             DriveConstants.kFrontLeftDrivingCanId,
             DriveConstants.kFrontLeftTurningCanId,
             DriveConstants.kFrontLeftChassisAngularOffset);
 
-    m_frontRight =
+    this.m_frontRight =
         new MAXSwerveModule(
             DriveConstants.kFrontRightDrivingCanId,
             DriveConstants.kFrontRightTurningCanId,
             DriveConstants.kFrontRightChassisAngularOffset);
 
-    m_rearLeft =
+    this.m_rearLeft =
         new MAXSwerveModule(
             DriveConstants.kRearLeftDrivingCanId,
             DriveConstants.kRearLeftTurningCanId,
             DriveConstants.kBackLeftChassisAngularOffset);
 
-    m_rearRight =
+    this.m_rearRight =
         new MAXSwerveModule(
             DriveConstants.kRearRightDrivingCanId,
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
-    m_gyro = new Pigeon2(DriveConstants.kGyroId);
+    this.m_gyro = new Pigeon2(DriveConstants.kGyroId);
 
     m_timer = new Timer();
 
@@ -89,15 +89,15 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevTime = m_timer.get();
 
-    m_odometry =
+    this.m_odometry =
         new SwerveDriveOdometry(
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroRadians()),
             new SwerveModulePosition[] {
-              m_frontLeft.getPosition(),
-              m_frontRight.getPosition(),
-              m_rearLeft.getPosition(),
-              m_rearRight.getPosition(),
+              this.m_frontLeft.getPosition(),
+              this.m_frontRight.getPosition(),
+              this.m_rearLeft.getPosition(),
+              this.m_rearRight.getPosition(),
             });
 
     m_powerDistribution.clearStickyFaults();
@@ -111,10 +111,10 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.update(
         Rotation2d.fromRadians(-getGyroRadians()),
         new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition(),
+          this.m_frontLeft.getPosition(),
+          this.m_frontRight.getPosition(),
+          this.m_rearLeft.getPosition(),
+          this.m_rearRight.getPosition(),
         });
 
     double ang = getGyroRadians();
@@ -137,10 +137,10 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.resetPosition(
         Rotation2d.fromDegrees(-getGyroRadians()),
         new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition(),
+          this.m_frontLeft.getPosition(),
+          this.m_frontRight.getPosition(),
+          this.m_rearLeft.getPosition(),
+          this.m_rearRight.getPosition(),
         },
         pose);
   }
@@ -251,7 +251,7 @@ public class Drivetrain extends SubsystemBase {
                 spdDelivered.x(),
                 spdDelivered.y(),
                 rotDelivered,
-                Rotation2d.fromDegrees(-m_gyro.getAngle())));
+                Rotation2d.fromDegrees(-this.m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConfig.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
