@@ -41,17 +41,16 @@ public class Intake extends SubsystemBase {
   }
 
   /**
-   * This code runs the intake at a default speed The motor can be reversed by inputing a true as
-   * its parameter
+   * Runs the intake at a default speed The motor can be reversed by inputing a true as its
+   * parameter
    *
    * @param isReversed The input to reverse the motor speed
    */
   public void run(boolean isReversed) {
     if (isReversed) {
       run(-IntakeConstants.kDefaultSpeed);
-    } else {
-      run(-IntakeConstants.kDefaultSpeed);
-    }
+      }
+      run(IntakeConstants.kDefaultSpeed);
   }
 
   // Stops the motor
