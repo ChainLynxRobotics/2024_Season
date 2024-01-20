@@ -14,10 +14,13 @@ public class Intake extends SubsystemBase {
   // Constructs intake, and initializes motor objects
   public Intake() {
     this.m_angleMotor = new CANSparkMax(IntakeConstants.kAngleMotorID, MotorType.kBrushless);
-    this.m_rollerFollowerMotor =
-        new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
-    this.m_rollerLeaderMotor =
-        new CANSparkMax(IntakeConstants.kLeaderMotorID, MotorType.kBrushless);
+
+    this.m_rollerFollowerMotor = new CANSparkMax(
+      IntakeConstants.kFollowerMotorID, MotorType.kBrushless
+    );
+    this.m_rollerLeaderMotor = new CANSparkMax(
+      IntakeConstants.kLeaderMotorID, MotorType.kBrushless
+    );
     this.m_rollerFollowerMotor.follow(this.m_rollerLeaderMotor);
   }
 
@@ -32,9 +35,9 @@ public class Intake extends SubsystemBase {
   }
 
   /**
-   * This code runs the intake
+   * Runs the intake
    *
-   * @param motorOutput The speed the roller motors are set to
+   * @param motorOutput Motor speed from -1.0 to 1.0 as a percentage
    */
   public void run(double motorOutput) {
     this.m_rollerLeaderMotor.set(motorOutput);
