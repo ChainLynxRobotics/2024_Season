@@ -4,7 +4,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
@@ -31,6 +33,30 @@ public class Intake extends SubsystemBase {
 
     m_anglePidController = m_angleMotor.getPIDController();
     m_angleEncoder = m_angleMotor.getEncoder();
+
+    // set Roller PID coefficients
+    m_rollerPidController.setP(RobotConfig.kRollerP);
+    m_rollerPidController.setI(RobotConfig.kRollerI);
+    m_rollerPidController.setD(RobotConfig.kRollerD);
+    m_rollerPidController.setFF(RobotConfig.kRollerFF);
+
+    // set Angle PID coefficients
+    m_anglePidController.setP(RobotConfig.kAngleP);
+    m_anglePidController.setI(RobotConfig.kAngleI);
+    m_anglePidController.setD(RobotConfig.kAngleD);
+    m_anglePidController.setFF(RobotConfig.kAngleFF);
+
+    // display Roller PID coefficients on SmartDashboard
+    SmartDashboard.putNumber("Roller P Gain", RobotConfig.kRollerP);
+    SmartDashboard.putNumber("Roller I Gain", RobotConfig.kRollerI);
+    SmartDashboard.putNumber("Roller D Gain", RobotConfig.kRollerD);
+    SmartDashboard.putNumber("Roller Feed Forward", RobotConfig.kRollerFF);
+
+    // display Angle PID coefficients on SmartDashboard
+    SmartDashboard.putNumber("Angle P Gain", RobotConfig.kAngleP);
+    SmartDashboard.putNumber("Angle I Gain", RobotConfig.kAngleI);
+    SmartDashboard.putNumber("Angle D Gain", RobotConfig.kAngleD);
+    SmartDashboard.putNumber("Angle Feed Forward", RobotConfig.kAngleFF);
   }
 
   @Override
