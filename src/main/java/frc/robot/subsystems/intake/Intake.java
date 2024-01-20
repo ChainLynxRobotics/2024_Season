@@ -2,21 +2,38 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_angleMotor; // intake angle motor
 
-  private final CANSparkMax m_rollerFollowerMotor; // left motor
-  private final CANSparkMax m_rollerLeaderMotor; // right motor
+  private final CANSparkMax m_rollerFollowerMotor; // left motor (Rollers)
+  private final CANSparkMax m_rollerLeaderMotor; // right motor (Rollers)
 
-  // Constructs intake, and initializes motor objects
+  private final SparkPIDController m_rollerPidController; // Roller velocity PID controllers
+  private final RelativeEncoder m_rollerEncoder; // Roller Relative Encoder
+
+  private final SparkPIDController m_anglePidController; // Angle position PID controllers
+  private final RelativeEncoder m_angleEncoder; // Angle Relative Encoder
+
+  public double kRollerP, kRollerI, kRollerD, kRollerFF; // P; I; D; FF; variables for roller PID
+  public double kAngleP, kAngleI, kAngleD, kAngleFF; // P; I; D; FF; variables for angle PID
+
+  // Constructs intake, and initializes motor, PID, encoder objects
   public Intake() {
     m_angleMotor = new CANSparkMax(IntakeConstants.kAngleMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor = new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
     m_rollerLeaderMotor = new CANSparkMax(IntakeConstants.kLeaderMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor.follow(this.m_rollerLeaderMotor);
+
+    m_rollerPidController = m_rollerLeaderMotor.getPIDController();
+    m_rollerEncoder = m_rollerLeaderMotor.getEncoder();
+
+    m_anglePidController = m_angleMotor.getPIDController();
+    m_angleEncoder = m_angleMotor.getEncoder();
   }
 
   @Override
