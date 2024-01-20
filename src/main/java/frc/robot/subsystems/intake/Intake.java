@@ -14,10 +14,8 @@ public class Intake extends SubsystemBase {
   // Constructs intake, and initializes motor objects
   public Intake() {
     m_angleMotor = new CANSparkMax(IntakeConstants.kAngleMotorID, MotorType.kBrushless);
-    m_rollerFollowerMotor =
-        new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
-    m_rollerLeaderMotor =
-        new CANSparkMax(IntakeConstants.kLeaderMotorID, MotorType.kBrushless);
+    m_rollerFollowerMotor = new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
+    m_rollerLeaderMotor = new CANSparkMax(IntakeConstants.kLeaderMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor.follow(this.m_rollerLeaderMotor);
   }
 
