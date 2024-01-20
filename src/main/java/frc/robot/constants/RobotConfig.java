@@ -4,11 +4,6 @@ public class RobotConfig {
 
     public static class DriveConfig {
 
-        public static final double kFrontLeftChassisAngularOffset = 0.0;
-        public static final double kFrontRightChassisAngularOffset = 0.0;
-        public static final double kBackLeftChassisAngularOffset = 0.0;
-        public static final double kBackRightChassisAngularOffset = 0.0;
-
         //4.45 m/s max speed
         public static final double kMaxSpeedBase = 4.8;
         public static final double kMaxSpeedScaleFactor = 0.9;

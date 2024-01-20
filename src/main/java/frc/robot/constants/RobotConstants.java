@@ -14,21 +14,26 @@ public final class RobotConstants {
     public static final class DriveConstants {
         //placeholder CAN IDs, fix these later
 
+        public static final double kFrontLeftChassisAngularOffset = 0.0;
+        public static final double kFrontRightChassisAngularOffset = 0.0;
+        public static final double kBackLeftChassisAngularOffset = 0.0;
+        public static final double kBackRightChassisAngularOffset = 0.0;
+
         public static final double kDriveDeadband = 0.06;
 
-        public static final int kFrontLeftDrivingCanId = -1;
-        public static final int kFrontLeftTurningCanId = -2;
+        public static final int kFrontLeftDrivingCanId = 6;
+        public static final int kFrontLeftTurningCanId = 5;
 
-        public static final int kFrontRightDrivingCanId = -3;
-        public static final int kFrontRightTurningCanId = -4;
+        public static final int kFrontRightDrivingCanId = 8;
+        public static final int kFrontRightTurningCanId = 7;
 
-        public static final int kRearLeftDrivingCanId = -5;
-        public static final int kRearLeftTurningCanId = -6;
+        public static final int kRearLeftDrivingCanId = 4;
+        public static final int kRearLeftTurningCanId = 3;
 
-        public static final int kRearRightDrivingCanId = -7;
-        public static final int kRearRightTurningCanId = -8;
+        public static final int kRearRightDrivingCanId = 2;
+        public static final int kRearRightTurningCanId = 1;
 
-        public static final int kGyroId = -9;
+        public static final int kGyroId = 15;
 
         // Chassis configuration
         public static final double kTrackWidth = Units.inchesToMeters(26.5);
@@ -48,14 +53,12 @@ public final class RobotConstants {
             public static final int kDriverControllerPort = -1;
             public static final int kIOperatorControllerPort = -2;
             public static final int yAxis = 1;
-            public static final double kDriveDeadband = Double.NaN;
-            public static final double kMagnitudeDeadband = Double.NaN;
+            public static final double kDriveDeadband = 0.06;
+            public static final double kMagnitudeDeadband = 0.06;
             public static final double kDirectionSlewRate = 10; // radians per second
             public static final double kMagnitudeSlewRate = 90; // percent per second (1 = 100%)
             public static final double kRotationalSlewRate = 90; // percent per second (1 = 100%)
 
-            //button bindings
-            public static final int INTAKE_SPEED_AXIS = 3;
         }
 
         //update these constants when we actually test this on the robot
