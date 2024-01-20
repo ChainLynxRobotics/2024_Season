@@ -19,10 +19,7 @@ public class Intake extends SubsystemBase {
   private final SparkPIDController m_anglePidController; // Angle position PID controllers
   private final RelativeEncoder m_angleEncoder; // Angle Relative Encoder
 
-  public double kRollerP, kRollerI, kRollerD, kRollerFF; // P; I; D; FF; variables for roller PID
-  public double kAngleP, kAngleI, kAngleD, kAngleFF; // P; I; D; FF; variables for angle PID
-
-  // Constructs intake, and initializes motor, PID, encoder objects
+  // Constructs intake and initializes motor, PID, encoder objects
   public Intake() {
     m_angleMotor = new CANSparkMax(IntakeConstants.kAngleMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor = new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
