@@ -2,9 +2,13 @@ package frc.robot.constants;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
+
 //IDs and stuff
 public final class RobotConstants {
-    public static final class NeoMotor {
+    public static final class NeoMotorConstants {
         public static final double kFreeSpeedRpm = 5676;
     }
     public static final class DriveConstants {
@@ -22,6 +26,36 @@ public final class RobotConstants {
         public static final int kRearRightDrivingCanId = -7;
         public static final int kRearRightTurningCanId = -8;
 
+        public static final int kGyroId = -9;
+
+        // Chassis configuration
+        public static final double kTrackWidth = Units.inchesToMeters(26.5);
+
+        // Distance between centers of right and left wheels on robot
+        public static final double kWheelBase = Units.inchesToMeters(26.5);
+        // Distance between front and back wheels on robot
+        public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
+        );
+
+        public static final class OIConstants {
+
+            public static final int kDriverControllerPort = -1;
+            public static final int kIOperatorControllerPort = -2;
+            public static final int yAxis = 1;
+            public static final double kDriveDeadband = Double.NaN;
+            public static final double kMagnitudeDeadband = Double.NaN;
+            public static final double kDirectionSlewRate = 10; // radians per second
+            public static final double kMagnitudeSlewRate = 90; // percent per second (1 = 100%)
+            public static final double kRotationalSlewRate = 90; // percent per second (1 = 100%)
+
+            //button bindings
+            public static final int INTAKE_SPEED_AXIS = 3;
+        }
+
         //update these constants when we actually test this on the robot
         public static final class SwerveModuleConstants {
             // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
@@ -34,7 +68,7 @@ public final class RobotConstants {
             public static final boolean kTurningEncoderInverted = true;
 
             // Calculations required for driving motor conversion factors and feed forward
-            public static final double kDrivingMotorFreeSpeedRps = NeoMotor.kFreeSpeedRpm / 60;
+            public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
             public static final double kWheelDiameterMeters = 0.0762;
             public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
             // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
