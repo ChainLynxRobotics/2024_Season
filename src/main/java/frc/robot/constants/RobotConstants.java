@@ -1,5 +1,9 @@
 package frc.robot.constants;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -7,6 +11,16 @@ import edu.wpi.first.math.util.Units;
 
 // IDs and stuff
 public final class RobotConstants {
+  public static final class VisionConstants {
+    public static final double camChassisXOffset = -1;
+    public static final double camChassisYOffset = -1;
+    public static final double camChassisZOffset = -1;
+
+    public static final Transform3d robotToCam =
+      new Transform3d(
+        new Translation3d(camChassisXOffset, camChassisYOffset, camChassisZOffset),
+        new Rotation3d(0,0,0));
+  }
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
