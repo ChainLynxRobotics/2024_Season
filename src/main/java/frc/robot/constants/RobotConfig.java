@@ -18,6 +18,18 @@ public class RobotConfig {
     public static final double kAngleD = 0;
     public static final double kAngleFF = 0;
 
+    // Smart dashboard roller keys
+    public static final String kRollerPGain = "Roller P Gain";
+    public static final String kRollerIGain = "Roller I Gain";
+    public static final String kRollerDGain = "Roller D Gain";
+    public static final String kRollerFFGain = "Roller FF Gain";
+
+    // Smart dashboard angle keys
+    public static final String kAnglePGain = "Angle P Gain";
+    public static final String kAngleIGain = "Angle I Gain";
+    public static final String kAngleDGain = "Angle D Gain";
+    public static final String kAngleFFGain = "Angle FF Gain";
+
     // Default Speed
     public static final double kDefaultSpeed = 0;
   }

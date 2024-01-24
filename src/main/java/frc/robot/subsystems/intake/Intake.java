@@ -47,16 +47,16 @@ public class Intake extends SubsystemBase {
     m_anglePidController.setFF(RobotConfig.IntakeConfig.kAngleFF);
 
     // display Roller PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("Roller P Gain", RobotConfig.IntakeConfig.kRollerP);
-    SmartDashboard.putNumber("Roller I Gain", RobotConfig.IntakeConfig.kRollerI);
-    SmartDashboard.putNumber("Roller D Gain", RobotConfig.IntakeConfig.kRollerD);
-    SmartDashboard.putNumber("Roller Feed Forward", RobotConfig.IntakeConfig.kRollerFF);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerPGain, RobotConfig.IntakeConfig.kRollerP);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerIGain, RobotConfig.IntakeConfig.kRollerI);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerDGain, RobotConfig.IntakeConfig.kRollerD);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerFFGain, RobotConfig.IntakeConfig.kRollerFF);
 
     // display Angle PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("Angle P Gain", RobotConfig.IntakeConfig.kAngleP);
-    SmartDashboard.putNumber("Angle I Gain", RobotConfig.IntakeConfig.kAngleI);
-    SmartDashboard.putNumber("Angle D Gain", RobotConfig.IntakeConfig.kAngleD);
-    SmartDashboard.putNumber("Angle Feed Forward", RobotConfig.IntakeConfig.kAngleFF);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAnglePGain, RobotConfig.IntakeConfig.kAngleP);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleIGain, RobotConfig.IntakeConfig.kAngleI);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleDGain, RobotConfig.IntakeConfig.kAngleD);
+    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleFFGain, RobotConfig.IntakeConfig.kAngleFF);
   }
 
   @Override
