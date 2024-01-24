@@ -5,15 +5,17 @@ package frc.robot.constants;
  * RobotConstants"
  */
 public class RobotConfig {
-  // Roller PID coefficients
-  public static final double kRollerP = 0;
-  public static final double kRollerI = 0;
-  public static final double kRollerD = 0;
-  public static final double kRollerFF = 0;
+  public static final class IntakeConfig {
+    // Roller PID coefficients
+    public static final double kRollerP = 0;
+    public static final double kRollerI = 0;
+    public static final double kRollerD = 0;
+    public static final double kRollerFF = 0;
 
-  // Angle PID coefficents
-  public static final double kAngleP = 0;
-  public static final double kAngleI = 0;
-  public static final double kAngleD = 0;
-  public static final double kAngleFF = 0;
+    // Angle PID coefficents
+    public static final double kAngleP = 0;
+    public static final double kAngleI = 0;
+    public static final double kAngleD = 0;
+    public static final double kAngleFF = 0;
+  }
 }
