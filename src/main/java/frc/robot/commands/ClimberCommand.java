@@ -30,9 +30,7 @@ public class ClimberCommand extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -47,5 +45,4 @@ public class ClimberCommand extends Command {
     double error = SmartDashboard.getNumber("SetPoint", 0) - m_subsystem.getEncoderPosition();
     return Math.abs(error) <= RobotConstants.ClimberConstants.kSetPointTolerance;
   }
-
 }

@@ -1,13 +1,12 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.RobotConstants.ClimberConstants;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.RobotConstants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
 
@@ -18,8 +17,10 @@ public class Climber extends SubsystemBase {
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
 
   public Climber() {
-    leaderController = new CANSparkMax(ClimberConstants.kControllerID1, MotorType.kBrushless);
-    followerController = new CANSparkMax(ClimberConstants.kControllerID2, MotorType.kBrushless);
+    leaderController =
+        new CANSparkMax(ClimberConstants.CLIMBER_CONTROLLER_ID1, MotorType.kBrushless);
+    followerController =
+        new CANSparkMax(ClimberConstants.CLIMBER_CONTROLLER_ID2, MotorType.kBrushless);
 
     followerController.follow(leaderController);
 
@@ -34,6 +35,7 @@ public class Climber extends SubsystemBase {
     kMaxOutput = 1;
     kMinOutput = -1;
 
+    // set PID coefficients
     m_pidController.setP(kP);
     m_pidController.setI(kI);
     m_pidController.setD(kD);
@@ -49,7 +51,6 @@ public class Climber extends SubsystemBase {
     SmartDashboard.putNumber("Max Output", kMaxOutput);
     SmartDashboard.putNumber("Min Output", kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
-
   }
 
   @Override
@@ -64,14 +65,30 @@ public class Climber extends SubsystemBase {
     double min = SmartDashboard.getNumber("Min Output", 0);
     double rotations = SmartDashboard.getNumber("Set Rotations", 0);
 
-    if((p != kP)) { m_pidController.setP(p); kP = p; }
-    if((i != kI)) { m_pidController.setI(i); kI = i; }
-    if((d != kD)) { m_pidController.setD(d); kD = d; }
-    if((iz != kIz)) { m_pidController.setIZone(iz); kIz = iz; }
-    if((ff != kFF)) { m_pidController.setFF(ff); kFF = ff; }
-    if((max != kMaxOutput) || (min != kMinOutput)) {
+    if ((p != kP)) {
+      m_pidController.setP(p);
+      kP = p;
+    }
+    if ((i != kI)) {
+      m_pidController.setI(i);
+      kI = i;
+    }
+    if ((d != kD)) {
+      m_pidController.setD(d);
+      kD = d;
+    }
+    if ((iz != kIz)) {
+      m_pidController.setIZone(iz);
+      kIz = iz;
+    }
+    if ((ff != kFF)) {
+      m_pidController.setFF(ff);
+      kFF = ff;
+    }
+    if ((max != kMaxOutput) || (min != kMinOutput)) {
       m_pidController.setOutputRange(min, max);
-      kMinOutput = min; kMaxOutput = max;
+      kMinOutput = min;
+      kMaxOutput = max;
     }
 
     m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
@@ -84,8 +101,7 @@ public class Climber extends SubsystemBase {
     leaderController.set(speed);
   }
 
-  public double getEncoderPosition (){
+  public double getEncoderPosition() {
     return m_encoder.getPosition();
   }
-
 }
