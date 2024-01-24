@@ -40,7 +40,8 @@ public class Intake extends SubsystemBase {
     m_rollerPidController.setD(RobotConfig.IntakeConfig.kRollerD);
     m_rollerPidController.setFF(RobotConfig.IntakeConfig.kRollerFF);
     m_rollerPidController.setIZone(RobotConfig.IntakeConfig.kRollerIZone);
-    m_rollerPidController.setOutputRange(RobotConfig.IntakeConfig.kRollerMinOutput, RobotConfig.IntakeConfig.kRollerMaxOutput);
+    m_rollerPidController.setOutputRange(
+        RobotConfig.IntakeConfig.kRollerMinOutput, RobotConfig.IntakeConfig.kRollerMaxOutput);
 
     // set Angle PID coefficients
     m_anglePidController.setP(RobotConfig.IntakeConfig.kAngleP);
@@ -48,26 +49,40 @@ public class Intake extends SubsystemBase {
     m_anglePidController.setD(RobotConfig.IntakeConfig.kAngleD);
     m_anglePidController.setFF(RobotConfig.IntakeConfig.kAngleFF);
     m_anglePidController.setIZone(RobotConfig.IntakeConfig.kAngleIZone);
-    m_anglePidController.setOutputRange(RobotConfig.IntakeConfig.kAngleMinOutput, RobotConfig.IntakeConfig.kAngleMaxOutput);
+    m_anglePidController.setOutputRange(
+        RobotConfig.IntakeConfig.kAngleMinOutput, RobotConfig.IntakeConfig.kAngleMaxOutput);
 
     // display Roller PID coefficients on SmartDashboard
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerPGain, RobotConfig.IntakeConfig.kRollerP);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerIGain, RobotConfig.IntakeConfig.kRollerI);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerDGain, RobotConfig.IntakeConfig.kRollerD);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerFFGain, RobotConfig.IntakeConfig.kRollerFF);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerIZoneKey, RobotConfig.IntakeConfig.kRollerIZone);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerMinOutputKey, RobotConfig.IntakeConfig.kRollerMinOutput);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kRollerMaxOutputKey, RobotConfig.IntakeConfig.kRollerMaxOutput);
-
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kRollerPGain, RobotConfig.IntakeConfig.kRollerP);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kRollerIGain, RobotConfig.IntakeConfig.kRollerI);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kRollerDGain, RobotConfig.IntakeConfig.kRollerD);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kRollerFFGain, RobotConfig.IntakeConfig.kRollerFF);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kRollerIZoneKey, RobotConfig.IntakeConfig.kRollerIZone);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kRollerMinOutputKey, RobotConfig.IntakeConfig.kRollerMinOutput);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kRollerMaxOutputKey, RobotConfig.IntakeConfig.kRollerMaxOutput);
 
     // display Angle PID coefficients on SmartDashboard
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAnglePGain, RobotConfig.IntakeConfig.kAngleP);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleIGain, RobotConfig.IntakeConfig.kAngleI);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleDGain, RobotConfig.IntakeConfig.kAngleD);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleFFGain, RobotConfig.IntakeConfig.kAngleFF);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleIZoneKey, RobotConfig.IntakeConfig.kAngleIZone);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleMinOutputKey, RobotConfig.IntakeConfig.kAngleMinOutput);
-    SmartDashboard.putNumber(RobotConfig.IntakeConfig.kAngleMaxOutputKey, RobotConfig.IntakeConfig.kAngleMaxOutput);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kAnglePGain, RobotConfig.IntakeConfig.kAngleP);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kAngleIGain, RobotConfig.IntakeConfig.kAngleI);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kAngleDGain, RobotConfig.IntakeConfig.kAngleD);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kAngleFFGain, RobotConfig.IntakeConfig.kAngleFF);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kAngleIZoneKey, RobotConfig.IntakeConfig.kAngleIZone);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kAngleMinOutputKey, RobotConfig.IntakeConfig.kAngleMinOutput);
+    SmartDashboard.putNumber(
+        RobotConfig.IntakeConfig.kAngleMaxOutputKey, RobotConfig.IntakeConfig.kAngleMaxOutput);
   }
 
   @Override
@@ -96,7 +111,10 @@ public class Intake extends SubsystemBase {
    * @param isReversed The input to reverse the motor speed
    */
   public void run(boolean isReversed) {
-    double runSpeed = isReversed ? -RobotConfig.IntakeConfig.kDefaultSpeed : RobotConfig.IntakeConfig.kDefaultSpeed;
+    double runSpeed =
+        isReversed
+            ? -RobotConfig.IntakeConfig.kDefaultSpeed
+            : RobotConfig.IntakeConfig.kDefaultSpeed;
     run(runSpeed);
   }
 

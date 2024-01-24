@@ -42,8 +42,6 @@ public class RobotConfig {
     public static final String kAngleMinOutputKey = "Angle Minimum output";
     public static final String kAngleMaxOutputKey = "Angle Maximum output";
 
-
-
     // Default Speed
     public static final double kDefaultSpeed = 0;
   }
