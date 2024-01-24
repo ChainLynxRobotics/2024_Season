@@ -17,5 +17,8 @@ public class RobotConfig {
     public static final double kAngleI = 0;
     public static final double kAngleD = 0;
     public static final double kAngleFF = 0;
+
+    // Default Speed
+    public static final double kDefaultSpeed = 0;
   }
 }

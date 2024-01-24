@@ -5,7 +5,7 @@ package frc.robot.constants;
  * configs @see RobotConfig
  */
 public final class RobotConstants {
-  public static final class IntakeConstants {
+  public static final class IntakeConfig {
     // Placeholder CAN IDs, replace later
 
     // Roller Motor IDs
@@ -14,7 +14,5 @@ public final class RobotConstants {
 
     // Angle Motor ID
     public static final int kAngleMotorID = -1;
-
-    public static final double kDefaultSpeed = Double.NaN;
   }
 }

@@ -7,7 +7,7 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
-import frc.robot.constants.RobotConstants.IntakeConstants;
+import frc.robot.constants.RobotConstants.IntakeConfig;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_angleMotor; // intake angle motor
@@ -23,9 +23,9 @@ public class Intake extends SubsystemBase {
 
   // Constructs intake and initializes motor, PID, encoder objects
   public Intake() {
-    m_angleMotor = new CANSparkMax(IntakeConstants.kAngleMotorID, MotorType.kBrushless);
-    m_rollerFollowerMotor = new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
-    m_rollerLeaderMotor = new CANSparkMax(IntakeConstants.kLeaderMotorID, MotorType.kBrushless);
+    m_angleMotor = new CANSparkMax(IntakeConfig.kAngleMotorID, MotorType.kBrushless);
+    m_rollerFollowerMotor = new CANSparkMax(IntakeConfig.kFollowerMotorID, MotorType.kBrushless);
+    m_rollerLeaderMotor = new CANSparkMax(IntakeConfig.kLeaderMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor.follow(this.m_rollerLeaderMotor);
 
     m_rollerPidController = m_rollerLeaderMotor.getPIDController();
@@ -85,7 +85,7 @@ public class Intake extends SubsystemBase {
    * @param isReversed The input to reverse the motor speed
    */
   public void run(boolean isReversed) {
-    double runSpeed = isReversed ? -IntakeConstants.kDefaultSpeed : IntakeConstants.kDefaultSpeed;
+    double runSpeed = isReversed ? -RobotConfig.IntakeConfig.kDefaultSpeed : RobotConfig.IntakeConfig.kDefaultSpeed;
     run(runSpeed);
   }
 
