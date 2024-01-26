@@ -84,6 +84,11 @@ public class Intake extends SubsystemBase {
     run(runSpeed);
   }
 
+  // Checks if note is intaken
+  public boolean isIntaken() {
+    return true;
+  }
+
   // Stops the motor
   public void stop() {
     m_rollerLeaderMotor.stopMotor();

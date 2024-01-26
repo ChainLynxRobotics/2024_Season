@@ -26,5 +26,8 @@ public class RobotConfig {
 
     // Default Speed
     public static final double kDefaultSpeed = 0;
+
+    // Timeout time (in seconds)
+    public static final double kRunIntakeTimeoutTime = 0;
   }
 }
