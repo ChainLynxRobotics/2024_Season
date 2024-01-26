@@ -11,8 +11,5 @@ public final class RobotConstants {
     // Roller Motor IDs
     public static final int kFollowerMotorID = -1;
     public static final int kLeaderMotorID = -1;
-
-    // Angle Motor ID
-    public static final int kAngleMotorID = -1;
   }
 }

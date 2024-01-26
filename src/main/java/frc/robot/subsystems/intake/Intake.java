@@ -10,29 +10,20 @@ import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants.IntakeConfig;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax m_angleMotor; // intake angle motor
-
   private final CANSparkMax m_rollerFollowerMotor; // left motor (Rollers)
   private final CANSparkMax m_rollerLeaderMotor; // right motor (Rollers)
 
   private final SparkPIDController m_rollerPidController; // Roller velocity PID controllers
   private final RelativeEncoder m_rollerEncoder; // Roller Relative Encoder
 
-  private final SparkPIDController m_anglePidController; // Angle position PID controllers
-  private final RelativeEncoder m_angleEncoder; // Angle Relative Encoder
-
   // Constructs intake and initializes motor, PID, encoder objects
   public Intake() {
-    m_angleMotor = new CANSparkMax(IntakeConfig.kAngleMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor = new CANSparkMax(IntakeConfig.kFollowerMotorID, MotorType.kBrushless);
     m_rollerLeaderMotor = new CANSparkMax(IntakeConfig.kLeaderMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor.follow(this.m_rollerLeaderMotor);
 
     m_rollerPidController = m_rollerLeaderMotor.getPIDController();
     m_rollerEncoder = m_rollerLeaderMotor.getEncoder();
-
-    m_anglePidController = m_angleMotor.getPIDController();
-    m_angleEncoder = m_angleMotor.getEncoder();
 
     // set Roller PID coefficients
     m_rollerPidController.setP(RobotConfig.IntakeConfig.kRollerP);
@@ -42,15 +33,6 @@ public class Intake extends SubsystemBase {
     m_rollerPidController.setIZone(RobotConfig.IntakeConfig.kRollerIZone);
     m_rollerPidController.setOutputRange(
         RobotConfig.IntakeConfig.kRollerMinOutput, RobotConfig.IntakeConfig.kRollerMaxOutput);
-
-    // set Angle PID coefficients
-    m_anglePidController.setP(RobotConfig.IntakeConfig.kAngleP);
-    m_anglePidController.setI(RobotConfig.IntakeConfig.kAngleI);
-    m_anglePidController.setD(RobotConfig.IntakeConfig.kAngleD);
-    m_anglePidController.setFF(RobotConfig.IntakeConfig.kAngleFF);
-    m_anglePidController.setIZone(RobotConfig.IntakeConfig.kAngleIZone);
-    m_anglePidController.setOutputRange(
-        RobotConfig.IntakeConfig.kAngleMinOutput, RobotConfig.IntakeConfig.kAngleMaxOutput);
 
     // display Roller PID coefficients on SmartDashboard
     SmartDashboard.putNumber(
@@ -67,22 +49,6 @@ public class Intake extends SubsystemBase {
         RobotConfig.IntakeConfig.kRollerMinOutputKey, RobotConfig.IntakeConfig.kRollerMinOutput);
     SmartDashboard.putNumber(
         RobotConfig.IntakeConfig.kRollerMaxOutputKey, RobotConfig.IntakeConfig.kRollerMaxOutput);
-
-    // display Angle PID coefficients on SmartDashboard
-    SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kAnglePGain, RobotConfig.IntakeConfig.kAngleP);
-    SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kAngleIGain, RobotConfig.IntakeConfig.kAngleI);
-    SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kAngleDGain, RobotConfig.IntakeConfig.kAngleD);
-    SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kAngleFFGain, RobotConfig.IntakeConfig.kAngleFF);
-    SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kAngleIZoneKey, RobotConfig.IntakeConfig.kAngleIZone);
-    SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kAngleMinOutputKey, RobotConfig.IntakeConfig.kAngleMinOutput);
-    SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kAngleMaxOutputKey, RobotConfig.IntakeConfig.kAngleMaxOutput);
   }
 
   @Override
