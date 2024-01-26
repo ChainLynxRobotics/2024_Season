@@ -17,9 +17,9 @@ public final class RobotConstants {
     public static final double camChassisZOffset = -1;
 
     public static final Transform3d robotToCam =
-      new Transform3d(
-        new Translation3d(camChassisXOffset, camChassisYOffset, camChassisZOffset),
-        new Rotation3d(0,0,0));
+        new Transform3d(
+            new Translation3d(camChassisXOffset, camChassisYOffset, camChassisZOffset),
+            new Rotation3d(0, 0, 0));
   }
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
