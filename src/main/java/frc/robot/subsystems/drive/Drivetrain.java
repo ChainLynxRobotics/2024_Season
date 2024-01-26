@@ -18,9 +18,7 @@ import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.utils.SwerveUtils;
 
-/**
- * an object representing the Drivetrain of a swerve drive frc robot
- */
+/** an object representing the Drivetrain of a swerve drive frc robot */
 public class Drivetrain extends SubsystemBase {
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft;
@@ -51,9 +49,7 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
-  /**
-   * constructs a new Drivatrain object
-   */
+  /** constructs a new Drivatrain object */
   public Drivetrain() {
     m_frontLeft =
         new MAXSwerveModule(
@@ -103,9 +99,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("driveVelocity", 0);
   }
 
-  /**
-   * runs the periodic functionality of the drivetrain
-   */
+  /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
@@ -146,17 +140,16 @@ public class Drivetrain extends SubsystemBase {
         pose);
   }
 
-  //TODO: any x and y component values should use vectors instead for conciseness and readability
+  // TODO: any x and y component values should use vectors instead for conciseness and readability
 
   /**
-   * drives the drivatrain using the given inputs
-   * the magnitude of the joystick components shouldn't be > 1
-   * (x^2 + y^2 <= 1)
+   * drives the drivatrain using the given inputs the magnitude of the joystick components shouldn't
+   * be > 1 (x^2 + y^2 <= 1)
    *
    * @param xSpeed the x-pos of the left joystick (-1, 1)
    * @param ySpeed the y-pos of the left joystick (-1, 1)
-   * @param xRot   the x-pos of the right joystick (-1, 1)
-   * @param yRot   the x-pos of the right joystick (-1, 1)
+   * @param xRot the x-pos of the right joystick (-1, 1)
+   * @param yRot the x-pos of the right joystick (-1, 1)
    * @param altDrive whether or not to use the alternative turning mode
    * @param centerGyro whether or not to reset the gyro position to the current rotation
    */
@@ -189,6 +182,7 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * gets the value of the robot's gyro in radians
+   *
    * @return the angle of the robot gyro in radians
    */
   private double getGyroRadians() {
@@ -211,7 +205,8 @@ public class Drivetrain extends SubsystemBase {
       // gets the difference in angle, then uses mod to make sure its from -PI rad to PI rad
       rot =
           Math.tanh(
-                  ((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI) / DriveConfig.altTurnSmoothing)
+                  ((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
+                      / DriveConfig.altTurnSmoothing)
               * DriveConfig.kMaxAngularSpeed;
     }
     m_turnDirRadians = rot;
@@ -262,7 +257,9 @@ public class Drivetrain extends SubsystemBase {
       if (angleDif < 0.45 * Math.PI) {
         m_currentTranslationDirRadians =
             SwerveUtils.StepTowardsCircular(
-                m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
+                m_currentTranslationDirRadians,
+                inputTranslationDir,
+                directionSlewRate * elapsedTime);
         m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
       } else if (angleDif > 0.85 * Math.PI) {
         if (m_currentTranslationMag
@@ -277,7 +274,9 @@ public class Drivetrain extends SubsystemBase {
       } else {
         m_currentTranslationDirRadians =
             SwerveUtils.StepTowardsCircular(
-                m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
+                m_currentTranslationDirRadians,
+                inputTranslationDir,
+                directionSlewRate * elapsedTime);
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
       }
       m_prevTime = currentTime;
@@ -317,9 +316,7 @@ public class Drivetrain extends SubsystemBase {
     m_gyro.reset();
   }
 
-  /**
-   * run periodically when being simulated, required but not used in this implementation
-   */
+  /** run periodically when being simulated, required but not used in this implementation */
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
