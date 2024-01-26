@@ -14,6 +14,7 @@ import frc.robot.commands.BasicDriveCommand;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.utils.Vector;
+import frc.robot.subsystems.vision.Vision;
 
 public class RobotContainer {
   private Drivetrain m_robotDrive;
@@ -21,10 +22,12 @@ public class RobotContainer {
   // The driver's controller
   XboxController m_driverController;
 
+  private Vision vision;
   public RobotContainer() {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
+    vision = new Vision();
     configureBindings();
 
     m_robotDrive.setDefaultCommand(

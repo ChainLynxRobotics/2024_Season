@@ -25,7 +25,7 @@ public class Vision extends SubsystemBase {
   private PhotonPoseEstimator poseEstimator;
 
   public Vision() {
-    camera = new PhotonCamera("test_cam");
+    camera = new PhotonCamera("picam");
 
     try {
       aprilTagFieldLayout =
