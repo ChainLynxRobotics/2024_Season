@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +18,9 @@ import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.utils.SwerveUtils;
 
+/**
+ * an object representing the Drivetrain of a swerve drive frc robot
+ */
 public class Drivetrain extends SubsystemBase {
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft;
@@ -184,6 +188,14 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
+   * gets the value of the robot's gyro in radians
+   * @return the angle of the robot gyro in radians
+   */
+  private double getGyroRadians() {
+    return Units.degreesToRadians(m_gyro.getAngle());
+  }
+
+  /**
    * moves the drivetrain using the alternative turning mode
    *
    * @param xSpeed the proportion of the robot's max velocity to move in the x direction
@@ -193,15 +205,13 @@ public class Drivetrain extends SubsystemBase {
    */
   private void altDrive(double xSpeed, double ySpeed, double xRot, double yRot) {
     double rot = 0;
-    // convert to degrees
-    this.m_rightAngGoal = Math.atan2(xRot, yRot) * 180 / Math.PI;
+    this.m_rightAngGoal = Math.atan2(xRot, yRot);
     if (xRot != 0 || yRot != 0) {
-      // convert to degrees
-      double stickAng = Math.atan2(xRot, yRot) * 180 / Math.PI;
-      // gets the difference in angle, then uses mod to make sure its from -180 to 180
+      double stickAng = Math.atan2(xRot, yRot);
+      // gets the difference in angle, then uses mod to make sure its from -PI rad to PI rad
       rot =
           Math.tanh(
-                  ((m_gyro.getAngle() + stickAng + 180) % 360 - 180) / DriveConfig.altTurnSmoothing)
+                  ((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI) / DriveConfig.altTurnSmoothing)
               * DriveConfig.kMaxAngularSpeed;
     }
     this.m_turnDir = rot;
