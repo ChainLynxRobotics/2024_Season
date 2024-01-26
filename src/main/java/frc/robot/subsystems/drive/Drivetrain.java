@@ -46,7 +46,10 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
-  /** Creates a new ExampleSubsystem. */
+
+  /**
+   * constructs a new Drivatrain object
+   */
   public Drivetrain() {
     this.m_frontLeft =
         new MAXSwerveModule(
@@ -96,6 +99,9 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("driveVelocity", 0);
   }
 
+  /**
+   * runs the periodic functionality of the drivetrain
+   */
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
@@ -136,6 +142,20 @@ public class Drivetrain extends SubsystemBase {
         pose);
   }
 
+  //TODO: any x and y component values should use vectors instead for conciseness and readability
+
+  /**
+   * drives the drivatrain using the given inputs
+   * the magnitude of the joystick components shouldn't be > 1
+   * (x^2 + y^2 <= 1)
+   *
+   * @param xSpeed the x-pos of the left joystick (-1, 1)
+   * @param ySpeed the y-pos of the left joystick (-1, 1)
+   * @param xRot   the x-pos of the right joystick (-1, 1)
+   * @param yRot   the x-pos of the right joystick (-1, 1)
+   * @param altDrive whether or not to use the alternative turning mode
+   * @param centerGyro whether or not to reset the gyro position to the current rotation
+   */
   public void drive(
       double xSpeed,
       double ySpeed,
@@ -151,12 +171,27 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void mainDrive(double xSpeed, double ySpeed, double xRot) {
+  /**
+   * moves the drivetrain using the main turning mode
+   *
+   * @param xSpeed the proportion of the robot's max velocity to move in the x direction
+   * @param ySpeed the proportion of the robot's max velocity to move in the y direction
+   * @param xRot the speed to rotate with (-1, 1)
+   */
+  private void mainDrive(double xSpeed, double ySpeed, double xRot) {
     double rot = xRot * DriveConfig.kMaxAngularSpeed;
     move(xSpeed, ySpeed, rot);
   }
 
-  public void altDrive(double xSpeed, double ySpeed, double xRot, double yRot) {
+  /**
+   * moves the drivetrain using the alternative turning mode
+   *
+   * @param xSpeed the proportion of the robot's max velocity to move in the x direction
+   * @param ySpeed the proportion of the robot's max velocity to move in the y direction
+   * @param xRot the x component of the direction vector to point towards
+   * @param yRot the y component of the direction vector to point towards
+   */
+  private void altDrive(double xSpeed, double ySpeed, double xRot, double yRot) {
     double rot = 0;
     // convert to degrees
     this.m_rightAngGoal = Math.atan2(xRot, yRot) * 180 / Math.PI;
@@ -173,10 +208,25 @@ public class Drivetrain extends SubsystemBase {
     move(xSpeed, ySpeed, rot);
   }
 
+  /**
+   * moves the drivetrain using the given values
+   *
+   * @param xSpeed the proportion of the robot's max velocity to move in the x direction
+   * @param ySpeed the proportion of the robot's max velocity to move in the y direction
+   * @param rot the angular velocity to rotate the drivetrain in radians/s
+   */
   private void move(double xSpeed, double ySpeed, double rot) {
     move(xSpeed, ySpeed, rot, true);
   }
 
+  /**
+   * moves the drivetrain using the given values
+   *
+   * @param xSpeed the proportion of the robot's max velocity to move in the x direction
+   * @param ySpeed the proportion of the robot's max velocity to move in the y direction
+   * @param rot the angular velocity to rotate the drivetrain in radians/s
+   * @param rateLimit whether or not to use slew rate limiting
+   */
   private void move(double xSpeed, double ySpeed, double rot, boolean rateLimit) {
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -257,6 +307,9 @@ public class Drivetrain extends SubsystemBase {
     this.m_gyro.reset();
   }
 
+  /**
+   * run periodically when being simulated, required but not used in this implementation
+   */
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
