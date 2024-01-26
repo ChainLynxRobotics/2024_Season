@@ -55,7 +55,7 @@ public class MAXSwerveModule {
     // but we want meters and meters per second to use with WPILib's swerve APIs.
     this.m_drivingEncoder.setPositionConversionFactor(
         SwerveModuleConstants.kDrivingEncoderPositionFactor);
-        this.m_drivingEncoder.setVelocityConversionFactor(
+    this.m_drivingEncoder.setVelocityConversionFactor(
         SwerveModuleConstants.kDrivingEncoderVelocityFactor);
 
     // Apply position and velocity conversion factors for the turning encoder. We
@@ -122,7 +122,7 @@ public class MAXSwerveModule {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
     return new SwerveModuleState(
-      this.m_drivingEncoder.getVelocity(),
+        this.m_drivingEncoder.getVelocity(),
         new Rotation2d(this.m_turningEncoder.getPosition() - this.m_chassisAngularOffset));
   }
 
@@ -135,7 +135,7 @@ public class MAXSwerveModule {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
     return new SwerveModulePosition(
-      this.m_drivingEncoder.getPosition(),
+        this.m_drivingEncoder.getPosition(),
         new Rotation2d(this.m_turningEncoder.getPosition() - this.m_chassisAngularOffset));
   }
 
@@ -162,7 +162,7 @@ public class MAXSwerveModule {
     this.m_turningPIDController.setReference(
         optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
-        this.m_desiredState = desiredState;
+    this.m_desiredState = desiredState;
   }
 
   /** Zeroes all the SwerveModule encoders. */
