@@ -4,9 +4,11 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
+import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.IntakeConfig;
 
 public class Intake extends SubsystemBase {
@@ -16,6 +18,8 @@ public class Intake extends SubsystemBase {
   private final SparkPIDController m_rollerPidController; // Roller velocity PID controllers
   private final RelativeEncoder m_rollerEncoder; // Roller Relative Encoder
 
+  private final DigitalInput m_intakeSensor; // Line break note sensor
+
   // Constructs intake and initializes motor, PID, encoder objects
   public Intake() {
     m_rollerFollowerMotor = new CANSparkMax(IntakeConfig.kFollowerMotorID, MotorType.kBrushless);
@@ -24,6 +28,9 @@ public class Intake extends SubsystemBase {
 
     m_rollerPidController = m_rollerLeaderMotor.getPIDController();
     m_rollerEncoder = m_rollerLeaderMotor.getEncoder();
+
+
+    m_intakeSensor = new DigitalInput(RobotConstants.IntakeConfig.kLineBreakSensor);
 
     // set Roller PID coefficients
     m_rollerPidController.setP(RobotConfig.IntakeConfig.kRollerP);
