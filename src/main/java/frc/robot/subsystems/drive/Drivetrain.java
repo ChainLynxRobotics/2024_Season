@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +17,7 @@ import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.utils.SwerveUtils;
+import frc.utils.Vector;
 
 /** an object representing the Drivetrain of a swerve drive frc robot */
 public class Drivetrain extends SubsystemBase {
@@ -145,8 +145,6 @@ public class Drivetrain extends SubsystemBase {
         pose);
   }
 
-  // TODO: any x and y component values should use vectors instead for conciseness and readability
-
   /**
    * drives the drivatrain using the given inputs the magnitude of the joystick components shouldn't
    * be > 1 (x^2 + y^2 <= 1)
@@ -159,17 +157,15 @@ public class Drivetrain extends SubsystemBase {
    * @param centerGyro whether or not to reset the gyro position to the current rotation
    */
   public void drive(
-      double xSpeed,
-      double ySpeed,
-      double xRot,
-      double yRot,
+      Vector spdVec,
+      Vector rotVec,
       boolean altDrive,
       boolean centerGyro) {
     if (centerGyro) zeroHeading();
     if (altDrive) {
-      altDrive(xSpeed, ySpeed, xRot, yRot);
+      altDrive(spdVec, rotVec);
     } else {
-      mainDrive(xSpeed, ySpeed, xRot);
+      mainDrive(spdVec, rotVec.x());
     }
   }
 
@@ -180,9 +176,9 @@ public class Drivetrain extends SubsystemBase {
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param xRot the speed to rotate with (-1, 1)
    */
-  private void mainDrive(double xSpeed, double ySpeed, double xRot) {
+  private void mainDrive(Vector spdVec, double xRot) {
     double rot = xRot * DriveConfig.kMaxAngularSpeed;
-    move(xSpeed, ySpeed, rot);
+    move(spdVec, rot);
   }
 
   /**
@@ -202,17 +198,17 @@ public class Drivetrain extends SubsystemBase {
    * @param xRot the x component of the direction vector to point towards
    * @param yRot the y component of the direction vector to point towards
    */
-  private void altDrive(double xSpeed, double ySpeed, double xRot, double yRot) {
+  private void altDrive(Vector spdVec, Vector rotVec) {
     double rot = 0;
-    m_rightAngGoalRadians = Math.atan2(xRot, yRot);
-    if (Double.compare(xRot, 0) != 0 || Double.compare(yRot, 0) != 0) {
-      double stickAng = Math.atan2(xRot, yRot);
+    m_rightAngGoalRadians = rotVec.angle();
+    if (rotVec.squaredMag() > 0) {
+      double stickAng = m_rightAngGoalRadians;
       // gets the difference in angle, then uses mod to make sure its from -PI rad to PI rad
       rot = altTurnSmooth(stickAng);
-          
+
     }
     m_turnDirRadians = rot;
-    move(xSpeed, ySpeed, rot);
+    move(spdVec, rot);
   }
 
   private double altTurnSmooth(double stickAng){
@@ -226,8 +222,8 @@ public class Drivetrain extends SubsystemBase {
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param rot the angular velocity to rotate the drivetrain in radians/s
    */
-  private void move(double xSpeed, double ySpeed, double rot) {
-    move(xSpeed, ySpeed, rot, true);
+  private void move(Vector spdVec, double rot) {
+    move(spdVec, rot, true);
   }
 
   /**
@@ -238,74 +234,24 @@ public class Drivetrain extends SubsystemBase {
    * @param rot the angular velocity to rotate the drivetrain in radians/s
    * @param rateLimit whether or not to use slew rate limiting
    */
-  private void move(double xSpeed, double ySpeed, double rot, boolean rateLimit) {
-    double xSpeedCommanded;
-    double ySpeedCommanded;
+  private void move(Vector spdVec, double rot, boolean rateLimit) {
+    Vector spdCommanded = spdVec;
+    m_currentRotationRadians = rot;
 
     if (rateLimit) {
-      // Convert XY to polar for rate limiting
-      double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
-      double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
-
-      // Calculate the direction slew rate based on an estimate of the lateral acceleration
-      double directionSlewRate;
-      if (m_currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
-      } else {
-        directionSlewRate =
-            500.0; // some high number that means the slew rate is effectively instantaneous
-      }
-
-      double currentTime = m_timer.get();
-      double elapsedTime = currentTime - m_prevTime;
-      double angleDif =
-          SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
-      if (angleDif < 0.45 * Math.PI) {
-        m_currentTranslationDirRadians =
-            SwerveUtils.StepTowardsCircular(
-                m_currentTranslationDirRadians,
-                inputTranslationDir,
-                directionSlewRate * elapsedTime);
-        m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-      } else if (angleDif > 0.85 * Math.PI) {
-        if (m_currentTranslationMag
-            > 1e-4) { // some small number to avoid floating-point errors with equality checking
-          // keep currentTranslationDir unchanged
-          m_currentTranslationMag = m_magLimiter.calculate(0.0);
-        } else {
-          m_currentTranslationDirRadians =
-              SwerveUtils.WrapAngle(m_currentTranslationDirRadians + Math.PI);
-          m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-        }
-      } else {
-        m_currentTranslationDirRadians =
-            SwerveUtils.StepTowardsCircular(
-                m_currentTranslationDirRadians,
-                inputTranslationDir,
-                directionSlewRate * elapsedTime);
-        m_currentTranslationMag = m_magLimiter.calculate(0.0);
-      }
-      m_prevTime = currentTime;
-
-      xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDirRadians);
-      ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDirRadians);
+      spdVec = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
-    } else {
-      xSpeedCommanded = xSpeed;
-      ySpeedCommanded = ySpeed;
-      m_currentRotationRadians = rot;
     }
 
     // Adjust input based on max speed
-    double xSpeedDelivered = xSpeedCommanded * DriveConfig.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeedCommanded * DriveConfig.kMaxSpeedMetersPerSecond;
+    Vector spdDelivered = spdCommanded.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                xSpeedDelivered,
-                ySpeedDelivered,
+                spdDelivered.x(),
+                spdDelivered.y(),
                 rotDelivered,
                 Rotation2d.fromDegrees(-m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -314,6 +260,54 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  private Vector limitDirectionSlewRate(Vector spdVec) {
+    // Convert XY to polar for rate limiting
+    double inputTranslationDir = spdVec.angle();
+    double inputTranslationMag = spdVec.mag();
+
+    // Calculate the direction slew rate based on an estimate of the lateral acceleration
+    double directionSlewRate;
+    if (m_currentTranslationMag != 0.0) {
+      directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
+    } else {
+      directionSlewRate =
+          500.0; // some high number that means the slew rate is effectively instantaneous
+    }
+
+    double currentTime = m_timer.get();
+    double elapsedTime = currentTime - m_prevTime;
+    double angleDif =
+        SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
+    if (angleDif < 0.45 * Math.PI) {
+      m_currentTranslationDirRadians =
+          SwerveUtils.StepTowardsCircular(
+              m_currentTranslationDirRadians,
+              inputTranslationDir,
+              directionSlewRate * elapsedTime);
+      m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+    } else if (angleDif > 0.85 * Math.PI) {
+      if (m_currentTranslationMag
+          > 1e-4) { // some small number to avoid floating-point errors with equality checking
+        // keep currentTranslationDir unchanged
+        m_currentTranslationMag = m_magLimiter.calculate(0.0);
+      } else {
+        m_currentTranslationDirRadians =
+            SwerveUtils.WrapAngle(m_currentTranslationDirRadians + Math.PI);
+        m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+      }
+    } else {
+      m_currentTranslationDirRadians =
+          SwerveUtils.StepTowardsCircular(
+              m_currentTranslationDirRadians,
+              inputTranslationDir,
+              directionSlewRate * elapsedTime);
+      m_currentTranslationMag = m_magLimiter.calculate(0.0);
+    }
+    m_prevTime = currentTime;
+
+    return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
   }
 
   /** Zeroes the heading of the robot. */
