@@ -156,11 +156,7 @@ public class Drivetrain extends SubsystemBase {
    * @param altDrive whether or not to use the alternative turning mode
    * @param centerGyro whether or not to reset the gyro position to the current rotation
    */
-  public void drive(
-      Vector spdVec,
-      Vector rotVec,
-      boolean altDrive,
-      boolean centerGyro) {
+  public void drive(Vector spdVec, Vector rotVec, boolean altDrive, boolean centerGyro) {
     if (centerGyro) zeroHeading();
     if (altDrive) {
       altDrive(spdVec, rotVec);
@@ -205,14 +201,16 @@ public class Drivetrain extends SubsystemBase {
       double stickAng = m_rightAngGoalRadians;
       // gets the difference in angle, then uses mod to make sure its from -PI rad to PI rad
       rot = altTurnSmooth(stickAng);
-
     }
     m_turnDirRadians = rot;
     move(spdVec, rot);
   }
 
-  private double altTurnSmooth(double stickAng){
-    return Math.tanh(((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI) / DriveConfig.altTurnSmoothing) * DriveConfig.kMaxAngularSpeed;
+  private double altTurnSmooth(double stickAng) {
+    return Math.tanh(
+            ((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
+                / DriveConfig.altTurnSmoothing)
+        * DriveConfig.kMaxAngularSpeed;
   }
 
   /**
@@ -283,9 +281,7 @@ public class Drivetrain extends SubsystemBase {
     if (angleDif < 0.45 * Math.PI) {
       m_currentTranslationDirRadians =
           SwerveUtils.StepTowardsCircular(
-              m_currentTranslationDirRadians,
-              inputTranslationDir,
-              directionSlewRate * elapsedTime);
+              m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
       m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
     } else if (angleDif > 0.85 * Math.PI) {
       if (m_currentTranslationMag
@@ -300,9 +296,7 @@ public class Drivetrain extends SubsystemBase {
     } else {
       m_currentTranslationDirRadians =
           SwerveUtils.StepTowardsCircular(
-              m_currentTranslationDirRadians,
-              inputTranslationDir,
-              directionSlewRate * elapsedTime);
+              m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
       m_currentTranslationMag = m_magLimiter.calculate(0.0);
     }
     m_prevTime = currentTime;

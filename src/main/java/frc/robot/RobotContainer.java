@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import frc.utils.Vector;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.utils.Vector;
 
 public class RobotContainer {
   private Drivetrain m_robotDrive;
@@ -34,13 +33,16 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.drive(
-                  new Vector(MathUtil.applyDeadband(
-                        -m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                    MathUtil.applyDeadband(-m_driverController.getLeftX(), OIConstants.kDriveDeadband)),
-                    new Vector(MathUtil.applyDeadband(
-                        -m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                    MathUtil.applyDeadband(
-                        -m_driverController.getRightY(), OIConstants.kDriveDeadband)),
+                    new Vector(
+                        MathUtil.applyDeadband(
+                            -m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                        MathUtil.applyDeadband(
+                            -m_driverController.getLeftX(), OIConstants.kDriveDeadband)),
+                    new Vector(
+                        MathUtil.applyDeadband(
+                            -m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                        MathUtil.applyDeadband(
+                            -m_driverController.getRightY(), OIConstants.kDriveDeadband)),
                     m_driverController.getRightBumper(),
                     m_driverController.getAButton()),
             m_robotDrive));
