@@ -144,7 +144,7 @@ public class Vector {
    *
    * @return the X component of this Vector
    */
-  public double X() {
+  public double x() {
     return m_vals[0];
   }
 
@@ -162,7 +162,7 @@ public class Vector {
    *
    * @return the Y component of this Vector
    */
-  public double Y() {
+  public double y() {
     return m_vals[1];
   }
 
@@ -180,7 +180,7 @@ public class Vector {
    *
    * @return the Z component of this Vector
    */
-  public double Z() {
+  public double z() {
     if (m_vals.length < 2)
       throw new IllegalStateException("z-value requires a point with at least 3 dimensions");
     return m_vals[2];
@@ -400,44 +400,8 @@ public class Vector {
    * @return this Vector
    */
   public Vector matrixTransform(Vector iHatLoc, Vector jHatLoc) {
-    double newX = Y() * jHatLoc.X() + X() * iHatLoc.X();
-    double newY = Y() * jHatLoc.Y() + X() * iHatLoc.Y();
-    setX(newX);
-    setY(newY);
-    return this;
-  }
-
-  /**
-   * multiplies this vector by another as if they're complex numbers, where the x value is the real
-   * component and the y value is the complex component, throwing an error if either Vector has more
-   * than 2 dimensions
-   *
-   * @param o the Vector to multiply by
-   * @return this Vector
-   */
-  public Vector cMult(Vector o) {
-    if (o.m_vals.length > 2 || this.m_vals.length > 2) {
-      throw new IllegalArgumentException();
-    }
-    double newX = X() * o.X() - Y() * o.Y();
-    double newY = X() * o.Y() + Y() * o.X();
-    setX(newX);
-    setY(newY);
-    return this;
-  }
-
-  /**
-   * divides this vector by another as if they're complex numbers, where the x value is the real
-   * component and the y value is the complex component, throwing an error if either Vector has more
-   * than 2 dimensions
-   *
-   * @param o the Vector to divide by
-   * @return this Vector
-   */
-  public Vector cDiv(Vector o) {
-    double oSqrd = o.X() * o.X() + o.Y() * o.Y();
-    double newX = (X() * o.X() + Y() * o.Y()) / oSqrd;
-    double newY = (Y() * o.X() - X() * o.Y()) / oSqrd;
+    double newX = y() * jHatLoc.x() + x() * iHatLoc.x();
+    double newY = y() * jHatLoc.y() + x() * iHatLoc.y();
     setX(newX);
     setY(newY);
     return this;
@@ -449,17 +413,17 @@ public class Vector {
    * @return the Vector 90 degrees counter-clockwise from this one
    */
   public Vector getPerpendicular() {
-    return new Vector(-Y(), X());
+    return new Vector(-y(), x());
   }
 
   /**
    * rotates this Vector the given number of radians around the origin
    *
-   * @param rot the number of radians to rotate this Vector around the origin
+   * @param theta the number of radians to rotate this Vector around the origin
    * @return this Vector
    */
-  public Vector rot(double rot) {
-    Vector newXLoc = new Vector(Math.cos(rot), -Math.sin(rot));
+  public Vector rot(double theta) {
+    Vector newXLoc = new Vector(Math.cos(theta), -Math.sin(theta));
     Vector newYLoc = newXLoc.getPerpendicular();
     return matrixTransform(newXLoc, newYLoc);
   }
@@ -480,7 +444,28 @@ public class Vector {
   }
 
   /**
-   * clamps the value of a Point between the limits given by minimum and maximum Points such that
+   * restricts this Point to a maximum length, setting it to that length it it it longer, then
+   * returns itself
+   *
+   * @param maxLength the maximum length to be clamped to
+   * @return this Vector
+   */
+  public Vector clampLength(double minLength, double maxLength) {
+    if(minLength > maxLength) throw new IllegalArgumentException();
+    if (this.squaredMag() < minLength * minLength) {
+      normalize();
+      mult(minLength);
+      return this;
+    }
+    if (this.squaredMag() > maxLength * maxLength) {
+      normalize();
+      mult(maxLength);
+    }
+    return this;
+  }
+
+  /**
+   * clamps the value of a Point elementwise between the limits given by minimum and maximum Points such that
    * min.X() <= max.X() and min.Y() <= max.Y()
    *
    * @param min the minimum value for the dimensions of this Vector
@@ -508,10 +493,10 @@ public class Vector {
    * @return this Vector
    */
   public Vector toSpace(Vector space) {
-    double oldX = X();
-    double oldY = Y();
-    setX(oldX * space.X() + oldY * space.Y());
-    setY(oldY * space.X() - oldX * space.Y());
+    double oldX = x();
+    double oldY = y();
+    setX(oldX * space.x() + oldY * space.y());
+    setY(oldY * space.x() - oldX * space.y());
     return this;
   }
 
@@ -535,12 +520,12 @@ public class Vector {
   }
 
   /**
-   * gets the angle from the origin to this Vector
+   * gets the angle from the origin to this Vector in a counter-clockwise direction
    *
    * @return the angle from the origin to this Vector
    */
-  public double ang() {
-    return Math.atan2(Y(), X());
+  public double angle() {
+    return Math.atan2(y(), x());
   }
 
   /**
@@ -556,22 +541,22 @@ public class Vector {
     double minY;
     double maxY;
 
-    if (boundsMin.X() < boundsMax.X()) {
-      minX = boundsMin.X();
-      maxX = boundsMax.X();
+    if (boundsMin.x() < boundsMax.x()) {
+      minX = boundsMin.x();
+      maxX = boundsMax.x();
     } else {
-      maxX = boundsMin.X();
-      minX = boundsMax.X();
+      maxX = boundsMin.x();
+      minX = boundsMax.x();
     }
 
-    if (boundsMin.Y() < boundsMax.Y()) {
-      minY = boundsMin.Y();
-      maxY = boundsMax.Y();
+    if (boundsMin.y() < boundsMax.y()) {
+      minY = boundsMin.y();
+      maxY = boundsMax.y();
     } else {
-      maxY = boundsMin.Y();
-      minY = boundsMax.Y();
+      maxY = boundsMin.y();
+      minY = boundsMax.y();
     }
 
-    return minX <= X() && X() <= maxX && minY <= Y() && Y() <= maxY;
+    return minX <= x() && x() <= maxX && minY <= y() && y() <= maxY;
   }
 }
