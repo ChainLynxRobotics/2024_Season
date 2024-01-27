@@ -32,14 +32,16 @@ public class BasicDriveCommand extends Command {
       SmartDashboard.putBoolean("slow mode", true);
     }
 
+    Vector lStickPos = new Vector(
+      MathUtil.applyDeadband(-m_controller.getLeftY(), OIConstants.kDriveDeadband),
+      MathUtil.applyDeadband(-m_controller.getLeftX(), OIConstants.kDriveDeadband));
+    Vector rStickPos = new Vector(
+      MathUtil.applyDeadband(-m_controller.getRightX(), OIConstants.kDriveDeadband),
+      MathUtil.applyDeadband(-m_controller.getRightY(), OIConstants.kDriveDeadband));
+
     m_drive.drive(
-        (new Vector(
-                MathUtil.applyDeadband(-m_controller.getLeftY(), OIConstants.kDriveDeadband),
-                MathUtil.applyDeadband(-m_controller.getLeftX(), OIConstants.kDriveDeadband)))
-            .mult(m_multiplier),
-        new Vector(
-            MathUtil.applyDeadband(-m_controller.getRightX(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(-m_controller.getRightY(), OIConstants.kDriveDeadband)),
+        lStickPos.mult(m_multiplier),
+        rStickPos,
         m_controller.getRightBumper(),
         m_controller.getAButton());
   }
