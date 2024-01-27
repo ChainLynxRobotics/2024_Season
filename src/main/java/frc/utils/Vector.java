@@ -131,7 +131,7 @@ public class Vector {
    *
    * @return the magnitude of this Vector squared
    */
-  public double sMag() {
+  public double squaredMag() {
     double n = 0;
     for (double d : m_vals) {
       n += d * d;
