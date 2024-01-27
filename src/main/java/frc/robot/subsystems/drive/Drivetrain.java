@@ -268,7 +268,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
-    if (Double.compare(m_currentTranslationMag, 0) != 0) {
+    if (SwerveUtils.approxEqual(m_currentTranslationMag, 0)) {
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
     } else {
       directionSlewRate =
@@ -294,8 +294,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
-      if (Double.compare(m_currentTranslationMag, 0)
-          != 0) { // some small number to avoid floating-point errors with equality checking
+      if (SwerveUtils.approxEqual(
+          m_currentTranslationMag,
+          0)) { // some small number to avoid floating-point errors with equality checking
         // keep currentTranslationDir unchanged
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
         return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
