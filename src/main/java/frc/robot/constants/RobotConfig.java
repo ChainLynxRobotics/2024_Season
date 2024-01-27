@@ -21,5 +21,8 @@ public class RobotConfig {
     public static final double kBackRightChassisAngularOffset = 0.0;
     // scaling factor for the alternative turning mode
     public static final int altTurnSmoothing = 20;
+    public static final double HIGH_DIRECTION_SLEW_RATE = 500;
+    public static final double MIN_ANGLE_SLEW_RATE = 0.45;
+    public static final double MAX_ANGLE_SLEW_RATE = 0.85;
   }
 }
