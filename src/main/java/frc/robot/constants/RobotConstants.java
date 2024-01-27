@@ -10,5 +10,6 @@ public final class RobotConstants {
     public static final int kRollerMotorRightId = -1;
     public static final int kAngleMotorLeaderId = -1;
     public static final int kAngleMotorFollowerId = -1;
+    public static final int kFlywheelMotorId = -1;
   }
 }
