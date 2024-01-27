@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.utils.Vector;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,14 +34,13 @@ public class RobotContainer {
         new RunCommand(
             () ->
                 m_robotDrive.drive(
-                    MathUtil.applyDeadband(
+                  new Vector(MathUtil.applyDeadband(
                         -m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                    MathUtil.applyDeadband(
-                        -m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                    MathUtil.applyDeadband(
+                    MathUtil.applyDeadband(-m_driverController.getLeftX(), OIConstants.kDriveDeadband)),
+                    new Vector(MathUtil.applyDeadband(
                         -m_driverController.getRightX(), OIConstants.kDriveDeadband),
                     MathUtil.applyDeadband(
-                        -m_driverController.getRightY(), OIConstants.kDriveDeadband),
+                        -m_driverController.getRightY(), OIConstants.kDriveDeadband)),
                     m_driverController.getRightBumper(),
                     m_driverController.getAButton()),
             m_robotDrive));
