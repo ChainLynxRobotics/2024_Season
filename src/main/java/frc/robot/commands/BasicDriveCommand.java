@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants.DriveConstants;
+import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.utils.Vector;
 
 public class BasicDriveCommand extends Command {
   private Drivetrain m_drive;
@@ -32,15 +34,14 @@ public class BasicDriveCommand extends Command {
     }
 
     m_drive.drive(
-        MathUtil.applyDeadband(
-            -this.m_multiplier * this.m_controller.getLeftY(), DriveConstants.kDriveDeadband),
-        MathUtil.applyDeadband(
-            -this.m_multiplier * this.m_controller.getLeftX(), DriveConstants.kDriveDeadband),
-        MathUtil.applyDeadband(
-            -this.m_multiplier * this.m_controller.getRightX(), DriveConstants.kDriveDeadband),
-        MathUtil.applyDeadband(
-            -this.m_multiplier * this.m_controller.getRightY(), DriveConstants.kDriveDeadband),
-        this.m_controller.getRightBumper(),
-        this.m_controller.getAButton());
+                  new Vector(MathUtil.applyDeadband(
+                        -m_controller.getLeftY(), OIConstants.kDriveDeadband),
+                    MathUtil.applyDeadband(-m_controller.getLeftX(), OIConstants.kDriveDeadband)),
+                    new Vector(MathUtil.applyDeadband(
+                        -m_controller.getRightX(), OIConstants.kDriveDeadband),
+                    MathUtil.applyDeadband(
+                        -m_controller.getRightY(), OIConstants.kDriveDeadband)),
+                    m_controller.getRightBumper(),
+                    m_controller.getAButton());
   }
 }
