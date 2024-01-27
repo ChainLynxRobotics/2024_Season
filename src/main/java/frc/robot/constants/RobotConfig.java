@@ -16,13 +16,17 @@ public class RobotConfig {
     public static final double kRollerMaxOutput = 0;
 
     // Smart dashboard roller keys
-    public static final String kRollerPGain = "Roller P Gain";
-    public static final String kRollerIGain = "Roller I Gain";
-    public static final String kRollerDGain = "Roller D Gain";
-    public static final String kRollerFFGain = "Roller FF Gain";
+    public static final String kRollerPGainKey = "Roller P Gain";
+    public static final String kRollerIGainKey = "Roller I Gain";
+    public static final String kRollerDGainKey = "Roller D Gain";
+    public static final String kRollerFFGainKey = "Roller FF Gain";
     public static final String kRollerIZoneKey = "Roller I Zone";
     public static final String kRollerMinOutputKey = "Roller Minimum output";
     public static final String kRollerMaxOutputKey = "Roller Maximum output";
+
+    // Smart dashboard test mode keys
+    public static final String kTestCheck1Key = "Test Check 1";
+    public static final String kTestCheck2Key = "Test Check 2";
 
     // Default Speed
     public static final double kDefaultSpeed = 0;

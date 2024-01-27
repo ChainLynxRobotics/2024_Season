@@ -22,6 +22,9 @@ public class Intake extends SubsystemBase {
 
   private double m_targetRPM; // Target RPM of the rollers
 
+  private boolean m_testModeCheck1;
+  private boolean m_testModeCheck2;
+
   // Constructs intake and initializes motor, PID, encoder objects, sensor
   public Intake() {
     m_rollerFollowerMotor = new CANSparkMax(IntakeConfig.kFollowerMotorID, MotorType.kBrushless);
@@ -43,31 +46,72 @@ public class Intake extends SubsystemBase {
     m_rollerPidController.setOutputRange(
         RobotConfig.IntakeConfig.kRollerMinOutput, RobotConfig.IntakeConfig.kRollerMaxOutput);
 
-    // display Roller PID coefficients on SmartDashboard
+    // display Roller PID coefficients on SmartDashboard & test mode booleans
     SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kRollerPGain, RobotConfig.IntakeConfig.kRollerP);
+        RobotConfig.IntakeConfig.kRollerPGainKey, RobotConfig.IntakeConfig.kRollerP);
     SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kRollerIGain, RobotConfig.IntakeConfig.kRollerI);
+        RobotConfig.IntakeConfig.kRollerIGainKey, RobotConfig.IntakeConfig.kRollerI);
     SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kRollerDGain, RobotConfig.IntakeConfig.kRollerD);
+        RobotConfig.IntakeConfig.kRollerDGainKey, RobotConfig.IntakeConfig.kRollerD);
     SmartDashboard.putNumber(
-        RobotConfig.IntakeConfig.kRollerFFGain, RobotConfig.IntakeConfig.kRollerFF);
+        RobotConfig.IntakeConfig.kRollerFFGainKey, RobotConfig.IntakeConfig.kRollerFF);
     SmartDashboard.putNumber(
         RobotConfig.IntakeConfig.kRollerIZoneKey, RobotConfig.IntakeConfig.kRollerIZone);
     SmartDashboard.putNumber(
         RobotConfig.IntakeConfig.kRollerMinOutputKey, RobotConfig.IntakeConfig.kRollerMinOutput);
     SmartDashboard.putNumber(
         RobotConfig.IntakeConfig.kRollerMaxOutputKey, RobotConfig.IntakeConfig.kRollerMaxOutput);
+    SmartDashboard.putBoolean(RobotConfig.IntakeConfig.kTestCheck1Key, m_testModeCheck1);
+    SmartDashboard.putBoolean(RobotConfig.IntakeConfig.kTestCheck2Key, m_testModeCheck2);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
+    m_rollerPidController.setReference(m_targetRPM, CANSparkMax.ControlType.kVelocity);
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+    boolean testCheck1 = SmartDashboard.getBoolean(RobotConfig.IntakeConfig.kTestCheck1Key, false);
+    boolean testCheck2 = SmartDashboard.getBoolean(RobotConfig.IntakeConfig.kTestCheck2Key, false);
+
+    // Checks if test mode is enabled
+    if (m_testModeCheck1 != testCheck1) {
+      m_testModeCheck1 = testCheck1;
+    }
+    if (m_testModeCheck2 != testCheck2) {
+      m_testModeCheck2 = testCheck2;
+    }
+
+    if (m_testModeCheck1 && m_testModeCheck2) {
+      // read PID coefficients from SmartDashboard
+      double p = SmartDashboard.getNumber(RobotConfig.IntakeConfig.kRollerPGainKey, 0);
+      double i = SmartDashboard.getNumber(RobotConfig.IntakeConfig.kRollerIGainKey, 0);
+      double d = SmartDashboard.getNumber(RobotConfig.IntakeConfig.kRollerDGainKey, 0);
+      double iz = SmartDashboard.getNumber(RobotConfig.IntakeConfig.kRollerIZoneKey, 0);
+      double ff = SmartDashboard.getNumber(RobotConfig.IntakeConfig.kRollerFFGainKey, 0);
+      double max = SmartDashboard.getNumber(RobotConfig.IntakeConfig.kRollerMaxOutputKey, 0);
+      double min = SmartDashboard.getNumber(RobotConfig.IntakeConfig.kRollerMinOutputKey, 0);
+
+      // checks PID values against Smartdash board
+      if (m_rollerPidController.getP() != p) {
+        m_rollerPidController.setP(p);
+      }
+      if (m_rollerPidController.getI() != i) {
+        m_rollerPidController.setI(i);
+      }
+      if (m_rollerPidController.getD() != d) {
+        m_rollerPidController.setD(d);
+      }
+      if (m_rollerPidController.getFF() != ff) {
+        m_rollerPidController.setFF(ff);
+      }
+      if (m_rollerPidController.getIZone() != iz) {
+        m_rollerPidController.setIZone(iz);
+      }
+      if (m_rollerPidController.getOutputMax() != max
+          || m_rollerPidController.getOutputMin() != min) {
+        m_rollerPidController.setOutputRange(min, max);
+      }
+    }
   }
 
   /**
