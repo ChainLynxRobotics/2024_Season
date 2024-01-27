@@ -436,11 +436,7 @@ public class Vector {
    * @return this Vector
    */
   public Vector clampLength(double maxLength) {
-    if (this.squaredMag() > maxLength * maxLength) {
-      normalize();
-      mult(maxLength);
-    }
-    return this;
+    return clampLength(0, maxLength);
   }
 
   /**
