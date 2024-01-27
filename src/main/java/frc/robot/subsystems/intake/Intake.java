@@ -20,9 +20,7 @@ public class Intake extends SubsystemBase {
 
   private final DigitalInput m_intakeSensor; // Line break note sensor
 
-  private double m_targetRPM; // Target RPM of the rollers
-
-  private boolean m_testModeCheck1;
+  private boolean m_testModeCheck1; // Booleans for if test mode is enabled
   private boolean m_testModeCheck2;
 
   // Constructs intake and initializes motor, PID, encoder objects, sensor
@@ -68,7 +66,6 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    m_rollerPidController.setReference(m_targetRPM, CANSparkMax.ControlType.kVelocity);
 
     boolean testCheck1 = SmartDashboard.getBoolean(RobotConfig.IntakeConfig.kTestCheck1Key, false);
     boolean testCheck2 = SmartDashboard.getBoolean(RobotConfig.IntakeConfig.kTestCheck2Key, false);
@@ -112,6 +109,15 @@ public class Intake extends SubsystemBase {
         m_rollerPidController.setOutputRange(min, max);
       }
     }
+  }
+
+  /**
+   * Sets the target rpm
+   *
+   * @param targetRPM Target rpm
+   */
+  public void setTargetRPM(double targetRPM) {
+    m_rollerPidController.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
   }
 
   /**
