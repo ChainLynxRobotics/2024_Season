@@ -23,6 +23,7 @@ public class SwerveUtils {
 
   /**
    * compares to doubles with the given tolerance and returns if they are approximately equal
+   *
    * @param a the first double to compare
    * @param b the second double to compare
    * @param tol the maximum difference between doubles to still be considered equal
@@ -34,6 +35,7 @@ public class SwerveUtils {
 
   /**
    * compares two doubles and returns whether they are equal within a small tolerance
+   *
    * @param a the first double to compare
    * @param b the second double to compare
    * @return whether the doubles are approximately equal
