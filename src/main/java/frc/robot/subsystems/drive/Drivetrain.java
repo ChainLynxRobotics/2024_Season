@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -92,7 +92,7 @@ public class Drivetrain extends SubsystemBase {
     m_odometry =
         new SwerveDriveOdometry(
             DriveConstants.kDriveKinematics,
-            Rotation2d.fromRadians(-getGyroRadians()),
+            Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
             new SwerveModulePosition[] {
               m_frontLeft.getPosition(),
               m_frontRight.getPosition(),
@@ -109,7 +109,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromRadians(-getGyroRadians()),
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -117,7 +117,7 @@ public class Drivetrain extends SubsystemBase {
           m_rearRight.getPosition(),
         });
 
-    double ang = getGyroRadians();
+    double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
@@ -135,7 +135,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(-getGyroRadians()),
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -178,12 +178,13 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * gets the value of the robot's gyro in radians
+   * gets the value of the robot's gyro as a Measure<Angle>
    *
-   * @return the angle of the robot gyro in radians
+   * @see Measure
+   * @return the angle of the robot gyro
    */
-  private double getGyroRadians() {
-    return Units.degreesToRadians(m_gyro.getAngle());
+  private Measure<Angle> getGyroAngle() {
+    return Units.Degrees.of(m_gyro.getAngle());
   }
 
   /**
@@ -208,7 +209,7 @@ public class Drivetrain extends SubsystemBase {
 
   private double altTurnSmooth(double stickAng) {
     return Math.tanh(
-            ((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
+            ((getGyroAngle().in(Units.Radians) + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
                 / DriveConfig.altTurnSmoothing)
         * DriveConfig.kMaxAngularSpeed;
   }
@@ -317,7 +318,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    m_headingOffsetRadians = getGyroRadians();
+    m_headingOffsetRadians = getGyroAngle().in(Units.Radians);
     m_gyro.reset();
   }
 
