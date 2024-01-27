@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig.DriveConfig;
@@ -44,6 +45,7 @@ public class Drivetrain extends SubsystemBase {
   private SlewRateLimiter m_magLimiter;
   private SlewRateLimiter m_rotLimiter;
 
+  private Timer m_timer;
   private double m_prevTime;
 
   // Odometry class for tracking robot pose
@@ -77,12 +79,15 @@ public class Drivetrain extends SubsystemBase {
 
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
 
+    m_timer = new Timer();
+
     m_powerDistribution = new PowerDistribution();
 
     m_magLimiter = new SlewRateLimiter(OIConstants.kMagnitudeSlewRate);
     m_rotLimiter = new SlewRateLimiter(OIConstants.kRotationalSlewRate);
 
-    m_prevTime = WPIUtilJNI.now() * 1e-6;
+    m_timer.start();
+    m_prevTime = m_timer.get();
 
     m_odometry =
         new SwerveDriveOdometry(
@@ -200,17 +205,18 @@ public class Drivetrain extends SubsystemBase {
   private void altDrive(double xSpeed, double ySpeed, double xRot, double yRot) {
     double rot = 0;
     m_rightAngGoalRadians = Math.atan2(xRot, yRot);
-    if (xRot != 0 || yRot != 0) {
+    if (Double.compare(xRot, 0) != 0 || Double.compare(yRot, 0) != 0) {
       double stickAng = Math.atan2(xRot, yRot);
       // gets the difference in angle, then uses mod to make sure its from -PI rad to PI rad
-      rot =
-          Math.tanh(
-                  ((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
-                      / DriveConfig.altTurnSmoothing)
-              * DriveConfig.kMaxAngularSpeed;
+      rot = altTurnSmooth(stickAng);
+          
     }
     m_turnDirRadians = rot;
     move(xSpeed, ySpeed, rot);
+  }
+
+  private double altTurnSmooth(double stickAng){
+    return Math.tanh(((getGyroRadians() + stickAng + Math.PI) % (2 * Math.PI) - Math.PI) / DriveConfig.altTurnSmoothing) * DriveConfig.kMaxAngularSpeed;
   }
 
   /**
@@ -250,7 +256,7 @@ public class Drivetrain extends SubsystemBase {
             500.0; // some high number that means the slew rate is effectively instantaneous
       }
 
-      double currentTime = WPIUtilJNI.now() * 1e-6;
+      double currentTime = m_timer.get();
       double elapsedTime = currentTime - m_prevTime;
       double angleDif =
           SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
