@@ -451,7 +451,7 @@ public class Vector {
    * @return this Vector
    */
   public Vector clampLength(double minLength, double maxLength) {
-    if(minLength > maxLength) throw new IllegalArgumentException();
+    if (minLength > maxLength) throw new IllegalArgumentException();
     if (this.squaredMag() < minLength * minLength) {
       normalize();
       mult(minLength);
@@ -465,8 +465,8 @@ public class Vector {
   }
 
   /**
-   * clamps the value of a Point elementwise between the limits given by minimum and maximum Points such that
-   * min.X() <= max.X() and min.Y() <= max.Y()
+   * clamps the value of a Point elementwise between the limits given by minimum and maximum Points
+   * such that min.X() <= max.X() and min.Y() <= max.Y()
    *
    * @param min the minimum value for the dimensions of this Vector
    * @param max the maximum value for the dimentions of this Vector
