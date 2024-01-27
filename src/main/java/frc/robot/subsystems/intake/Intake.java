@@ -84,9 +84,9 @@ public class Intake extends SubsystemBase {
     run(runSpeed);
   }
 
-  // Checks if note is intaken
-  public boolean isIntaken() {
-    return true;
+  // Checks if note is indexed
+  public boolean isIndexed() {
+    return m_intakeSensor.get();
   }
 
   // Stops the motor
