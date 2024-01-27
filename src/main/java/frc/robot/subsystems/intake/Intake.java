@@ -20,6 +20,8 @@ public class Intake extends SubsystemBase {
 
   private final DigitalInput m_intakeSensor; // Line break note sensor
 
+  private double m_targetRPM; // Target RPM of the rollers
+
   // Constructs intake and initializes motor, PID, encoder objects
   public Intake() {
     m_rollerFollowerMotor = new CANSparkMax(IntakeConfig.kFollowerMotorID, MotorType.kBrushless);
@@ -28,7 +30,7 @@ public class Intake extends SubsystemBase {
 
     m_rollerPidController = m_rollerLeaderMotor.getPIDController();
     m_rollerEncoder = m_rollerLeaderMotor.getEncoder();
-
+    zeroEncoders();
 
     m_intakeSensor = new DigitalInput(RobotConstants.IntakeConfig.kLineBreakSensor);
 
@@ -63,7 +65,10 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-
+  @Override
+  public void simulationPeriodic() {
+    // This method will be called once per scheduler run during simulation
+  }
 
   /**
    * Runs the intake
@@ -96,5 +101,10 @@ public class Intake extends SubsystemBase {
   // Stops the motor
   public void stop() {
     m_rollerLeaderMotor.stopMotor();
+  }
+
+  // Zeros the encoder(s)
+  public void zeroEncoders() {
+    m_rollerEncoder.setPosition(0);
   }
 }
