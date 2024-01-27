@@ -270,13 +270,17 @@ public class Drivetrain extends SubsystemBase {
     if (Double.compare(m_currentTranslationMag, 0) != 0) {
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
     } else {
-      directionSlewRate = DriveConfig.HIGH_DIRECTION_SLEW_RATE; // some high number that means the slew rate is effectively instantaneous
+      directionSlewRate =
+          DriveConfig
+              .HIGH_DIRECTION_SLEW_RATE; // some high number that means the slew rate is effectively
+      // instantaneous
     }
 
     double currentTime = m_timer.get();
     double elapsedTime = currentTime - m_prevTime;
 
-    double angleDif = SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
+    double angleDif =
+        SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
 
     m_prevTime = currentTime;
 
@@ -289,7 +293,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
-      if (Double.compare(m_currentTranslationMag, 0) != 0) { // some small number to avoid floating-point errors with equality checking
+      if (Double.compare(m_currentTranslationMag, 0)
+          != 0) { // some small number to avoid floating-point errors with equality checking
         // keep currentTranslationDir unchanged
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
         return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);

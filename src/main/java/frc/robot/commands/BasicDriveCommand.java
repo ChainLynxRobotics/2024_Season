@@ -34,8 +34,8 @@ public class BasicDriveCommand extends Command {
 
     m_drive.drive(
         (new Vector(
-            MathUtil.applyDeadband(-m_controller.getLeftY(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(-m_controller.getLeftX(), OIConstants.kDriveDeadband)))
+                MathUtil.applyDeadband(-m_controller.getLeftY(), OIConstants.kDriveDeadband),
+                MathUtil.applyDeadband(-m_controller.getLeftX(), OIConstants.kDriveDeadband)))
             .mult(m_multiplier),
         new Vector(
             MathUtil.applyDeadband(-m_controller.getRightX(), OIConstants.kDriveDeadband),
