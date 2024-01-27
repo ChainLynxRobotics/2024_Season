@@ -22,6 +22,29 @@ public class SwerveUtils {
   }
 
   /**
+   * compares to doubles with the given tolerance and returns if they are approximately equal
+   *
+   * @param a the first double to compare
+   * @param b the second double to compare
+   * @param tol the maximum difference between doubles to still be considered equal
+   * @return whether the doubles are approximately equal
+   */
+  public static final boolean approxEqual(double a, double b, double tol) {
+    return Math.abs(a - b) <= tol;
+  }
+
+  /**
+   * compares two doubles and returns whether they are equal within a small tolerance
+   *
+   * @param a the first double to compare
+   * @param b the second double to compare
+   * @return whether the doubles are approximately equal
+   */
+  public static final boolean approxEqual(double a, double b) {
+    return approxEqual(a, b, 1e-6);
+  }
+
+  /**
    * Steps a value (angle) towards a target (angle) taking the shortest path with a specified step
    * size.
    *
