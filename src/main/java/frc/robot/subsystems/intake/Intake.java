@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase {
 
   private double m_targetRPM; // Target RPM of the rollers
 
-  // Constructs intake and initializes motor, PID, encoder objects
+  // Constructs intake and initializes motor, PID, encoder objects, sensor
   public Intake() {
     m_rollerFollowerMotor = new CANSparkMax(IntakeConfig.kFollowerMotorID, MotorType.kBrushless);
     m_rollerLeaderMotor = new CANSparkMax(IntakeConfig.kLeaderMotorID, MotorType.kBrushless);
