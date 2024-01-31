@@ -6,12 +6,11 @@ package frc.robot.constants;
  */
 public final class RobotConstants {
   public static final class IntakeConfig {
-    // Placeholder CAN IDs, replace later
 
-    // Digital input ID
+    // TODO: update placeholder digital input ID
     public static final int kLineBreakSensor = -1;
 
-    // Roller Motor IDs
+    // TODO: update placeholder roller Motor IDs
     public static final int kFollowerMotorID = -1;
     public static final int kLeaderMotorID = -1;
   }
