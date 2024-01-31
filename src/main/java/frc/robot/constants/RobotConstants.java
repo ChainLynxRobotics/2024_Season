@@ -5,7 +5,7 @@ package frc.robot.constants;
  * configs @see RobotConfig
  */
 public final class RobotConstants {
-  public static final class IntakeConfig {
+  public static final class IntakeConstants {
 
     // TODO: update placeholder digital input ID
     public static final int kLineBreakSensor = -1;

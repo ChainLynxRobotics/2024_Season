@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants;
-import frc.robot.constants.RobotConstants.IntakeConfig;
+import frc.robot.constants.RobotConstants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_rollerFollowerMotor; // left motor (Rollers)
@@ -19,14 +19,14 @@ public class Intake extends SubsystemBase {
 
   // Constructs intake and initializes motor, PID, encoder objects, sensor
   public Intake() {
-    m_rollerFollowerMotor = new CANSparkMax(IntakeConfig.kFollowerMotorID, MotorType.kBrushless);
-    m_rollerLeaderMotor = new CANSparkMax(IntakeConfig.kLeaderMotorID, MotorType.kBrushless);
+    m_rollerFollowerMotor = new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
+    m_rollerLeaderMotor = new CANSparkMax(IntakeConstants.kLeaderMotorID, MotorType.kBrushless);
     m_rollerFollowerMotor.follow(this.m_rollerLeaderMotor);
 
     m_rollerEncoder = m_rollerLeaderMotor.getEncoder();
     zeroEncoders();
 
-    m_intakeSensor = new DigitalInput(RobotConstants.IntakeConfig.kLineBreakSensor);
+    m_intakeSensor = new DigitalInput(RobotConstants.IntakeConstants.kLineBreakSensor);
   }
 
   @Override
