@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
+import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.vision.Vision;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
@@ -60,6 +62,7 @@ public class Drivetrain extends SubsystemBase {
   SwerveDriveOdometry m_odometry;
 
   private Pose2d m_pose;
+  private Pose2d m_prevPose;
   private ChassisSpeeds m_speeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
