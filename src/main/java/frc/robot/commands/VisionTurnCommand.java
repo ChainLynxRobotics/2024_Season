@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.vision.Vision;
+import frc.utils.Vector;
 
 public class VisionTurnCommand extends Command {
 
@@ -39,15 +40,20 @@ public class VisionTurnCommand extends Command {
       rotationSpeed = 0;
     }
 
-    drive.mainDrive(
-        MathUtil.applyDeadband(controller.getLeftY(), RobotConstants.DriveConstants.DRIVE_DEADBAND),
-        MathUtil.applyDeadband(controller.getLeftX(), RobotConstants.DriveConstants.DRIVE_DEADBAND),
-        MathUtil.applyDeadband(rotationSpeed, RobotConstants.DriveConstants.DRIVE_DEADBAND)
-    );
+    drive.drive(
+        new Vector(
+            MathUtil.applyDeadband(
+                controller.getLeftX(), RobotConstants.DriveConstants.kDriveDeadband),
+            MathUtil.applyDeadband(
+                controller.getLeftY(), RobotConstants.DriveConstants.kDriveDeadband)),
+        new Vector(
+            MathUtil.applyDeadband(rotationSpeed, RobotConstants.DriveConstants.kDriveDeadband), 0),
+        false,
+        false);
   }
 
   @Override
   public void end(boolean interrupted) {
-    drive.drive(0, 0, 0, 0, false, false);
+    drive.drive(new Vector(0, 0), new Vector(0, 0), false, false);
   }
 }
