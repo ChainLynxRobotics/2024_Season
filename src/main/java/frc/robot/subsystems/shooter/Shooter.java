@@ -212,7 +212,33 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  // sets the target angle the shooter should be at
+  public void setAngle(double targetAngleDegrees) {
+
   }
+
+  // runs the rollers
+  public void startFeedNote() {
+
+  }
+
+  // stops the rollers
+  public void stopFeedNote() {
+
+  }
+
+  // runs the flywheel at a speed in rotations per minute
+  public void runFlywheel(double targetRPM) {
+
+  }
+
+  // extends shield
+  public void extendShield() {
+
+  }
+
+  // retracts shield
+  public void retractShield() {
 
   }
   /*
