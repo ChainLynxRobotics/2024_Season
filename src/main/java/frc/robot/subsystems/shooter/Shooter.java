@@ -27,13 +27,13 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_angleMotorLeader;
   private CANSparkMax m_angleMotorFollower;
 
-  private CANSparkMax m_hoodMotor;
+  private CANSparkMax m_topHoodMotor;
 
   private SparkPIDController m_anglePidController;
-  private SparkPIDController m_hoodPidController;
+  private SparkPIDController m_topHoodPidController;
 
   private RelativeEncoder m_angleEncoder;
-  private RelativeEncoder m_hoodEncoder;
+  private RelativeEncoder m_topHoodEncoder;
 
   private boolean m_testModeCheck1; // Booleans for if test mode is enabled
   private boolean m_testModeCheck2;
@@ -43,9 +43,9 @@ public class Shooter extends SubsystemBase {
     m_rollerMotorRight =
         new CANSparkMax(ShooterConstants.kRollerMotorRightId, MotorType.kBrushless);
 
-    m_hoodMotor = new CANSparkMax(ShooterConstants.kHoodMotorId, MotorType.kBrushed);
-    m_hoodPidController = m_hoodMotor.getPIDController();
-    m_hoodEncoder = m_hoodMotor.getEncoder();
+    m_topHoodMotor = new CANSparkMax(ShooterConstants.kTopHoodMotorId, MotorType.kBrushed);
+    m_topHoodPidController = m_topHoodMotor.getPIDController();
+    m_topHoodEncoder = m_topHoodMotor.getEncoder();
 
     m_angleMotorLeader =
         new CANSparkMax(ShooterConstants.kAngleMotorLeaderId, MotorType.kBrushless);
@@ -66,17 +66,17 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kAngleControlMinOutput,
         RobotConfig.ShooterConfig.kAngleControlMaxOutput);
 
-    // set Hood PID coefficients
-    m_hoodPidController.setP(RobotConfig.ShooterConfig.kHoodP);
-    m_hoodPidController.setI(RobotConfig.ShooterConfig.kHoodI);
-    m_hoodPidController.setD(RobotConfig.ShooterConfig.kHoodD);
-    m_hoodPidController.setFF(RobotConfig.ShooterConfig.kHoodFF);
-    m_hoodPidController.setIZone(RobotConfig.ShooterConfig.kHoodIZone);
-    m_hoodPidController.setOutputRange(
-        RobotConfig.ShooterConfig.kHoodMinOutput, RobotConfig.ShooterConfig.kHoodMaxOutput);
+    // set top Hood PID coefficients
+    m_topHoodPidController.setP(RobotConfig.ShooterConfig.kTopHoodP);
+    m_topHoodPidController.setI(RobotConfig.ShooterConfig.kTopHoodI);
+    m_topHoodPidController.setD(RobotConfig.ShooterConfig.kTopHoodD);
+    m_topHoodPidController.setFF(RobotConfig.ShooterConfig.kTopHoodFF);
+    m_topHoodPidController.setIZone(RobotConfig.ShooterConfig.kTopHoodIZone);
+    m_topHoodPidController.setOutputRange(
+        RobotConfig.ShooterConfig.kTopHoodMinOutput, RobotConfig.ShooterConfig.kTopHoodMaxOutput);
 
     putAngleOnSmartDashboard();
-    putHoodOnSmartDashboard();
+    putTopHoodOnSmartDashboard();
 
     // Both are required to enable test mode
     SmartDashboard.putBoolean(RobotConfig.ShooterConfig.kTestCheck1Key, m_testModeCheck1);
@@ -105,24 +105,24 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kAngleControlMaxOutput);
   }
 
-  public void putHoodOnSmartDashboard() {
+  public void putTopHoodOnSmartDashboard() {
     // display Angle PID coefficients on SmartDashboard & test mode booleans
     SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kHoodPGainKey, RobotConfig.ShooterConfig.kHoodP);
+        RobotConfig.ShooterConfig.kTopHoodPGainKey, RobotConfig.ShooterConfig.kTopHoodP);
     SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kHoodIGainKey, RobotConfig.ShooterConfig.kHoodI);
+        RobotConfig.ShooterConfig.kTopHoodIGainKey, RobotConfig.ShooterConfig.kTopHoodI);
     SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kHoodDGainKey, RobotConfig.ShooterConfig.kHoodD);
+        RobotConfig.ShooterConfig.kTopHoodDGainKey, RobotConfig.ShooterConfig.kTopHoodD);
     SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kHoodFFGainKey, RobotConfig.ShooterConfig.kHoodFF);
+        RobotConfig.ShooterConfig.kTopHoodFFGainKey, RobotConfig.ShooterConfig.kTopHoodFF);
     SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kHoodIZoneKey, RobotConfig.ShooterConfig.kHoodIZone);
+        RobotConfig.ShooterConfig.kTopHoodIZoneKey, RobotConfig.ShooterConfig.kTopHoodIZone);
     SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kHoodMinOutputKey,
-        RobotConfig.ShooterConfig.kHoodMinOutput);
+        RobotConfig.ShooterConfig.kTopHoodMinOutputKey,
+        RobotConfig.ShooterConfig.kTopHoodMinOutput);
     SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kHoodMaxOutputKey,
-        RobotConfig.ShooterConfig.kHoodMaxOutput);
+        RobotConfig.ShooterConfig.kTopHoodMaxOutputKey,
+        RobotConfig.ShooterConfig.kTopHoodMaxOutput);
   }
 
   @Override
@@ -158,15 +158,15 @@ public class Shooter extends SubsystemBase {
           SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMinOutputKey, 0);
 
       // read PID coefficients from SmartDashboard
-      double pHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kHoodPGainKey, 0);
-      double iHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kHoodIGainKey, 0);
-      double dHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kHoodDGainKey, 0);
-      double izHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kHoodIZoneKey, 0);
-      double ffHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kHoodFFGainKey, 0);
-      double maxHood =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kHoodMaxOutputKey, 0);
-      double minHood =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kHoodMinOutputKey, 0);
+      double pTopHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopHoodPGainKey, 0);
+      double iTopHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopHoodIGainKey, 0);
+      double dTopHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopHoodDGainKey, 0);
+      double izTopHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopHoodIZoneKey, 0);
+      double ffTopHood = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopHoodFFGainKey, 0);
+      double maxTopHood =
+          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopHoodMaxOutputKey, 0);
+      double minTopHood =
+          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopHoodMinOutputKey, 0);
 
       // checks PID values against Smartdash board
       if (m_anglePidController.getP() != pAngleController) {
@@ -190,24 +190,24 @@ public class Shooter extends SubsystemBase {
       }
 
       // checks PID values against Smartdash board
-      if (m_hoodPidController.getP() != pHood) {
-        m_hoodPidController.setP(pHood);
+      if (m_topHoodPidController.getP() != pTopHood) {
+        m_topHoodPidController.setP(pTopHood);
       }
-      if (m_hoodPidController.getI() != iHood) {
-        m_hoodPidController.setI(iHood);
+      if (m_topHoodPidController.getI() != iTopHood) {
+        m_topHoodPidController.setI(iTopHood);
       }
-      if (m_hoodPidController.getD() != dHood) {
-        m_hoodPidController.setD(dHood);
+      if (m_topHoodPidController.getD() != dTopHood) {
+        m_topHoodPidController.setD(dTopHood);
       }
-      if (m_hoodPidController.getFF() != ffHood) {
-        m_hoodPidController.setFF(ffHood);
+      if (m_topHoodPidController.getFF() != ffTopHood) {
+        m_topHoodPidController.setFF(ffTopHood);
       }
-      if (m_hoodPidController.getIZone() != izHood) {
-        m_hoodPidController.setIZone(izHood);
+      if (m_topHoodPidController.getIZone() != izTopHood) {
+        m_topHoodPidController.setIZone(izTopHood);
       }
-      if (m_hoodPidController.getOutputMax() != maxHood
-          || m_hoodPidController.getOutputMin() != minHood) {
-        m_hoodPidController.setOutputRange(minHood, maxHood);
+      if (m_topHoodPidController.getOutputMax() != maxTopHood
+          || m_topHoodPidController.getOutputMin() != minTopHood) {
+        m_topHoodPidController.setOutputRange(minTopHood, maxTopHood);
       }
     }
   }
