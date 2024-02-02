@@ -81,6 +81,7 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kBackRightChassisAngularOffset);
 
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
+    m_gyro.reset();
 
     m_timer = new Timer();
 
