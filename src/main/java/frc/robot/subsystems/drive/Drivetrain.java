@@ -4,6 +4,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -60,7 +62,6 @@ public class Drivetrain extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
-
   private Pose2d m_pose;
   private Pose2d m_prevPose;
   private ChassisSpeeds m_speeds;
