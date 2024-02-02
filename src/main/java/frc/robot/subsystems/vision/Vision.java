@@ -38,6 +38,7 @@ public class Vision extends SubsystemBase {
         new PhotonPoseEstimator(
             aprilTagFieldLayout,
             PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+            camera,
             VisionConstants.robotToCam);
   }
 
@@ -48,13 +49,15 @@ public class Vision extends SubsystemBase {
     if (hasTarget) {
       this.result = result;
     }
-
-    SmartDashboard.putNumber(
-        "vision/estimated x pos", getEstimatedGlobalPose().get().estimatedPose.getX());
-    SmartDashboard.putNumber(
-        "vision/estimated y pos", getEstimatedGlobalPose().get().estimatedPose.getY());
-    SmartDashboard.putNumber(
-        "vision/estimated z pos", getEstimatedGlobalPose().get().estimatedPose.getZ());
+    Optional<EstimatedRobotPose> currentEstPose = getEstimatedGlobalPose();
+    if (currentEstPose.isPresent()) {
+      SmartDashboard.putNumber(
+          "vision/estimated x pos", currentEstPose.get().estimatedPose.getX());
+      SmartDashboard.putNumber(
+          "vision/estimated y pos", currentEstPose.get().estimatedPose.getY());
+      SmartDashboard.putNumber(
+          "vision/estimated z pos", currentEstPose.get().estimatedPose.getZ());
+    }
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
