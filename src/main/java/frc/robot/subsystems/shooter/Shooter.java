@@ -35,8 +35,6 @@ public class Shooter extends SubsystemBase {
   private RelativeEncoder m_angleEncoder;
   private RelativeEncoder m_flywheelEncoder;
 
-  private DigitalInput m_linebreakSensor;
-
   private boolean m_testModeCheck1; // Booleans for if test mode is enabled
   private boolean m_testModeCheck2;
 
@@ -228,8 +226,9 @@ public class Shooter extends SubsystemBase {
   public void runAmp() {
     run(1, m_flywheelMotor);
   }
-
+  /*
   public boolean hasNote() {
-    return m_linebreakSensor.get();
+    return Intake.isIndexed();
   }
+  */
 }
