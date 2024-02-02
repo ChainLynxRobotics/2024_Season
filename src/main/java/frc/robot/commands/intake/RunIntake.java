@@ -1,13 +1,11 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig;
 import frc.robot.subsystems.intake.Intake;
 
 public class RunIntake extends Command {
   private final Intake m_intake;
-  private final Timer m_timer;
 
   /**
    * Creates a new RunIntake command.
@@ -16,7 +14,6 @@ public class RunIntake extends Command {
    */
   public RunIntake(Intake subsystem) {
     m_intake = subsystem;
-    m_timer = new Timer();
 
     addRequirements(subsystem);
   }
@@ -24,7 +21,6 @@ public class RunIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_timer.start();
     m_intake.run(RobotConfig.IntakeConfig.kDefaultSpeed);
   }
 
@@ -41,7 +37,6 @@ public class RunIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_intake.isIndexed()
-        || m_timer.advanceIfElapsed(RobotConfig.IntakeConfig.kRunIntakeTimeoutTime));
+    return m_intake.isIndexed();
   }
 }
