@@ -24,23 +24,23 @@ public class RobotConfig {
     public static final String kAngleControlMinOutputKey = "Angle Controller Minimum output";
     public static final String kAngleControlMaxOutputKey = "Angle Controller Maximum output";
 
-    // top hood pid coefficients
-    public static final double kTopHoodP = 0;
-    public static final double kTopHoodI = 0;
-    public static final double kTopHoodD = 0;
-    public static final double kTopHoodFF = 0;
-    public static final double kTopHoodIZone = 0;
-    public static final double kTopHoodMinOutput = 0;
-    public static final double kTopHoodMaxOutput = 0;
+    // top Flywheel controller PID coefficients
+    public static final double kTopFlywheelP = 0;
+    public static final double kTopFlywheelI = 0;
+    public static final double kTopFlywheelD = 0;
+    public static final double kTopFlywheelFF = 0;
+    public static final double kTopFlywheelIZone = 0;
+    public static final double kTopFlywheelMinOutput = 0;
+    public static final double kTopFlywheelMaxOutput = 0;
 
-    // Smart dashboard top Hood Controller keys
-    public static final String kTopHoodPGainKey = "Top Hood P Gain";
-    public static final String kTopHoodIGainKey = "Top Hood I Gain";
-    public static final String kTopHoodDGainKey = "Top Hood D Gain";
-    public static final String kTopHoodFFGainKey = "Top Hood FF Gain";
-    public static final String kTopHoodIZoneKey = "Top Hood I Zone";
-    public static final String kTopHoodMinOutputKey = "Top Hood Minimum output";
-    public static final String kTopHoodMaxOutputKey = "Top Hood Maximum output";
+    // Smart dashboard top Flywheel Controller keys
+    public static final String kTopFlywheelPGainKey = "Top Flywheel P Gain";
+    public static final String kTopFlywheelIGainKey = "Top Flywheel I Gain";
+    public static final String kTopFlywheelDGainKey = "Top Flywheel D Gain";
+    public static final String kTopFlywheelFFGainKey = "Top Flywheel FF Gain";
+    public static final String kTopFlywheelIZoneKey = "Top Flywheel I Zone";
+    public static final String kTopFlywheelMinOutputKey = "Top Flywheel Minimum output";
+    public static final String kTopFlywheelMaxOutputKey = "Top Flywheel Maximum output";
 
     // Smart dashboard test mode keys
     public static final String kTestCheck1Key = "Test Check 1";
