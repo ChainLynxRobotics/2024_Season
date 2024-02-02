@@ -6,7 +6,6 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.IntakeConstants;
 
@@ -40,20 +39,6 @@ public class Intake extends SubsystemBase {
    */
   public void run(double motorOutput) {
     m_rollerMotor.set(motorOutput);
-  }
-
-  /**
-   * Runs the intake at a default speed The motor can be reversed by inputing a true as its
-   * parameter
-   *
-   * @param isReversed The input to reverse the motor speed
-   */
-  public void run(boolean isReversed) {
-    double runSpeed =
-        isReversed
-            ? -RobotConfig.IntakeConfig.kDefaultSpeed
-            : RobotConfig.IntakeConfig.kDefaultSpeed;
-    run(runSpeed);
   }
 
   // Checks if note is indexed

@@ -25,7 +25,7 @@ public class RunIntake extends Command {
   @Override
   public void initialize() {
     m_timer.start();
-    m_intake.run(false);
+    m_intake.run(RobotConfig.IntakeConfig.kDefaultSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
