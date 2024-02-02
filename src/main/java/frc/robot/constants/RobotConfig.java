@@ -33,6 +33,15 @@ public class RobotConfig {
     public static final double kTopFlywheelMinOutput = 0;
     public static final double kTopFlywheelMaxOutput = 0;
 
+    // bottom Flywheel controller PID coefficients
+    public static final double kBottomFlywheelP = 0;
+    public static final double kBottomFlywheelI = 0;
+    public static final double kBottomFlywheelD = 0;
+    public static final double kBottomFlywheelFF = 0;
+    public static final double kBottomFlywheelIZone = 0;
+    public static final double kBottomFlywheelMinOutput = 0;
+    public static final double kBottomFlywheelMaxOutput = 0;
+
     // Smart dashboard top Flywheel Controller keys
     public static final String kTopFlywheelPGainKey = "Top Flywheel P Gain";
     public static final String kTopFlywheelIGainKey = "Top Flywheel I Gain";
@@ -41,6 +50,15 @@ public class RobotConfig {
     public static final String kTopFlywheelIZoneKey = "Top Flywheel I Zone";
     public static final String kTopFlywheelMinOutputKey = "Top Flywheel Minimum output";
     public static final String kTopFlywheelMaxOutputKey = "Top Flywheel Maximum output";
+
+    // Smart dashboard bottom Flywheel Controller keys
+    public static final String kBottomFlywheelPGainKey = "Bottom Flywheel P Gain";
+    public static final String kBottomFlywheelIGainKey = "Bottom Flywheel I Gain";
+    public static final String kBottomFlywheelDGainKey = "Bottom Flywheel D Gain";
+    public static final String kBottomFlywheelFFGainKey = "Bottom Flywheel FF Gain";
+    public static final String kBottomFlywheelIZoneKey = "Bottom Flywheel I Zone";
+    public static final String kBottomFlywheelMinOutputKey = "Bottom Flywheel Minimum output";
+    public static final String kBottomFlywheelMaxOutputKey = "Bottom Flywheel Maximum output";
 
     // Smart dashboard test mode keys
     public static final String kTestCheck1Key = "Test Check 1";
