@@ -34,4 +34,3 @@ public class RobotConfig {
     public static final double kRunIntakeTimeoutTime = 0;
   }
 }
-
