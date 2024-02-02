@@ -52,6 +52,8 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
+  SwerveDrivePoseEstimator m_swerveDrivePoseEstimator;
+
   private Pose2d m_prevPose;
   private ChassisSpeeds m_speeds;
 
@@ -104,6 +106,16 @@ public class Drivetrain extends SubsystemBase {
               m_rearLeft.getPosition(),
               m_rearRight.getPosition(),
             });
+
+    m_swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
+      DriveConstants.kDriveKinematics, 
+      Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), 
+      new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition(),
+        }, m_prevPose);
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
