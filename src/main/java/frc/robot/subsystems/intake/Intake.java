@@ -10,8 +10,7 @@ import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax m_rollerFollowerMotor; // left motor (Rollers)
-  private final CANSparkMax m_rollerLeaderMotor; // right motor (Rollers)
+  private final CANSparkMax m_rollerMotor; // right motor (Rollers)
 
   private final RelativeEncoder m_rollerEncoder; // Roller Relative Encoder
 
@@ -19,11 +18,9 @@ public class Intake extends SubsystemBase {
 
   // Constructs intake and initializes motor, PID, encoder objects, sensor
   public Intake() {
-    m_rollerFollowerMotor = new CANSparkMax(IntakeConstants.kFollowerMotorID, MotorType.kBrushless);
-    m_rollerLeaderMotor = new CANSparkMax(IntakeConstants.kLeaderMotorID, MotorType.kBrushless);
-    m_rollerFollowerMotor.follow(this.m_rollerLeaderMotor);
+    m_rollerMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
 
-    m_rollerEncoder = m_rollerLeaderMotor.getEncoder();
+    m_rollerEncoder = m_rollerMotor.getEncoder();
     zeroEncoders();
 
     m_intakeSensor = new DigitalInput(RobotConstants.IntakeConstants.kLineBreakSensor);
@@ -40,7 +37,7 @@ public class Intake extends SubsystemBase {
    * @param motorOutput Motor speed from -1.0 to 1.0 as a percentage
    */
   public void run(double motorOutput) {
-    m_rollerLeaderMotor.set(motorOutput);
+    m_rollerMotor.set(motorOutput);
   }
 
   /**
@@ -64,7 +61,7 @@ public class Intake extends SubsystemBase {
 
   // Stops the motor
   public void stop() {
-    m_rollerLeaderMotor.stopMotor();
+    m_rollerMotor.stopMotor();
   }
 
   // Zeros the encoder(s)
