@@ -24,23 +24,23 @@ public class RobotConfig {
     public static final String kAngleControlMinOutputKey = "Angle Controller Minimum output";
     public static final String kAngleControlMaxOutputKey = "Angle Controller Maximum output";
 
-    // Flywheel controller PID coefficients
-    public static final double kFlywheelP = 0;
-    public static final double kFlywheelI = 0;
-    public static final double kFlywheelD = 0;
-    public static final double kFlywheelFF = 0;
-    public static final double kFlywheelIZone = 0;
-    public static final double kFlywheelMinOutput = 0;
-    public static final double kFlywheelMaxOutput = 0;
+    // Hood controller PID coefficients
+    public static final double kHoodP = 0;
+    public static final double kHoodI = 0;
+    public static final double kHoodD = 0;
+    public static final double kHoodFF = 0;
+    public static final double kHoodIZone = 0;
+    public static final double kHoodMinOutput = 0;
+    public static final double kHoodMaxOutput = 0;
 
-    // Smart dashboard Flywheel Controller keys
-    public static final String kFlywheelPGainKey = "Flywheel P Gain";
-    public static final String kFlywheelIGainKey = "Flywheel I Gain";
-    public static final String kFlywheelDGainKey = "Flywheel D Gain";
-    public static final String kFlywheelFFGainKey = "Flywheel FF Gain";
-    public static final String kFlywheelIZoneKey = "Flywheel I Zone";
-    public static final String kFlywheelMinOutputKey = "Flywheel Minimum output";
-    public static final String kFlywheelMaxOutputKey = "Flywheel Maximum output";
+    // Smart dashboard Hood Controller keys
+    public static final String kHoodPGainKey = "Hood P Gain";
+    public static final String kHoodIGainKey = "Hood I Gain";
+    public static final String kHoodDGainKey = "Hood D Gain";
+    public static final String kHoodFFGainKey = "Hood FF Gain";
+    public static final String kHoodIZoneKey = "Hood I Zone";
+    public static final String kHoodMinOutputKey = "Hood Minimum output";
+    public static final String kHoodMaxOutputKey = "Hood Maximum output";
 
     // Smart dashboard test mode keys
     public static final String kTestCheck1Key = "Test Check 1";
