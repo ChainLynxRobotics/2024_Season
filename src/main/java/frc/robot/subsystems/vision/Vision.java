@@ -5,7 +5,6 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.VisionConstants;
-import java.io.IOException;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -27,12 +26,7 @@ public class Vision extends SubsystemBase {
   public Vision() {
     camera = new PhotonCamera("picam");
 
-    try {
-      aprilTagFieldLayout =
-          AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
     poseEstimator =
         new PhotonPoseEstimator(
