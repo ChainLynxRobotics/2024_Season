@@ -3,10 +3,8 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
@@ -14,15 +12,11 @@ public class Intake extends SubsystemBase {
 
   private final RelativeEncoder m_rollerEncoder; // Roller Relative Encoder
 
-  private final DigitalInput m_intakeSensor; // Line break note sensor
-
   // Constructs intake and initializes motor, PID, encoder objects, sensor
   public Intake() {
     m_rollerMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
 
     m_rollerEncoder = m_rollerMotor.getEncoder();
-
-    m_intakeSensor = new DigitalInput(RobotConstants.IntakeConstants.kLineBreakSensor);
   }
 
   @Override
@@ -38,11 +32,6 @@ public class Intake extends SubsystemBase {
    */
   public void run(double motorOutput) {
     m_rollerMotor.set(motorOutput);
-  }
-
-  // Checks if note is indexed
-  public boolean isIndexed() {
-    return m_intakeSensor.get();
   }
 
   // Stops the motor
