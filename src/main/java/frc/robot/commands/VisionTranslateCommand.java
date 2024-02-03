@@ -37,7 +37,7 @@ public class VisionTranslateCommand extends Command {
 
     addRequirements(vision, drive);
 
-    forwardController.setIntegratorRange(0, 2);
+    forwardController.setIntegratorRange(TranslateConfig.minIntegral, TranslateConfig.maxIntegral);
   }
 
   @Override

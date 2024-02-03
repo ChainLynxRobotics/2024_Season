@@ -5,6 +5,29 @@ public class RobotConfig {
 
   public static class DriveConfig {
 
+    public static class TranslateConfig {
+      public static final String kPKey = "Vision Translate P";
+      public static final String kIKey = "Vision Translate I";
+      public static final String kDKey = "Vision Translate D";
+      public static final double kP = 0.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kTolerance = 1.0;
+      public static final double minIntegral = 0;
+      public static final double maxIntegral = 2;
+    }
+
+    public static class TurnConfig {
+      public static final String kPKey = "Vision Turn P";
+      public static final String kIKey = "Vision Turn I";
+      public static final String kDKey = "Vision Turn D";
+      public static final double kP = 0.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kTolerance = 1.0;
+      public static final double minIntegral = 0;
+      public static final double maxIntegral = 8;
+    }
     // 4.45 m/s max speed
     public static final double kMaxSpeedBase = 4.8;
     public static final double kMaxSpeedScaleFactor = 0.9;

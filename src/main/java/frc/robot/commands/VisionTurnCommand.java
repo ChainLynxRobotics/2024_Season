@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants;
+import frc.robot.constants.RobotConfig.DriveConfig.TurnConfig;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.vision.Vision;
 import frc.utils.Vector;
@@ -24,10 +25,10 @@ public class VisionTurnCommand extends Command {
 
     addRequirements(vision, drive);
 
-    turnController = new PIDController(0.1, 0.2, 0.1);
+    turnController = new PIDController(TurnConfig.kP, TurnConfig.kI, TurnConfig.kD);
 
     // set a limit on overshoot compensation
-    turnController.setIntegratorRange(0, Math.toRadians(8));
+    turnController.setIntegratorRange(TurnConfig.minIntegral, Math.toRadians(TurnConfig.maxIntegral));
   }
 
   @Override
