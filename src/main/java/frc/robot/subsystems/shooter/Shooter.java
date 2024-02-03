@@ -39,9 +39,6 @@ public class Shooter extends SubsystemBase {
   private RelativeEncoder m_topFlywheelEncoder;
   private RelativeEncoder m_bottomFlywheelEncoder;
 
-  private boolean m_testModeCheck1; // Booleans for if test mode is enabled
-  private boolean m_testModeCheck2;
-
   public Shooter() {
     m_rollerMotorLeft = new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
     m_rollerMotorRight =
@@ -165,99 +162,85 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    boolean testCheck1 = SmartDashboard.getBoolean(RobotConfig.ShooterConfig.kTestCheck1Key, false);
-    boolean testCheck2 = SmartDashboard.getBoolean(RobotConfig.ShooterConfig.kTestCheck2Key, false);
+    double pAngleController =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlPGainKey, 0);
+    double iAngleController =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlIGainKey, 0);
+    double dAngleController =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlDGainKey, 0);
+    double izAngleController =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlIZoneKey, 0);
+    double ffAngleController =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlFFGainKey, 0);
+    double maxAngleController =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMaxOutputKey, 0);
+    double minAngleController =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMinOutputKey, 0);
 
-    // Checks if test mode is enabled
-    if (m_testModeCheck1 != testCheck1) {
-      m_testModeCheck1 = testCheck1;
+    // read PID coefficients from SmartDashboard
+    double pTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelPGainKey, 0);
+    double iTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelIGainKey, 0);
+    double dTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelDGainKey, 0);
+    double izTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelIZoneKey, 0);
+    double ffTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelFFGainKey, 0);
+    double maxTopFlywheel =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelMaxOutputKey, 0);
+    double minTopFlywheel =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelMinOutputKey, 0);
+
+        // read PID coefficients from SmartDashboard
+    double pBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelPGainKey, 0);
+    double iBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelIGainKey, 0);
+    double dBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelDGainKey, 0);
+    double izBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelIZoneKey, 0);
+    double ffBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelFFGainKey, 0);
+    double maxBottomFlywheel =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelMaxOutputKey, 0);
+    double minBottomFlywheel =
+        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelMinOutputKey, 0);
+
+    // checks PID values against Smartdash board
+    if (m_anglePidController.getP() != pAngleController) {
+      m_anglePidController.setP(pAngleController);
     }
-    if (m_testModeCheck2 != testCheck2) {
-      m_testModeCheck2 = testCheck2;
+    if (m_anglePidController.getI() != iAngleController) {
+      m_anglePidController.setI(iAngleController);
+    }
+    if (m_anglePidController.getD() != dAngleController) {
+      m_anglePidController.setD(dAngleController);
+    }
+    if (m_anglePidController.getFF() != ffAngleController) {
+      m_anglePidController.setFF(ffAngleController);
+    }
+    if (m_anglePidController.getIZone() != izAngleController) {
+      m_anglePidController.setIZone(izAngleController);
+    }
+    if (m_anglePidController.getOutputMax() != maxAngleController
+        || m_anglePidController.getOutputMin() != minAngleController) {
+      m_anglePidController.setOutputRange(minAngleController, maxAngleController);
     }
 
-    if (m_testModeCheck1 && m_testModeCheck2) {
-      // read PID coefficients from SmartDashboard
-      double pAngleController =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlPGainKey, 0);
-      double iAngleController =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlIGainKey, 0);
-      double dAngleController =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlDGainKey, 0);
-      double izAngleController =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlIZoneKey, 0);
-      double ffAngleController =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlFFGainKey, 0);
-      double maxAngleController =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMaxOutputKey, 0);
-      double minAngleController =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMinOutputKey, 0);
-
-      // read PID coefficients from SmartDashboard
-      double pTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelPGainKey, 0);
-      double iTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelIGainKey, 0);
-      double dTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelDGainKey, 0);
-      double izTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelIZoneKey, 0);
-      double ffTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelFFGainKey, 0);
-      double maxTopFlywheel =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelMaxOutputKey, 0);
-      double minTopFlywheel =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelMinOutputKey, 0);
-
-          // read PID coefficients from SmartDashboard
-      double pBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelPGainKey, 0);
-      double iBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelIGainKey, 0);
-      double dBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelDGainKey, 0);
-      double izBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelIZoneKey, 0);
-      double ffBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelFFGainKey, 0);
-      double maxBottomFlywheel =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelMaxOutputKey, 0);
-      double minBottomFlywheel =
-          SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelMinOutputKey, 0);
-
-      // checks PID values against Smartdash board
-      if (m_anglePidController.getP() != pAngleController) {
-        m_anglePidController.setP(pAngleController);
-      }
-      if (m_anglePidController.getI() != iAngleController) {
-        m_anglePidController.setI(iAngleController);
-      }
-      if (m_anglePidController.getD() != dAngleController) {
-        m_anglePidController.setD(dAngleController);
-      }
-      if (m_anglePidController.getFF() != ffAngleController) {
-        m_anglePidController.setFF(ffAngleController);
-      }
-      if (m_anglePidController.getIZone() != izAngleController) {
-        m_anglePidController.setIZone(izAngleController);
-      }
-      if (m_anglePidController.getOutputMax() != maxAngleController
-          || m_anglePidController.getOutputMin() != minAngleController) {
-        m_anglePidController.setOutputRange(minAngleController, maxAngleController);
-      }
-
-      // checks PID values against Smartdash board
-      if (m_bottomFlywheelPidController.getP() != pBottomFlywheel) {
-        m_bottomFlywheelPidController.setP(pBottomFlywheel);
-      }
-      if (m_bottomFlywheelPidController.getI() != iFBottomflywheel) {
-        m_bottomFlywheelPidController.setI(iBottomFlywheel);
-      }
-      if (m_bottomFlywheelPidController.getD() != dBottomFlywheel) {
-        m_bottomFlywheelPidController.setD(dBottomFlywheel);
-      }
-      if (m_bottomFlywheelPidController.getFF() != ffBottomFlywheel) {
-        m_bottomFlywheelPidController.setFF(ffBottomFlywheel);
-      }
-      if (m_bottomFlywheelPidController.getIZone() != izBottomFlywheel) {
-        m_bottomFlywheelPidController.setIZone(izBottomFlywheel);
-      }
-      if (m_bottomFlywheelPidController.getOutputMax() != maxBottomFlywheel
-          || m_bottomFlywheelPidController.getOutputMin() != minBottomFlywheel) {
-        m_bottomFlywheelPidController.setOutputRange(minBottomFlywheel, maxBottomFlywheel);
+    // checks PID values against Smartdash board
+    if (m_bottomFlywheelPidController.getP() != pBottomFlywheel) {
+      m_bottomFlywheelPidController.setP(pBottomFlywheel);
+    }
+    if (m_bottomFlywheelPidController.getI() != iFBottomflywheel) {
+      m_bottomFlywheelPidController.setI(iBottomFlywheel);
+    }
+    if (m_bottomFlywheelPidController.getD() != dBottomFlywheel) {
+      m_bottomFlywheelPidController.setD(dBottomFlywheel);
+    }
+    if (m_bottomFlywheelPidController.getFF() != ffBottomFlywheel) {
+      m_bottomFlywheelPidController.setFF(ffBottomFlywheel);
+    }
+    if (m_bottomFlywheelPidController.getIZone() != izBottomFlywheel) {
+      m_bottomFlywheelPidController.setIZone(izBottomFlywheel);
+    }
+    if (m_bottomFlywheelPidController.getOutputMax() != maxBottomFlywheel
+        || m_bottomFlywheelPidController.getOutputMin() != minBottomFlywheel) {
+      m_bottomFlywheelPidController.setOutputRange(minBottomFlywheel, maxBottomFlywheel);
       }
     }
-  }
 
   // sets the target angle the shooter should be at
   // should include motor, encoder, and pid controller for the angle motors
@@ -294,9 +277,4 @@ public class Shooter extends SubsystemBase {
   public void retractShield() {
 
   }
-  /*
-  public boolean hasNote() {
-    return Intake.isIndexed();
-  }
-  */
 }
