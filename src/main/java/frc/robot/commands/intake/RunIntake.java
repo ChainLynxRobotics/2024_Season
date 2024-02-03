@@ -8,7 +8,8 @@ public class RunIntake extends Command {
   private final Intake m_intake;
 
   /**
-   * Creates a new RunIntake command.
+   * Creates a new RunIntake command, which runs the roller motor on the intake subsystem to intake
+   * a note
    *
    * @param subsystem The subsystem used by this command.
    */
