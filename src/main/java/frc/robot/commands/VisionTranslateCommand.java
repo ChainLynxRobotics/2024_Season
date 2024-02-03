@@ -19,9 +19,6 @@ public class VisionTranslateCommand extends Command {
   private Vision vision;
   private Drivetrain drive;
   private XboxController controller;
-  private double kp = 0.2;
-  private double ki = 10;
-  private double kd = 0.05;
 
   private PIDController forwardController;
 
@@ -30,10 +27,14 @@ public class VisionTranslateCommand extends Command {
     this.drive = drive;
 
     this.controller = controller;
-    SmartDashboard.putNumber("kP", kp);
-    SmartDashboard.putNumber("kI", ki);
-    SmartDashboard.putNumber("kD", kd);
-    forwardController = new PIDController(kp, ki, kd);
+    SmartDashboard.putNumber(TranslateConfig.kPKey, TranslateConfig.kP);
+    SmartDashboard.putNumber(TranslateConfig.kIKey, TranslateConfig.kI);
+    SmartDashboard.putNumber(TranslateConfig.kDKey, TranslateConfig.kD);
+    forwardController = new PIDController(
+      TranslateConfig.kP,
+      TranslateConfig.kI,
+      TranslateConfig.kD
+    );
 
     addRequirements(vision, drive);
 
