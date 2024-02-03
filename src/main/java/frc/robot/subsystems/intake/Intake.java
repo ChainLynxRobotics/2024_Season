@@ -21,7 +21,6 @@ public class Intake extends SubsystemBase {
     m_rollerMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
 
     m_rollerEncoder = m_rollerMotor.getEncoder();
-    zeroEncoders();
 
     m_intakeSensor = new DigitalInput(RobotConstants.IntakeConstants.kLineBreakSensor);
   }
@@ -49,10 +48,5 @@ public class Intake extends SubsystemBase {
   // Stops the motor
   public void stop() {
     m_rollerMotor.stopMotor();
-  }
-
-  // Zeros the encoder(s)
-  public void zeroEncoders() {
-    m_rollerEncoder.setPosition(0);
   }
 }
