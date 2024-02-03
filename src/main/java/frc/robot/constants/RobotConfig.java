@@ -28,6 +28,7 @@ public class RobotConfig {
       public static final double minIntegral = 0;
       public static final double maxIntegral = 8;
     }
+
     // 4.45 m/s max speed
     public static final double kMaxSpeedBase = 4.8;
     public static final double kMaxSpeedScaleFactor = 0.9;
