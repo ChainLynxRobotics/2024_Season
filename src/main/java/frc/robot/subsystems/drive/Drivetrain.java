@@ -64,6 +64,7 @@ public class Drivetrain extends SubsystemBase {
   SwerveDriveOdometry m_odometry;
   private Pose2d m_pose;
   private Pose2d m_prevPose;
+  private Pose2d m_pose;
   private ChassisSpeeds m_speeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
@@ -147,6 +148,10 @@ public class Drivetrain extends SubsystemBase {
     return m_speeds;
   }
 
+  public Pose2d getPose() {
+    return m_prevPose;
+  }
+
   public void stop() {
     move(new Vector(0, 0), 0);
   }
@@ -196,6 +201,12 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  public void driveChassisSpeeds(ChassisSpeeds spds) {
+    Vector spd = new Vector(spds.vxMetersPerSecond,spds.vyMetersPerSecond);
+    double angVel = spds.omegaRadiansPerSecond;
+    move(spd, angVel);
+  }
+
   /**
    * moves the drivetrain using the main turning mode
    *
@@ -203,7 +214,7 @@ public class Drivetrain extends SubsystemBase {
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param xRot the speed to rotate with (-1, 1)
    */
-  private void mainDrive(Vector spdVec, double xRot) {
+  public void mainDrive(Vector spdVec, double xRot) {
     double rot = xRot * DriveConfig.kMaxAngularSpeed;
     move(spdVec, rot);
   }
@@ -214,7 +225,7 @@ public class Drivetrain extends SubsystemBase {
    * @see Measure
    * @return the angle of the robot gyro
    */
-  private Measure<Angle> getGyroAngle() {
+  public Measure<Angle> getGyroAngle() {
     return Units.Degrees.of(m_gyro.getAngle());
   }
 
@@ -226,7 +237,7 @@ public class Drivetrain extends SubsystemBase {
    * @param xRot the x component of the direction vector to point towards
    * @param yRot the y component of the direction vector to point towards
    */
-  private void altDrive(Vector spdVec, Vector rotVec) {
+  public void altDrive(Vector spdVec, Vector rotVec) {
     double rot = 0;
     m_rightAngGoalRadians = rotVec.angle();
     if (rotVec.squaredMag() > 0) {
@@ -271,7 +282,7 @@ public class Drivetrain extends SubsystemBase {
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param rot the angular velocity to rotate the drivetrain in radians/s
    */
-  private void move(Vector spdVec, double rot) {
+  public void move(Vector spdVec, double rot) {
     move(spdVec, rot, true);
   }
 
