@@ -41,7 +41,7 @@ public class VisionTranslateCommand extends Command {
 
   @Override
   public void execute() {
-    double forwardSpeed = -controller.getLeftY();
+    double forwardSpeed = 0.0;
 
     if (vision.getHasTarget()) {
       double range =
@@ -52,8 +52,6 @@ public class VisionTranslateCommand extends Command {
               Units.degreesToRadians(vision.getBestTarget().getPitch()));
 
       forwardSpeed = forwardController.calculate(range, 0);
-    } else {
-      forwardSpeed = 0;
     }
 
     drive.drive(
@@ -67,10 +65,8 @@ public class VisionTranslateCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    if (Math.abs(forwardController.getPositionError()) < 1) {
-      return true;
-    }
-    return false;
+    forwardController.setTolerance(TranslateConfig.kTolerance);
+    return forwardController.atSetpoint();
   }
 
   @Override

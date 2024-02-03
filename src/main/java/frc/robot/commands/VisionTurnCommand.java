@@ -34,12 +34,10 @@ public class VisionTurnCommand extends Command {
 
   @Override
   public void execute() {
-    double rotationSpeed = -controller.getRightX();
+    double rotationSpeed = 0.0;
 
     if (vision.getHasTarget()) {
       rotationSpeed = turnController.calculate(vision.getBestTarget().getYaw(), 0);
-    } else {
-      rotationSpeed = 0;
     }
 
     drive.drive(
@@ -52,6 +50,11 @@ public class VisionTurnCommand extends Command {
             MathUtil.applyDeadband(rotationSpeed, RobotConstants.DriveConstants.kDriveDeadband), 0),
         false,
         false);
+  }
+
+  public boolean isFinished() {
+    turnController.setTolerance(TurnConfig.kTolerance);
+    return turnController.atSetpoint();
   }
 
   @Override
