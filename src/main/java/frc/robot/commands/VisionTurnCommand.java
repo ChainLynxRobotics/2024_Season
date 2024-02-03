@@ -28,7 +28,8 @@ public class VisionTurnCommand extends Command {
     turnController = new PIDController(TurnConfig.kP, TurnConfig.kI, TurnConfig.kD);
 
     // set a limit on overshoot compensation
-    turnController.setIntegratorRange(TurnConfig.minIntegral, Math.toRadians(TurnConfig.maxIntegral));
+    turnController.setIntegratorRange(
+        TurnConfig.minIntegral, Math.toRadians(TurnConfig.maxIntegral));
   }
 
   @Override

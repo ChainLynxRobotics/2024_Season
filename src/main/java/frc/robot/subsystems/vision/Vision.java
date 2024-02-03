@@ -45,12 +45,9 @@ public class Vision extends SubsystemBase {
     }
     Optional<EstimatedRobotPose> currentEstPose = getEstimatedGlobalPose();
     if (currentEstPose.isPresent()) {
-      SmartDashboard.putNumber(
-          "vision/estimated x pos", currentEstPose.get().estimatedPose.getX());
-      SmartDashboard.putNumber(
-          "vision/estimated y pos", currentEstPose.get().estimatedPose.getY());
-      SmartDashboard.putNumber(
-          "vision/estimated z pos", currentEstPose.get().estimatedPose.getZ());
+      SmartDashboard.putNumber("vision/estimated x pos", currentEstPose.get().estimatedPose.getX());
+      SmartDashboard.putNumber("vision/estimated y pos", currentEstPose.get().estimatedPose.getY());
+      SmartDashboard.putNumber("vision/estimated z pos", currentEstPose.get().estimatedPose.getZ());
     }
   }
 
