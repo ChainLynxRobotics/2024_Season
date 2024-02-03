@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics.SwerveDriveWheelStates;
 import edu.wpi.first.units.*;
@@ -25,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConfig.DriveConfig;
+import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.vision.Vision;
@@ -96,6 +96,14 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
+    m_swerveModulePositions =
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+        };
+
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
     m_gyro.reset();
 
@@ -109,8 +117,8 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevTime = m_timer.get();
 
-    m_odometry =
-        new SwerveDriveOdometry(
+    m_swerveDrivePoseEstimator =
+        new SwerveDrivePoseEstimator(
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
             m_swerveModulePositions,
@@ -144,15 +152,7 @@ public class Drivetrain extends SubsystemBase {
   /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
-    // Update the odometry in the periodic block
-    m_odometry.update(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition(),
-        });
+    m_swerveDrivePoseEstimator.update(m_gyro.getRotation2d(), m_swerveModulePositions);
 
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
@@ -166,20 +166,13 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Resets the odometry to the specified pose.
+   * Resets the pose estimator to the specified pose.
    *
-   * @param pose The pose to which to set the odometry.
+   * @param pose The pose to which to set the estimator.
    */
-  public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition(),
-        },
-        pose);
+  public void resetPoseEstimator(Pose2d pose) {
+    m_swerveDrivePoseEstimator.resetPosition(
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), m_swerveModulePositions, pose);
   }
 
   /**
