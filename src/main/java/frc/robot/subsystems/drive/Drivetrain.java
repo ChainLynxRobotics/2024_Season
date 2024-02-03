@@ -17,6 +17,7 @@ import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.vision.Vision;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
@@ -58,8 +59,12 @@ public class Drivetrain extends SubsystemBase {
 
   private SwerveModulePosition[] m_swerveModulePositions;
 
+  private Vision m_vision;
+
   /** constructs a new Drivatrain object */
-  public Drivetrain() {
+  public Drivetrain(Vision vision) {
+    m_vision = vision;
+
     m_frontLeft =
         new MAXSwerveModule(
             DriveConstants.kFrontLeftDrivingCanId,
@@ -117,7 +122,6 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     m_swerveDrivePoseEstimator.update(m_gyro.getRotation2d(), m_swerveModulePositions);
-
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
