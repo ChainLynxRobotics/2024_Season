@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax m_rollerMotor; // right motor (Rollers)
+  private final CANSparkMax m_rollerMotor; // Intake roller motor
 
-  // Constructs intake and initializes motor, PID, encoder objects, sensor
+  // Constructs intake and initializes motor
   public Intake() {
     m_rollerMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
   }
@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase {
   }
 
   /**
-   * Runs the intake
+   * Runs the intake at given speed
    *
    * @param motorOutput Motor speed from -1.0 to 1.0 as a percentage
    */
