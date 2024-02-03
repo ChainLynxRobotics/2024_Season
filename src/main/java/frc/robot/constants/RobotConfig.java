@@ -64,8 +64,8 @@ public class RobotConfig {
     public static final String kTestCheck1Key = "Test Check 1";
     public static final String kTestCheck2Key = "Test Check 2";
 
-    // Default Speed
-    public static final double kDefaultSpeed = 0;
+    // Roller Default Speed
+    public static final double kRollerDefaultSpeed = 0;
 
     // Timeout time (in seconds)
     public static final double kRunIntakeTimeoutTime = 0;

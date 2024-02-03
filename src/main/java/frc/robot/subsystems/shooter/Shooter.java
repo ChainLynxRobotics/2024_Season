@@ -55,7 +55,8 @@ public class Shooter extends SubsystemBase {
         new CANSparkMax(ShooterConstants.kAngleMotorLeaderId, MotorType.kBrushless);
     m_angleMotorFollower =
         new CANSparkMax(ShooterConstants.kAngleMotorFollowerId, MotorType.kBrushless);
-    m_angleMotorFollower.follow(m_angleMotorLeader);
+    // sets follower motor to run inversely to the leader
+    m_angleMotorFollower.follow(m_angleMotorLeader, true);
 
     m_anglePidController = m_angleMotorLeader.getPIDController();
     m_angleEncoder = m_angleMotorLeader.getEncoder();
@@ -245,25 +246,28 @@ public class Shooter extends SubsystemBase {
   // sets the target angle the shooter should be at
   // should include motor, encoder, and pid controller for the angle motors
   public void setAngle(double targetAngleDegrees) {
-
+    m_anglePidController.setReference(targetAngleDegrees);
   }
 
   // runs the rollers
   // should include the roller motors
   public void startFeedNote() {
-
+    m_rollerMotorLeft.set(kRollerDefaultSpeed);
+    m_rollerMotorRight.set(kRollerDefaultSpeed);
   }
 
   // stops the rollers
   // should include the roller motors
   public void stopFeedNote() {
-
+    m_rollerMotorLeft.stopMotor();
+    m_rollerMotorRight.stopMotor();
   }
 
   // runs the flywheel at a speed in rotations per minute
   // should include motor, encoder, and pid controller for the flywheel motors
-  public void runFlywheel(double targetRPM) {
-
+  public void runFlywheel(double topTargetRPM, double bottomTargetRPM) {
+    m_topFlywheelPidControlller.setReference(topTargetRPM);
+    m_bottomFlywheelPidControlller.setReference(bottomTargetRPM);
   }
 
   // extends shield
