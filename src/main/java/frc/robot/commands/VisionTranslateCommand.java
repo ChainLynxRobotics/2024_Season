@@ -6,6 +6,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.RobotConfig.DriveConfig.TranslateConfig;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.subsystems.drive.Drivetrain;
@@ -30,11 +31,8 @@ public class VisionTranslateCommand extends Command {
     SmartDashboard.putNumber(TranslateConfig.kPKey, TranslateConfig.kP);
     SmartDashboard.putNumber(TranslateConfig.kIKey, TranslateConfig.kI);
     SmartDashboard.putNumber(TranslateConfig.kDKey, TranslateConfig.kD);
-    forwardController = new PIDController(
-      TranslateConfig.kP,
-      TranslateConfig.kI,
-      TranslateConfig.kD
-    );
+    forwardController =
+        new PIDController(TranslateConfig.kP, TranslateConfig.kI, TranslateConfig.kD);
 
     addRequirements(vision, drive);
 
