@@ -39,16 +39,16 @@ public final class PIDUtils {
       case D:
         returnValue = x -> controller.setD(x);
         break;
-      case IZone:
+      case I_ZONE:
         returnValue = x -> controller.setIZone(x);
         break;
       case FF:
         returnValue = x -> controller.setFF(x);
         break;
-      case MaxOutput:
+      case MAX_OUTPUT:
         returnValue = x -> controller.setOutputRange(controller.getOutputMin(), x);
         break;
-      case MinOutput:
+      case MIN_OUTPUT:
         returnValue = x -> controller.setOutputRange(x, controller.getOutputMax());
         break;
     }
@@ -81,16 +81,16 @@ public final class PIDUtils {
       case D:
         returnValue = () -> controller.getD();
         break;
-      case IZone:
+      case I_ZONE:
         returnValue = () -> controller.getIZone();
         break;
       case FF:
         returnValue = () -> controller.getFF();
         break;
-      case MaxOutput:
+      case MAX_OUTPUT:
         returnValue = () -> controller.getOutputMax();
         break;
-      case MinOutput:
+      case MIN_OUTPUT:
         returnValue = () -> controller.getOutputMin();
         break;
     }

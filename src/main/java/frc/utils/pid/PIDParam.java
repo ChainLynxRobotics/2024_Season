@@ -5,8 +5,8 @@ public enum PIDParam {
   P,
   I,
   D,
-  IZone,
+  I_ZONE,
   FF,
-  MaxOutput,
-  MinOutput
+  MAX_OUTPUT,
+  MIN_OUTPUT
 }

@@ -51,10 +51,10 @@ public class PIDConfig {
     this.configValues.put(PIDParam.P, Pair.of(PGainKey, PGainValue));
     this.configValues.put(PIDParam.I, Pair.of(IGainKey, IGainValue));
     this.configValues.put(PIDParam.D, Pair.of(DGainKey, DGainValue));
-    this.configValues.put(PIDParam.IZone, Pair.of(IZoneKey, IZoneValue));
+    this.configValues.put(PIDParam.I_ZONE, Pair.of(IZoneKey, IZoneValue));
     this.configValues.put(PIDParam.FF, Pair.of(FFGainKey, FFGainValue));
-    this.configValues.put(PIDParam.MaxOutput, Pair.of(MaxOutputKey, MaxOutputValue));
-    this.configValues.put(PIDParam.MinOutput, Pair.of(MinOutputKey, MinOutputValue));
+    this.configValues.put(PIDParam.MAX_OUTPUT, Pair.of(MaxOutputKey, MaxOutputValue));
+    this.configValues.put(PIDParam.MIN_OUTPUT, Pair.of(MinOutputKey, MinOutputValue));
   }
 
   /** Gets the key and value for the corresponding {@link frc.utils.pid.PIDParam}. */
