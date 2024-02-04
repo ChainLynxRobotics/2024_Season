@@ -1,27 +1,32 @@
 package frc.utils.pid;
 
+import com.revrobotics.SparkPIDController;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.revrobotics.SparkPIDController;
-
 /**
  * Contains helper methods for simplifying and abstracting code related to PID controllers.
+ *
  * @see frc.utils.pid.PIDConfig
  * @see frc.utils.pid.PIDParam
  */
 public final class PIDUtils {
 
-  private PIDUtils() { }
+  private PIDUtils() {}
 
   /**
-   * Maps a {@link frc.utils.pid.PIDParam} to the corresponding setter method of a {@link com.revrobotics.SparkPIDController}.
-   * <p> Example: {@code getCorrespondingSetMethod(controller, PIDParam.P)} will return a  {@link java.util.function.Consumer} {@code (value) -> controller.setP(value)}
+   * Maps a {@link frc.utils.pid.PIDParam} to the corresponding setter method of a {@link
+   * com.revrobotics.SparkPIDController}.
+   *
+   * <p>Example: {@code getCorrespondingSetMethod(controller, PIDParam.P)} will return a {@link
+   * java.util.function.Consumer} {@code (value) -> controller.setP(value)}
+   *
    * @param controller The PID controller that the mapping will target
    * @param pidParam The {@link frc.utils.pid.PIDParam} that the mapping will reference
    */
-  public static Consumer<Double> getCorrespondingSetMethod(SparkPIDController controller, PIDParam pidParam) {
-    
+  public static Consumer<Double> getCorrespondingSetMethod(
+      SparkPIDController controller, PIDParam pidParam) {
+
     Consumer<Double> returnValue = null;
 
     switch (pidParam) {
@@ -49,17 +54,21 @@ public final class PIDUtils {
     }
 
     return returnValue;
-
   }
 
   /**
-   * Maps a {@link frc.utils.pid.PIDParam} to the corresponding getter method of a {@link com.revrobotics.SparkPIDController}.
-   * <p> Example: {@code getCorrespondingGetMethod(controller, PIDParam.P)} will return a  {@link java.util.function.Supplier} {@code () -> controller.getP()}
+   * Maps a {@link frc.utils.pid.PIDParam} to the corresponding getter method of a {@link
+   * com.revrobotics.SparkPIDController}.
+   *
+   * <p>Example: {@code getCorrespondingGetMethod(controller, PIDParam.P)} will return a {@link
+   * java.util.function.Supplier} {@code () -> controller.getP()}
+   *
    * @param controller The PID controller that the mapping will target
    * @param pidParam The {@link frc.utils.pid.PIDParam} that the mapping will reference
    */
-  public static Supplier<Double> getCorrespondingGetMethod(SparkPIDController controller, PIDParam pidParam) {
-    
+  public static Supplier<Double> getCorrespondingGetMethod(
+      SparkPIDController controller, PIDParam pidParam) {
+
     Supplier<Double> returnValue = null;
 
     switch (pidParam) {
@@ -87,7 +96,5 @@ public final class PIDUtils {
     }
 
     return returnValue;
-
   }
-  
 }
