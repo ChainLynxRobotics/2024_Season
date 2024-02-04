@@ -240,7 +240,7 @@ public class Shooter extends SubsystemBase {
       if (m_bottomFlywheelPidController.getP() != pBottomFlywheel) {
         m_bottomFlywheelPidController.setP(pBottomFlywheel);
       }
-      if (m_bottomFlywheelPidController.getI() != iFBottomflywheel) {
+      if (m_bottomFlywheelPidController.getI() != iBottomFlywheel) {
         m_bottomFlywheelPidController.setI(iBottomFlywheel);
       }
       if (m_bottomFlywheelPidController.getD() != dBottomFlywheel) {
