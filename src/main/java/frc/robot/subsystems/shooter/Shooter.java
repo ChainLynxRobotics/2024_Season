@@ -92,14 +92,10 @@ public class Shooter extends SubsystemBase {
     putAngleOnSmartDashboard();
     putTopFlywheelOnSmartDashboard();
     putBottomFlywheelOnSmartDashboard();
-
-    // Both are required to enable test mode
-    SmartDashboard.putBoolean(RobotConfig.ShooterConfig.kTestCheck1Key, m_testModeCheck1);
-    SmartDashboard.putBoolean(RobotConfig.ShooterConfig.kTestCheck2Key, m_testModeCheck2);
   }
 
   public void putAngleOnSmartDashboard() {
-    // display Angle PID coefficients on SmartDashboard & test mode booleans
+    // display Angle PID coefficients on SmartDashboard
     SmartDashboard.putNumber(
         RobotConfig.ShooterConfig.kAngleControlPGainKey, RobotConfig.ShooterConfig.kAngleControlP);
     SmartDashboard.putNumber(
@@ -121,7 +117,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void putTopFlywheelOnSmartDashboard() {
-    // display Angle PID coefficients on SmartDashboard & test mode booleans
+    // display Angle PID coefficients on SmartDashboard
     SmartDashboard.putNumber(
         RobotConfig.ShooterConfig.kTopFlywheelPGainKey, RobotConfig.ShooterConfig.kTopFlywheelP);
     SmartDashboard.putNumber(
@@ -140,7 +136,7 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kTopFlywheelMaxOutput);
   }
   public void putBottomFlywheelOnSmartDashboard() {
-    // display Angle PID coefficients on SmartDashboard & test mode booleans
+    // display Angle PID coefficients on SmartDashboard
     SmartDashboard.putNumber(
         RobotConfig.ShooterConfig.kBottomFlywheelPGainKey, RobotConfig.ShooterConfig.kBottomFlywheelP);
     SmartDashboard.putNumber(
@@ -163,6 +159,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
+    // read PID coefficients from SmartDashboard and stores them
     double pAngleController =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlPGainKey, 0);
     double iAngleController =
@@ -178,7 +175,7 @@ public class Shooter extends SubsystemBase {
     double minAngleController =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMinOutputKey, 0);
 
-    // read PID coefficients from SmartDashboard
+    // read PID coefficients from SmartDashboard and stores them
     double pTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelPGainKey, 0);
     double iTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelIGainKey, 0);
     double dTopFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelDGainKey, 0);
@@ -189,7 +186,7 @@ public class Shooter extends SubsystemBase {
     double minTopFlywheel =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelMinOutputKey, 0);
 
-        // read PID coefficients from SmartDashboard
+    // read PID coefficients from SmartDashboard and stores them
     double pBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelPGainKey, 0);
     double iBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelIGainKey, 0);
     double dBottomFlywheel = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelDGainKey, 0);
@@ -200,7 +197,7 @@ public class Shooter extends SubsystemBase {
     double minBottomFlywheel =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelMinOutputKey, 0);
 
-    // checks PID values against Smartdash board
+    // checks PID values against Smartdash board and applies them to the PID if needed
     if (m_anglePidController.getP() != pAngleController) {
       m_anglePidController.setP(pAngleController);
     }
@@ -221,11 +218,11 @@ public class Shooter extends SubsystemBase {
       m_anglePidController.setOutputRange(minAngleController, maxAngleController);
     }
 
-    // checks PID values against Smartdash board
+    // checks PID values against Smartdash board and applies them to the PID if needed
     if (m_bottomFlywheelPidController.getP() != pBottomFlywheel) {
       m_bottomFlywheelPidController.setP(pBottomFlywheel);
     }
-    if (m_bottomFlywheelPidController.getI() != iFBottomflywheel) {
+    if (m_bottomFlywheelPidController.getI() != iBottomFlywheel) {
       m_bottomFlywheelPidController.setI(iBottomFlywheel);
     }
     if (m_bottomFlywheelPidController.getD() != dBottomFlywheel) {
@@ -246,14 +243,14 @@ public class Shooter extends SubsystemBase {
   // sets the target angle the shooter should be at
   // should include motor, encoder, and pid controller for the angle motors
   public void setAngle(double targetAngleDegrees) {
-    m_anglePidController.setReference(targetAngleDegrees);
+    m_anglePidController.setReference(targetAngleDegrees, CANSparkMax.ControlType.kPosition);
   }
 
   // runs the rollers
   // should include the roller motors
   public void startFeedNote() {
-    m_rollerMotorLeft.set(kRollerDefaultSpeed);
-    m_rollerMotorRight.set(kRollerDefaultSpeed);
+    m_rollerMotorLeft.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
+    m_rollerMotorRight.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
   }
 
   // stops the rollers
@@ -266,8 +263,8 @@ public class Shooter extends SubsystemBase {
   // runs the flywheel at a speed in rotations per minute
   // should include motor, encoder, and pid controller for the flywheel motors
   public void runFlywheel(double topTargetRPM, double bottomTargetRPM) {
-    m_topFlywheelPidControlller.setReference(topTargetRPM);
-    m_bottomFlywheelPidControlller.setReference(bottomTargetRPM);
+    m_topFlywheelPidController.setReference(topTargetRPM, CANSparkMax.ControlType.kVelocity);
+    m_bottomFlywheelPidController.setReference(bottomTargetRPM, CANSparkMax.ControlType.kVelocity);
   }
 
   // extends shield
