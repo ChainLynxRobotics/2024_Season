@@ -2,13 +2,13 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
@@ -55,7 +54,6 @@ public class Drivetrain extends SubsystemBase {
   private Timer m_timer;
   private double m_prevTime;
 
-<<<<<<< HEAD
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
@@ -122,21 +120,24 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void configureAutoBuilder() {
-    AutoBuilder.configureHolonomic(this::getPose,
-      this::resetPoseEstimator,
-      this::getSpeeds,
-      this::driveChassisSpeeds, RobotConfig.DriveConfig.kPathFollowerConfig,
-      () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    AutoBuilder.configureHolonomic(
+        this::getPose,
+        this::resetPoseEstimator,
+        this::getSpeeds,
+        this::driveChassisSpeeds,
+        RobotConfig.DriveConfig.kPathFollowerConfig,
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            }, this);
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this);
   }
 
   public ChassisSpeeds getSpeeds() {
@@ -154,7 +155,7 @@ public class Drivetrain extends SubsystemBase {
   /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
-    m_swerveDrivePoseEstimator.update(m_gyro.getRotation2d(), m_swerveModulePositions);
+    m_odometry.update(m_gyro.getRotation2d(), m_swerveModulePositions);
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
@@ -197,7 +198,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void driveChassisSpeeds(ChassisSpeeds spds) {
-    Vector spd = new Vector(spds.vxMetersPerSecond,spds.vyMetersPerSecond);
+    Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
     double angVel = spds.omegaRadiansPerSecond;
     move(spd, angVel);
   }
