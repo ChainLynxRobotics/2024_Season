@@ -3,10 +3,9 @@ package frc.robot.constants;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Time;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 
 // IDs and stuff
@@ -43,7 +42,8 @@ public final class RobotConstants {
     // Distance between centers of right and left wheels on robot
     public static final Measure<Distance> kWheelBase = Units.Inches.of(26.5);
 
-    public static final Measure<Distance> kWheelBaseRadius = edu.wpi.first.units.Units.Inches.of(31.75/2);
+    public static final Measure<Distance> kWheelBaseRadius =
+        edu.wpi.first.units.Units.Inches.of(31.75 / 2);
 
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =

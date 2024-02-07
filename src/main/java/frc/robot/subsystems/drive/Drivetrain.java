@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
@@ -202,7 +201,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void driveChassisSpeeds(ChassisSpeeds spds) {
-    Vector spd = new Vector(spds.vxMetersPerSecond,spds.vyMetersPerSecond);
+    Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
     double angVel = spds.omegaRadiansPerSecond;
     move(spd, angVel);
   }
