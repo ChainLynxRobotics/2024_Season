@@ -32,6 +32,6 @@ public class RobotConfig {
     public static final double kDefaultSpeed = 0;
 
     // TODO: update timeout time (in seconds)
-    public static final double kRunIntakeTimeoutTime = 0;
+    public static final double kRunIntakeTimeoutSecs = 0;
   }
 }
