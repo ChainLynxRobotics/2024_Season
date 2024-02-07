@@ -120,7 +120,7 @@ public final class RobotConstants {
     // TODO: update placeholder digital input ID
     public static final int kLineBreakSensor = -1;
 
-    // TODO: update placerholder roller Motor ID
+    // TODO: update placeholder roller Motor ID
     public static final int kMotorID = -1;
   }
 }
