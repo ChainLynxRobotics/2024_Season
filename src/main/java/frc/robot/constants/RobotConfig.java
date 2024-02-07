@@ -1,9 +1,30 @@
 package frc.robot.constants;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.units.Units;
+import frc.robot.constants.RobotConstants.DriveConstants;
+import frc.robot.constants.RobotConstants.DriveConstants.SwerveModuleConstants;
+
 // variable things like default speeds
 public class RobotConfig {
 
   public static class DriveConfig {
+
+    public static final HolonomicPathFollowerConfig kPathFollowerConfig =
+        new HolonomicPathFollowerConfig(
+            new PIDConstants(
+                SwerveModuleConstants.kDrivingP,
+                SwerveModuleConstants.kDrivingI,
+                SwerveModuleConstants.kDrivingD),
+            new PIDConstants(
+                SwerveModuleConstants.kTurningP,
+                SwerveModuleConstants.kTurningI,
+                SwerveModuleConstants.kTurningD),
+            SwerveModuleConstants.kMaxModuleSpeed.in(Units.MetersPerSecond),
+            DriveConstants.kWheelBaseRadius.in(Units.Meters),
+            new ReplanningConfig());
 
     // 4.45 m/s max speed
     public static final double kMaxSpeedBase = 4.8;
