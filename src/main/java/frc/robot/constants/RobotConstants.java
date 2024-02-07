@@ -114,4 +114,13 @@ public final class RobotConstants {
       public static final int kTurningMotorCurrentLimit = 20; // amps
     }
   }
+
+  public static final class IntakeConstants {
+
+    // TODO: update placeholder digital input ID
+    public static final int kLineBreakSensor = -1;
+
+    // TODO: update placeholder roller Motor ID
+    public static final int kMotorID = -1;
+  }
 }

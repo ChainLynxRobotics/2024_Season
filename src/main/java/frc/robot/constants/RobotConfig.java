@@ -25,4 +25,13 @@ public class RobotConfig {
     public static final double MIN_ANGLE_SLEW_RATE = 0.45;
     public static final double MAX_ANGLE_SLEW_RATE = 0.85;
   }
+
+  public static final class IntakeConfig {
+    // TODO: update intake motors default speed
+    // In percentage output
+    public static final double kDefaultSpeed = 0;
+
+    // TODO: update timeout time (in seconds)
+    public static final double kRunIntakeTimeoutSecs = 0;
+  }
 }
