@@ -28,6 +28,7 @@ public class RobotConfig {
 
   public static final class IntakeConfig {
     // TODO: update intake motors default speed
+    // In percentage output
     public static final double kDefaultSpeed = 0;
 
     // TODO: update timeout time (in seconds)
