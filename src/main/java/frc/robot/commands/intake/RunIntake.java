@@ -11,12 +11,12 @@ public class RunIntake extends Command {
    * Creates a new RunIntake command, which runs the roller motor on the intake subsystem to intake
    * a note
    *
-   * @param subsystem The subsystem used by this command.
+   * @param intake The subsystem used by this command.
    */
-  public RunIntake(Intake subsystem) {
-    m_intake = subsystem;
+  public RunIntake(Intake intake) {
+    m_intake = intake;
 
-    addRequirements(subsystem);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
