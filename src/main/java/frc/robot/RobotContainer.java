@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
@@ -20,10 +24,15 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController;
+  SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+    autoChooser = AutoBuilder.buildAutoChooser();
+    // example commands
+    NamedCommands.registerCommand("shoot", getAutonomousCommand());
+    NamedCommands.registerCommand("climb", getAutonomousCommand());
 
     configureBindings();
 
@@ -46,6 +55,8 @@ public class RobotContainer {
                     m_driverController.getRightBumper(),
                     m_driverController.getAButton()),
             m_robotDrive));
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -62,6 +73,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("example");
+    // followPathFromEvents deprecated
+    return AutoBuilder.followPath(path);
   }
 }
