@@ -3,10 +3,7 @@ package frc.robot.constants;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.Velocity;
+import edu.wpi.first.math.util.Units;
 
 // IDs and stuff
 public final class RobotConstants {
@@ -37,21 +34,17 @@ public final class RobotConstants {
     public static final int kGyroId = 15;
 
     // Chassis configuration
-    public static final Measure<Distance> kTrackWidth = Units.Inches.of(26.5);
+    public static final double kTrackWidth = Units.inchesToMeters(26.5);
 
     // Distance between centers of right and left wheels on robot
-    public static final Measure<Distance> kWheelBase = Units.Inches.of(26.5);
-
-    public static final Measure<Distance> kWheelBaseRadius =
-        edu.wpi.first.units.Units.Inches.of(31.75 / 2);
-
+    public static final double kWheelBase = Units.inchesToMeters(26.5);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase.in(Units.Meters) / 2, kTrackWidth.in(Units.Meters) / 2),
-            new Translation2d(kWheelBase.in(Units.Meters) / 2, -kTrackWidth.in(Units.Meters) / 2),
-            new Translation2d(-kWheelBase.in(Units.Meters) / 2, kTrackWidth.in(Units.Meters) / 2),
-            new Translation2d(-kWheelBase.in(Units.Meters) / 2, -kTrackWidth.in(Units.Meters) / 2));
+            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     public static final class OIConstants {
 
@@ -69,8 +62,6 @@ public final class RobotConstants {
       // This changes the drive speed of the module (a pinion gear with more teeth will result in a
       // robot that drives faster).
       public static final int kDrivingMotorPinionTeeth = 14;
-
-      public static final Measure<Velocity<Distance>> kMaxModuleSpeed = Units.MetersPerSecond.of(1);
 
       // Invert the turning encoder, since the output shaft rotates in the opposite direction of
       // the steering motor in the MAXSwerve Module.

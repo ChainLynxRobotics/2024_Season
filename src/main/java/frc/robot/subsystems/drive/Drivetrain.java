@@ -1,8 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,17 +9,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.units.*;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.DriveConfig;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
-import frc.robot.subsystems.vision.Vision;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
@@ -66,9 +60,7 @@ public class Drivetrain extends SubsystemBase {
   private Vision m_vision;
 
   /** constructs a new Drivatrain object */
-  public Drivetrain(Vision vision) {
-    m_vision = vision;
-
+  public Drivetrain() {
     m_frontLeft =
         new MAXSwerveModule(
             DriveConstants.kFrontLeftDrivingCanId,
@@ -93,16 +85,7 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
-    m_swerveModulePositions =
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-        };
-
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
-    m_gyro.reset();
 
     m_timer = new Timer();
 
@@ -114,48 +97,35 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevTime = m_timer.get();
 
+    m_odometry =
+        new SwerveDriveOdometry(
+            DriveConstants.kDriveKinematics,
+            Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+            new SwerveModulePosition[] {
+              m_frontLeft.getPosition(),
+              m_frontRight.getPosition(),
+              m_rearLeft.getPosition(),
+              m_rearRight.getPosition(),
+            });
     configureAutoBuilder();
+
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
-  }
-
-  private void configureAutoBuilder() {
-    AutoBuilder.configureHolonomic(
-        this::getPose,
-        this::resetPoseEstimator,
-        this::getSpeeds,
-        this::driveChassisSpeeds,
-        RobotConfig.DriveConfig.kPathFollowerConfig,
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        },
-        this);
-  }
-
-  public ChassisSpeeds getSpeeds() {
-    return m_speeds;
-  }
-
-  public Pose2d getPose() {
-    return m_prevPose;
-  }
-
-  public void stop() {
-    move(new Vector(0, 0), 0);
   }
 
   /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
-    m_odometry.update(m_gyro.getRotation2d(), m_swerveModulePositions);
+    // Update the odometry in the periodic block
+    m_odometry.update(
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition(),
+        });
+
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
@@ -168,13 +138,20 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Resets the pose estimator to the specified pose.
+   * Resets the odometry to the specified pose.
    *
-   * @param pose The pose to which to set the estimator.
+   * @param pose The pose to which to set the odometry.
    */
-  public void resetPoseEstimator(Pose2d pose) {
-    m_swerveDrivePoseEstimator.resetPosition(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), m_swerveModulePositions, pose);
+  public void resetOdometry(Pose2d pose) {
+    m_odometry.resetPosition(
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition(),
+        },
+        pose);
   }
 
   /**
@@ -197,12 +174,6 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void driveChassisSpeeds(ChassisSpeeds spds) {
-    Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
-    double angVel = spds.omegaRadiansPerSecond;
-    move(spd, angVel);
-  }
-
   /**
    * moves the drivetrain using the main turning mode
    *
@@ -210,7 +181,7 @@ public class Drivetrain extends SubsystemBase {
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param xRot the speed to rotate with (-1, 1)
    */
-  public void mainDrive(Vector spdVec, double xRot) {
+  private void mainDrive(Vector spdVec, double xRot) {
     double rot = xRot * DriveConfig.kMaxAngularSpeed;
     move(spdVec, rot);
   }
@@ -221,7 +192,7 @@ public class Drivetrain extends SubsystemBase {
    * @see Measure
    * @return the angle of the robot gyro
    */
-  public Measure<Angle> getGyroAngle() {
+  private Measure<Angle> getGyroAngle() {
     return Units.Degrees.of(m_gyro.getAngle());
   }
 
@@ -233,7 +204,7 @@ public class Drivetrain extends SubsystemBase {
    * @param xRot the x component of the direction vector to point towards
    * @param yRot the y component of the direction vector to point towards
    */
-  public void altDrive(Vector spdVec, Vector rotVec) {
+  private void altDrive(Vector spdVec, Vector rotVec) {
     double rot = 0;
     m_rightAngGoalRadians = rotVec.angle();
     if (rotVec.squaredMag() > 0) {
@@ -259,7 +230,7 @@ public class Drivetrain extends SubsystemBase {
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param rot the angular velocity to rotate the drivetrain in radians/s
    */
-  public void move(Vector spdVec, double rot) {
+  private void move(Vector spdVec, double rot) {
     move(spdVec, rot, true);
   }
 
