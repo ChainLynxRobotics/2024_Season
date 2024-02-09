@@ -13,6 +13,14 @@ public class ShootSpeaker extends Command {
   }
 
   // Called when the command is initially scheduled.
+  /**
+   * Takes in distances to calculate shot, then shoots
+   *
+   * Takes vertical height from constants
+   * Takes horizontal distance from vision
+   * Calculates angle and velocity
+   */
+  // TODO: implement kinematics
   @Override
   public void initialize() {}
 
