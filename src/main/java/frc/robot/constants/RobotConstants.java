@@ -3,7 +3,10 @@ package frc.robot.constants;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Velocity;
 
 // IDs and stuff
 public final class RobotConstants {
@@ -14,10 +17,12 @@ public final class RobotConstants {
   public static final class DriveConstants {
     // placeholder CAN IDs, fix these later
 
-    public static final double kFrontLeftChassisAngularOffset = 0.0;
-    public static final double kFrontRightChassisAngularOffset = 0.0;
-    public static final double kBackLeftChassisAngularOffset = 0.0;
-    public static final double kBackRightChassisAngularOffset = 0.0;
+    public static final double kMoveInputRotationalOffset = -Math.PI / 2;
+
+    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+    public static final double kFrontRightChassisAngularOffset = 0;
+    public static final double kBackLeftChassisAngularOffset = Math.PI;
+    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     public static final double kDriveDeadband = 0.06;
 
@@ -36,17 +41,21 @@ public final class RobotConstants {
     public static final int kGyroId = 15;
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(26.5);
+    public static final Measure<Distance> kTrackWidth = Units.Inches.of(26.5);
 
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(26.5);
+    public static final Measure<Distance> kWheelBase = Units.Inches.of(26.5);
+
+    public static final Measure<Distance> kWheelBaseRadius =
+        edu.wpi.first.units.Units.Inches.of(31.75 / 2);
+
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+            new Translation2d(kWheelBase.in(Units.Meters) / 2, kTrackWidth.in(Units.Meters) / 2),
+            new Translation2d(kWheelBase.in(Units.Meters) / 2, -kTrackWidth.in(Units.Meters) / 2),
+            new Translation2d(-kWheelBase.in(Units.Meters) / 2, kTrackWidth.in(Units.Meters) / 2),
+            new Translation2d(-kWheelBase.in(Units.Meters) / 2, -kTrackWidth.in(Units.Meters) / 2));
 
     public static final class OIConstants {
 
@@ -64,6 +73,8 @@ public final class RobotConstants {
       // This changes the drive speed of the module (a pinion gear with more teeth will result in a
       // robot that drives faster).
       public static final int kDrivingMotorPinionTeeth = 14;
+
+      public static final Measure<Velocity<Distance>> kMaxModuleSpeed = Units.MetersPerSecond.of(1);
 
       // Invert the turning encoder, since the output shaft rotates in the opposite direction of
       // the steering motor in the MAXSwerve Module.
@@ -113,5 +124,14 @@ public final class RobotConstants {
       public static final int kDrivingMotorCurrentLimit = 50; // amps
       public static final int kTurningMotorCurrentLimit = 20; // amps
     }
+  }
+
+  public static final class IntakeConstants {
+
+    // TODO: update placeholder digital input ID
+    public static final int kLineBreakSensor = -1;
+
+    // TODO: update placeholder roller Motor ID
+    public static final int kMotorID = -1;
   }
 }
