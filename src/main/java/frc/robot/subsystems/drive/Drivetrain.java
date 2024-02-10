@@ -56,7 +56,7 @@ public class Drivetrain extends SubsystemBase {
 
   SwerveDrivePoseEstimator m_swerveDrivePoseEstimator;
 
-  private Pose2d m_prevPose;
+  private Pose2d m_pose;
   private ChassisSpeeds m_speeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
@@ -117,7 +117,7 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
             m_swerveModulePositions,
-            m_prevPose);
+            m_pose);
 
     configureAutoBuilder();
 
