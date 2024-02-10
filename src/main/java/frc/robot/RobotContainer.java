@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
@@ -56,7 +57,16 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
-  private void registerCommands() {}
+  //TODO: fill in placeholder commands with actual functionality
+  private void registerCommands() {
+    NamedCommands.registerCommand("intakeFromFloor", doNothing());
+    NamedCommands.registerCommand("scoreAmp", doNothing());
+    NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
+  }
+
+  private Command doNothing() {
+    return new Command() {};
+  }
 
   private void configureBindings() {
     new Trigger(() -> triggerPressed())
