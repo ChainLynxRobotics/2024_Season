@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
@@ -57,7 +58,7 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
-  private Pose2d m_prevPose;
+  private Pose2d m_pose;
   private ChassisSpeeds m_speeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
@@ -106,12 +107,9 @@ public class Drivetrain extends SubsystemBase {
         new SwerveDriveOdometry(
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-            new SwerveModulePosition[] {
-              m_frontLeft.getPosition(),
-              m_frontRight.getPosition(),
-              m_rearLeft.getPosition(),
-              m_rearRight.getPosition(),
-            });
+            m_swerveModulePositions,
+            m_pose);
+
     configureAutoBuilder();
 
     m_powerDistribution.clearStickyFaults();
@@ -262,7 +260,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private Pose2d getPose() {
-    Pose2d pose = m_swerveDrivePoseEstimator.getEstimatedPosition();
+    Pose2d pose = m_odometry.getPoseMeters();
     return (pose);
   }
 
