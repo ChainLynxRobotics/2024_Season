@@ -1,5 +1,4 @@
 package frc.robot.subsystems.drive;
-
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -8,11 +7,13 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics.SwerveDriveWheelStates;
 import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -58,7 +59,6 @@ public class Drivetrain extends SubsystemBase {
   SwerveDriveOdometry m_odometry;
 
   private Pose2d m_prevPose;
-  private Pose2d m_pose;
   private ChassisSpeeds m_speeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
@@ -240,33 +240,30 @@ public class Drivetrain extends SubsystemBase {
     m_turnDirRadians = rot;
     move(spdVec, rot);
   }
-
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return DriveConstants.kDriveKinematics.toChassisSpeeds(
-        new SwerveModuleState[] {
-          m_frontLeft.getState(),
-          m_frontRight.getState(),
-          m_rearLeft.getState(),
-          m_rearRight.getState()
-        });
+      new SwerveModuleState[] {
+        m_frontLeft.getState(),
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState()
+      }
+    );
 
     // CCW rotation out of chassis frame
-    //   var rotated = new Translation2d(vxMetersPerSecond, vyMetersPerSecond).rotateBy(robotAngle);
-    //   return new ChassisSpeeds(rotated.getX(), rotated.getY(), omegaRadiansPerSecond);
+ //   var rotated = new Translation2d(vxMetersPerSecond, vyMetersPerSecond).rotateBy(robotAngle);
+ //   return new ChassisSpeeds(rotated.getX(), rotated.getY(), omegaRadiansPerSecond);
   }
-
   private double altTurnSmooth(double stickAng) {
     return Math.tanh(
             ((getGyroAngle().in(Units.Radians) + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
                 / DriveConfig.altTurnSmoothing)
         * DriveConfig.kMaxAngularSpeed;
   }
-
   private Pose2d getPose() {
-    Pose2d pose = m_odometry.getPoseMeters();
-    return (pose);
+    Pose2d pose = m_swerveDrivePoseEstimator.getEstimatedPosition();
+    return(pose);
   }
-
   /**
    * moves the drivetrain using the given values
    *
@@ -375,10 +372,10 @@ public class Drivetrain extends SubsystemBase {
 
   private boolean allianceCheck() {
     var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
+    if(alliance.isPresent()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
-    return (false);
+    return(false);
   }
 
   /** Zeroes the heading of the robot. */
