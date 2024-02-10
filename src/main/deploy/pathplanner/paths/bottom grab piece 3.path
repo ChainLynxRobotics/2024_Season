@@ -16,12 +16,21 @@
     },
     {
       "anchor": {
+<<<<<<< HEAD
         "x": 2.7226773907472728,
         "y": 4.1046482092964185
       },
       "prevControl": {
         "x": 1.7226773907472728,
         "y": 4.1046482092964185
+=======
+        "x": 2.670343626401539,
+        "y": 4.0606698356253865
+      },
+      "prevControl": {
+        "x": 1.670343626401539,
+        "y": 4.0606698356253865
+>>>>>>> b703c8e (added basic leave autos)
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,4 +58,8 @@
     "velocity": 0
   },
   "useDefaultConstraints": true
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b703c8e (added basic leave autos)
