@@ -50,10 +50,14 @@
                 "type": "path",
                 "data": {
 <<<<<<< HEAD
+<<<<<<< HEAD
                   "pathName": "amp grab piece 2 from the left"
 =======
                   "pathName": "amp grab piece 2"
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+                  "pathName": "amp grab piece 2 from the left"
+>>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
                 }
               },
               {
@@ -71,14 +75,20 @@
             "name": "aimAndScoreSpeaker"
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
         },
         {
           "type": "path",
           "data": {
             "pathName": "leave from piece 2"
           }
+<<<<<<< HEAD
 =======
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+>>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
         }
       ]
     }

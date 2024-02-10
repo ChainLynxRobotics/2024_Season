@@ -24,6 +24,7 @@
       "prevControl": {
         "x": 2.0642525926690074,
         "y": 5.267398384626121
+<<<<<<< HEAD
 =======
         "x": 2.934213868427737,
 =======
@@ -35,6 +36,8 @@
         "x": 1.904894952647049,
         "y": 5.541275082550166
 >>>>>>> b703c8e (added basic leave autos)
+=======
+>>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,12 +56,17 @@
   "goalEndState": {
     "velocity": 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "rotation": 41.02905996687005,
     "rotateFast": true
 =======
     "rotation": 0,
     "rotateFast": false
 >>>>>>> b703c8e (added basic leave autos)
+=======
+    "rotation": 41.02905996687005,
+    "rotateFast": true
+>>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
   },
   "reversed": false,
   "folder": null,

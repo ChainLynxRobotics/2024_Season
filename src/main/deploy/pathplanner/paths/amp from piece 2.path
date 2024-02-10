@@ -17,6 +17,7 @@
     {
       "anchor": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "x": 1.8401079805572578,
         "y": 7.775016232626323
       },
@@ -31,6 +32,14 @@
         "x": 1.8327532354723404,
         "y": 6.639933907854165
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+        "x": 1.8401079805572578,
+        "y": 7.775016232626323
+      },
+      "prevControl": {
+        "x": 1.8047351589583716,
+        "y": 6.52786160179829
+>>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
       },
       "nextControl": null,
       "isLocked": false,
