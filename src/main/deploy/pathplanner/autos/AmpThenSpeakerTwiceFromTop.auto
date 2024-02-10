@@ -91,6 +91,12 @@
           "data": {
             "name": "aimAndScoreSpeaker"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leave from piece 3"
+          }
         }
       ]
     }

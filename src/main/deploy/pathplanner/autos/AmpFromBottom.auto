@@ -41,6 +41,12 @@
           "data": {
             "name": "scoreAmp"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leave from amp"
+          }
         }
       ]
     }
