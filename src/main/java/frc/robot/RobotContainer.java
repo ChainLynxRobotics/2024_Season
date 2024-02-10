@@ -30,11 +30,9 @@ public class RobotContainer {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     autoChooser = AutoBuilder.buildAutoChooser();
-    // example commands
-    NamedCommands.registerCommand("shoot", getAutonomousCommand());
-    NamedCommands.registerCommand("climb", getAutonomousCommand());
 
     configureBindings();
+    registerCommands();
 
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -57,6 +55,10 @@ public class RobotContainer {
             m_robotDrive));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
+
+  private void registerCommands() {
+
   }
 
   private void configureBindings() {
