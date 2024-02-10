@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6619978954243629,
-      "y": 2.15494030988062
+      "x": 0.6180195217533299,
+      "y": 3.9433941725026314
     },
     "rotation": 0
   },
@@ -40,6 +40,12 @@
           "type": "named",
           "data": {
             "name": "scoreAmp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leave from amp"
           }
         }
       ]
