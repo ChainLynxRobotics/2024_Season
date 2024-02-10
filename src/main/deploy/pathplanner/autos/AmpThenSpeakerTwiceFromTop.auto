@@ -91,16 +91,23 @@
           "data": {
             "name": "aimAndScoreSpeaker"
           }
+<<<<<<< HEAD
         },
         {
           "type": "path",
           "data": {
             "pathName": "leave from piece 3"
           }
+=======
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
         }
       ]
     }
   },
   "folder": null,
   "choreoAuto": false
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)

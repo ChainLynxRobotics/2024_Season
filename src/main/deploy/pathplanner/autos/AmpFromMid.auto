@@ -2,8 +2,13 @@
   "version": 1.0,
   "startingPose": {
     "position": {
+<<<<<<< HEAD
       "x": 0.6180195217533299,
       "y": 3.9433941725026314
+=======
+      "x": 0.6619978954243629,
+      "y": 2.15494030988062
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
     },
     "rotation": 0
   },
@@ -41,16 +46,23 @@
           "data": {
             "name": "scoreAmp"
           }
+<<<<<<< HEAD
         },
         {
           "type": "path",
           "data": {
             "pathName": "leave from amp"
           }
+=======
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
         }
       ]
     }
   },
   "folder": null,
   "choreoAuto": false
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)

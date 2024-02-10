@@ -33,7 +33,11 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD
             "pathName": "amp from piece 1 from moving"
+=======
+            "pathName": "amp from piece 1"
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
           }
         },
         {
@@ -49,7 +53,11 @@
               {
                 "type": "path",
                 "data": {
+<<<<<<< HEAD
                   "pathName": "amp grab piece 2 from the left"
+=======
+                  "pathName": "amp grab piece 2"
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
                 }
               },
               {
@@ -66,16 +74,23 @@
           "data": {
             "name": "aimAndScoreSpeaker"
           }
+<<<<<<< HEAD
         },
         {
           "type": "path",
           "data": {
             "pathName": "leave from piece 2"
           }
+=======
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
         }
       ]
     }
   },
   "folder": null,
   "choreoAuto": false
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)

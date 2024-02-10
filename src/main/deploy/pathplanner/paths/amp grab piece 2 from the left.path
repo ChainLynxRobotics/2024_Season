@@ -3,6 +3,7 @@
   "waypoints": [
     {
       "anchor": {
+<<<<<<< HEAD
         "x": 1.8401079805572578,
         "y": 7.761007194369338
       },
@@ -10,6 +11,15 @@
       "nextControl": {
         "x": 1.7754162431776825,
         "y": 5.521812525828854
+=======
+        "x": 1.7840718275293204,
+        "y": 7.915106615196166
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7193800901497451,
+        "y": 5.675911946655682
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
       },
       "isLocked": false,
       "linkedName": null
@@ -49,4 +59,8 @@
     "velocity": 0
   },
   "useDefaultConstraints": true
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)

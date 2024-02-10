@@ -54,7 +54,11 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
+<<<<<<< HEAD
     "velocity": 1.0,
+=======
+    "velocity": 0,
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
     "rotation": 180.0,
     "rotateFast": true
   },
@@ -65,4 +69,8 @@
     "velocity": 0
   },
   "useDefaultConstraints": true
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)

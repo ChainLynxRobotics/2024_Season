@@ -17,6 +17,7 @@
     {
       "anchor": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "x": 2.7226773907472728,
         "y": 4.1046482092964185
       },
@@ -31,6 +32,14 @@
         "x": 1.670343626401539,
         "y": 4.0606698356253865
 >>>>>>> b703c8e (added basic leave autos)
+=======
+        "x": 2.7226773907472728,
+        "y": 4.1046482092964185
+      },
+      "prevControl": {
+        "x": 1.7226773907472728,
+        "y": 4.1046482092964185
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
       },
       "nextControl": null,
       "isLocked": false,

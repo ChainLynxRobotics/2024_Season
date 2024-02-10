@@ -16,12 +16,21 @@
     },
     {
       "anchor": {
+<<<<<<< HEAD
         "x": 1.8401079805572578,
         "y": 7.761007194369338
       },
       "prevControl": {
         "x": 1.8694268963379463,
         "y": 7.159969420865219
+=======
+        "x": 1.7980808657863048,
+        "y": 7.901097576939181
+      },
+      "prevControl": {
+        "x": 1.8273997815669933,
+        "y": 7.3000598034350626
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,4 +58,8 @@
     "velocity": 0
   },
   "useDefaultConstraints": true
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
