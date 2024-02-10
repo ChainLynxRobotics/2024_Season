@@ -75,8 +75,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("example");
-    // followPathFromEvents deprecated
-    return AutoBuilder.followPath(path);
+    return autoChooser.getSelected();
   }
 }
