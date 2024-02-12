@@ -51,6 +51,8 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
+  private ChassisSpeeds m_speeds;
+
   /** constructs a new Drivatrain object */
   public Drivetrain() {
     m_frontLeft =
@@ -234,6 +236,8 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
+    Vector spdCommanded = spdVec;
+
     m_currentRotationRadians = rot;
 
     if (rateLimit) {

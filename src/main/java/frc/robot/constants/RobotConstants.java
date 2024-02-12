@@ -12,6 +12,8 @@ public final class RobotConstants {
   }
 
   public static final class DriveConstants {
+    // placeholder CAN IDs, fix these later
+
     public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
     public static final double kFrontRightChassisAngularOffset = 0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
