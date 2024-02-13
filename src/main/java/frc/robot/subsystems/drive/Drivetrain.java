@@ -51,16 +51,16 @@ public class Drivetrain extends SubsystemBase {
   private SlewRateLimiter m_rotLimiter;
 
   private Timer m_timer;
-  private double m_prevTime;
+  private double m_prevSlewRateTime;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
   private Pose2d m_pose;
-  private ChassisSpeeds m_speeds;
+  private ChassisSpeeds m_relativeSpeeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
 
-  /** constructs a new Drivatrain object */
+  /** constructs a new Drivetrain object */
   public Drivetrain(Vision vision) {
     m_frontLeft =
         new MAXSwerveModule(
@@ -86,6 +86,9 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
+    // TODO: initialize this to where we place the robot on the field
+    m_pose = new Pose2d();
+
     m_swerveModulePositions =
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
@@ -105,7 +108,7 @@ public class Drivetrain extends SubsystemBase {
     m_rotLimiter = new SlewRateLimiter(OIConstants.kRotationalSlewRate);
 
     m_timer.start();
-    m_prevTime = m_timer.get();
+    m_prevSlewRateTime = m_timer.get();
 
     m_odometry =
         new SwerveDriveOdometry(
@@ -120,6 +123,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("driveVelocity", 0);
   }
 
+  /** configures the pathplanner AutoBuilder */
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
         this::getPose,
@@ -131,10 +135,16 @@ public class Drivetrain extends SubsystemBase {
         this);
   }
 
+  /**
+   * returns the current speed of the drivetrain
+   *
+   * @return the current speed of the drivetrain
+   */
   public ChassisSpeeds getSpeeds() {
-    return m_speeds;
+    return m_relativeSpeeds;
   }
 
+  /** stops the drivetrain's movement */
   public void stop() {
     move(new Vector(0, 0), 0);
   }
@@ -147,6 +157,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
+    m_relativeSpeeds = getRobotRelativeSpeeds();
+    m_pose = m_odometry.getPoseMeters();
 
     SmartDashboard.putNumber("heading", ang - m_headingOffsetRadians);
 
@@ -191,6 +203,11 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  /**
+   * moves the divetrain based on the given ChassisSpeeds
+   *
+   * @param spds the target speeds of the drivetrain chassis
+   */
   public void driveChassisSpeeds(ChassisSpeeds spds) {
     Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
     double angVel = spds.omegaRadiansPerSecond;
@@ -239,6 +256,11 @@ public class Drivetrain extends SubsystemBase {
     move(spdVec, rot);
   }
 
+  /**
+   * returns the current speed of the robot from it's reference frame
+   *
+   * @return the current speed of the robot from it's reference frame
+   */
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return DriveConstants.kDriveKinematics.toChassisSpeeds(
         new SwerveModuleState[] {
@@ -253,6 +275,12 @@ public class Drivetrain extends SubsystemBase {
     //   return new ChassisSpeeds(rotated.getX(), rotated.getY(), omegaRadiansPerSecond);
   }
 
+  /**
+   * applies smoothing to the turning input of altDrive
+   *
+   * @param stickAng the given angle of the driver turnig stick
+   * @return the commanded rotation based o the rotation input
+   */
   private double altTurnSmooth(double stickAng) {
     return Math.tanh(
             ((getGyroAngle().in(Units.Radians) + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
@@ -260,6 +288,11 @@ public class Drivetrain extends SubsystemBase {
         * DriveConfig.kMaxAngularSpeed;
   }
 
+  /**
+   * returns the current position of the robot on the field
+   *
+   * @return the current position of the robot on the field
+   */
   private Pose2d getPose() {
     Pose2d pose = m_odometry.getPoseMeters();
     return (pose);
@@ -285,9 +318,7 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    Vector spdCommanded = spdVec;
-
-    spdVec.rot(0);
+    spdVec = spdVec.copy();
 
     m_currentRotationRadians = rot;
 
@@ -297,7 +328,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Adjust input based on max speed
-    Vector spdDelivered = spdCommanded.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
+    Vector spdDelivered = spdVec.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
     var swerveModuleStates =
@@ -315,6 +346,12 @@ public class Drivetrain extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  /**
+   * applies slewrate limiting to the given control vector
+   *
+   * @param spdVec the vector which represents the commanded speed of the drivetrain
+   * @return the slew rate limited Vector for controlling the drivetrain
+   */
   private Vector limitDirectionSlewRate(Vector spdVec) {
     // Convert XY to polar for rate limiting
     double inputTranslationDir = spdVec.angle();
@@ -332,12 +369,12 @@ public class Drivetrain extends SubsystemBase {
     }
 
     double currentTime = m_timer.get();
-    double elapsedTime = currentTime - m_prevTime;
+    double elapsedTime = currentTime - m_prevSlewRateTime;
 
     double angleDif =
         SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
 
-    m_prevTime = currentTime;
+    m_prevSlewRateTime = currentTime;
 
     if (angleDif < DriveConfig.MIN_ANGLE_SLEW_RATE) {
       m_currentTranslationDirRadians =
@@ -371,6 +408,11 @@ public class Drivetrain extends SubsystemBase {
     return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
   }
 
+  /**
+   * checks whether pathplanner paths should be flipped based on the current alliance
+   *
+   * @return whether pathplanner paths should be flipped
+   */
   private boolean allianceCheck() {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
@@ -384,8 +426,4 @@ public class Drivetrain extends SubsystemBase {
     m_headingOffsetRadians = getGyroAngle().in(Units.Radians);
     m_gyro.reset();
   }
-
-  /** run periodically when being simulated, required but not used in this implementation */
-  @Override
-  public void simulationPeriodic() {}
 }
