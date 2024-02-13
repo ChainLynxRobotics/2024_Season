@@ -24,8 +24,11 @@ public class RobotContainer {
   private Vision m_robotVision;
 
   // The driver's controller
-  XboxController m_driverController;
-  SendableChooser<Command> autoChooser;
+  private XboxController m_driverController;
+  private SendableChooser<Command> autoChooser;
+
+  private Vector leftInputVec;
+  private Vector rightInputVec;
 
   public RobotContainer() {
     m_robotVision = new Vision();
@@ -40,20 +43,21 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () ->
-                m_robotDrive.drive(
-                    new Vector(
-                        MathUtil.applyDeadband(
-                            -m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                        MathUtil.applyDeadband(
-                            -m_driverController.getLeftX(), OIConstants.kDriveDeadband)),
-                    new Vector(
-                        MathUtil.applyDeadband(
-                            -m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                        MathUtil.applyDeadband(
-                            -m_driverController.getRightY(), OIConstants.kDriveDeadband)),
-                    m_driverController.getRightBumper(),
-                    m_driverController.getAButton()),
+            () -> {
+                    leftInputVec.setX(MathUtil.applyDeadband(
+                                  -m_driverController.getLeftY(), OIConstants.kDriveDeadband));
+                    leftInputVec.setY(MathUtil.applyDeadband(
+                                  -m_driverController.getLeftX(), OIConstants.kDriveDeadband));
+                    rightInputVec.setX(MathUtil.applyDeadband(
+                                  -m_driverController.getRightX(), OIConstants.kDriveDeadband));
+                    rightInputVec.setY(MathUtil.applyDeadband(
+                                  -m_driverController.getRightY(), OIConstants.kDriveDeadband));
+                    m_robotDrive.drive(
+                          leftInputVec,
+                          rightInputVec,
+                          m_driverController.getRightBumper(),
+                          m_driverController.getAButton());
+                  },
             m_robotDrive));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);

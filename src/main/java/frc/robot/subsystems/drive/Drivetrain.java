@@ -26,6 +26,8 @@ import frc.utils.Vector;
 
 /** an object representing the Drivetrain of a swerve drive frc robot */
 public class Drivetrain extends SubsystemBase {
+  public static final Vector ORIGIN = new Vector();
+
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft;
   private final MAXSwerveModule m_frontRight;
@@ -146,7 +148,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** stops the drivetrain's movement */
   public void stop() {
-    move(new Vector(0, 0), 0);
+    move(ORIGIN, 0);
   }
 
   /** runs the periodic functionality of the drivetrain */
@@ -318,8 +320,6 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    spdVec = spdVec.copy();
-
     m_currentRotationRadians = rot;
 
     if (rateLimit) {
@@ -328,7 +328,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Adjust input based on max speed
-    Vector spdDelivered = spdVec.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
+    Vector spdDelivered = spdVec.mult(DriveConfig.kMaxSpeedMetersPerSecond);
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
     var swerveModuleStates =
