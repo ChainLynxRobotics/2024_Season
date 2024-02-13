@@ -2,16 +2,12 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.*;
@@ -22,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.DriveConfig;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.vision.Vision;
@@ -61,17 +56,12 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
   private Pose2d m_pose;
-  private Pose2d m_prevPose;
   private ChassisSpeeds m_speeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
 
-  private Vision m_vision;
-
   /** constructs a new Drivatrain object */
   public Drivetrain(Vision vision) {
-    m_vision = vision;
-
     m_frontLeft =
         new MAXSwerveModule(
             DriveConstants.kFrontLeftDrivingCanId,
@@ -117,8 +107,8 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevTime = m_timer.get();
 
-    m_swerveDrivePoseEstimator =
-        new SwerveDrivePoseEstimator(
+    m_odometry =
+        new SwerveDriveOdometry(
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
             m_swerveModulePositions,
@@ -133,7 +123,7 @@ public class Drivetrain extends SubsystemBase {
   private void configureAutoBuilder() {
     AutoBuilder.configureHolonomic(
         this::getPose,
-        this::resetPoseEstimator,
+        this::resetOdometry,
         this::getSpeeds,
         this::driveChassisSpeeds,
         RobotConfig.DriveConfig.kPathFollowerConfig,
@@ -271,7 +261,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private Pose2d getPose() {
-    Pose2d pose = m_swerveDrivePoseEstimator.getEstimatedPosition();
+    Pose2d pose = m_odometry.getPoseMeters();
     return (pose);
   }
 

@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -60,7 +59,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
-  //TODO: fill in placeholder commands with actual functionality
+  // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
     NamedCommands.registerCommand("intakeFromFloor", doNothing());
     NamedCommands.registerCommand("scoreAmp", doNothing());
