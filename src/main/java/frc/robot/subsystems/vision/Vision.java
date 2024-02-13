@@ -70,4 +70,8 @@ public class Vision extends SubsystemBase {
   public PhotonCamera getCam() {
     return camera;
   }
+
+  public PhotonPoseEstimator getPoseEstimator() {
+    return poseEstimator;
+  }
 }

@@ -1,12 +1,13 @@
 package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -18,6 +19,7 @@ import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
+import frc.robot.subsystems.vision.Vision;
 
 /** an object representing the Drivetrain of a swerve drive frc robot */
 public class Drivetrain extends SubsystemBase {
@@ -26,6 +28,8 @@ public class Drivetrain extends SubsystemBase {
   private final MAXSwerveModule m_frontRight;
   private final MAXSwerveModule m_rearLeft;
   private final MAXSwerveModule m_rearRight;
+
+  private final SwerveModulePosition[]  SwerveModulePositions;
 
   private Pigeon2 m_gyro;
 
@@ -48,11 +52,13 @@ public class Drivetrain extends SubsystemBase {
   private Timer m_timer;
   private double m_prevTime;
 
-  // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry;
+  private Vision m_vision;
+
+  // Pose estimator class for tracking robot pose
+  SwerveDrivePoseEstimator m_swervePoseEstimator;
 
   /** constructs a new Drivatrain object */
-  public Drivetrain() {
+  public Drivetrain(Vision vision) {
     m_frontLeft =
         new MAXSwerveModule(
             DriveConstants.kFrontLeftDrivingCanId,
@@ -77,6 +83,18 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
+    SwerveModulePositions = new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_rearLeft.getPosition(),
+      m_rearRight.getPosition(),
+
+    };
+
+    m_currentRotationRadians = 0;
+
+    m_vision = vision;
+
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
 
     m_timer = new Timer();
@@ -89,16 +107,11 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevTime = m_timer.get();
 
-    m_odometry =
-        new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
-            Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-            new SwerveModulePosition[] {
-              m_frontLeft.getPosition(),
-              m_frontRight.getPosition(),
-              m_rearLeft.getPosition(),
-              m_rearRight.getPosition(),
-            });
+    m_swervePoseEstimator =
+        new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, Rotation2d.fromRadians(
+          -getGyroAngle().in(Units.Radians)), 
+          SwerveModulePositions, 
+          null)
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
@@ -107,15 +120,11 @@ public class Drivetrain extends SubsystemBase {
   /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
-    // Update the odometry in the periodic block
-    m_odometry.update(
+    // Update the pose estimator in the periodic block
+    m_swervePoseEstimator.update(
         Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition(),
-        });
+        SwerveModulePositions);
+    m_swervePoseEstimator.addVisionMeasurement(m_vision.getPoseEstimator(), m_currentRotationRadians);
 
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
@@ -129,19 +138,14 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Resets the odometry to the specified pose.
+   * Resets the pose estimator to the specified pose.
    *
-   * @param pose The pose to which to set the odometry.
+   * @param pose The pose to which to set the pose estimator.
    */
-  public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(
+  public void resetPoseEstimator(Pose2d pose) {
+    m_swervePoseEstimator.resetPosition(
         Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition(),
-        },
+        SwerveModulePositions,
         pose);
   }
 
