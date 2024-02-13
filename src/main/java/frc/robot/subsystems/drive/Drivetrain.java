@@ -51,6 +51,8 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
+  private ChassisSpeeds m_speeds;
+
   /** constructs a new Drivatrain object */
   public Drivetrain() {
     m_frontLeft =
@@ -78,6 +80,7 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kBackRightChassisAngularOffset);
 
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
+    m_gyro.reset();
 
     m_timer = new Timer();
 
@@ -102,6 +105,10 @@ public class Drivetrain extends SubsystemBase {
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return m_speeds;
   }
 
   /** runs the periodic functionality of the drivetrain */
@@ -234,7 +241,6 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    Vector spdCommanded = spdVec;
     m_currentRotationRadians = rot;
 
     if (rateLimit) {
@@ -243,7 +249,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Adjust input based on max speed
-    Vector spdDelivered = spdCommanded.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
+    Vector spdDelivered = spdVec.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
     var swerveModuleStates =
