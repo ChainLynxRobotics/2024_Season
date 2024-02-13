@@ -359,7 +359,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
-    if (SwerveUtils.approxEqual(m_currentTranslationMag, 0)) {
+    if (!SwerveUtils.approxEqual(m_currentTranslationMag, 0)) {
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
     } else {
       directionSlewRate =
