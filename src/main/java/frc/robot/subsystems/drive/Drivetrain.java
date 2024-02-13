@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.*;
@@ -117,8 +118,8 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevTime = m_timer.get();
 
-    m_swerveDrivePoseEstimator =
-        new SwerveDrivePoseEstimator(
+    m_odometry =
+        new SwerveDriveOdometry(
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
             m_swerveModulePositions,
@@ -152,7 +153,7 @@ public class Drivetrain extends SubsystemBase {
   /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
-    m_swerveDrivePoseEstimator.update(m_gyro.getRotation2d(), m_swerveModulePositions);
+    m_odometry.update(m_gyro.getRotation2d(), m_swerveModulePositions);
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
@@ -170,7 +171,7 @@ public class Drivetrain extends SubsystemBase {
    * @param pose The pose to which to set the estimator.
    */
   public void resetPoseEstimator(Pose2d pose) {
-    m_swerveDrivePoseEstimator.resetPosition(
+    m_odometry.resetPosition(
         Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), m_swerveModulePositions, pose);
   }
 

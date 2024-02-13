@@ -95,8 +95,10 @@
   },
   "folder": null,
   "choreoAuto": false
-<<<<<<< HEAD
 }
+<<<<<<< HEAD
 =======
 }
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+>>>>>>> 5bdb11c (resolved drivetrain to a function state which is rebased with develop)
