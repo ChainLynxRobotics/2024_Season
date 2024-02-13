@@ -93,8 +93,11 @@
           }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         },
         {
           "type": "path",
@@ -102,10 +105,13 @@
             "pathName": "leave from piece 3"
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
 =======
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         }
       ]
     }
@@ -113,7 +119,11 @@
   "folder": null,
   "choreoAuto": false
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+}
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a

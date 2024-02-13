@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.*;
@@ -118,8 +117,8 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevTime = m_timer.get();
 
-    m_odometry =
-        new SwerveDriveOdometry(
+    m_swerveDrivePoseEstimator =
+        new SwerveDrivePoseEstimator(
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
             m_swerveModulePositions,
@@ -170,9 +169,16 @@ public class Drivetrain extends SubsystemBase {
    *
    * @param pose The pose to which to set the estimator.
    */
-  public void resetPoseEstimator(Pose2d pose) {
+  public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), m_swerveModulePositions, pose);
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition(),
+        },
+        pose);
   }
 
   /**

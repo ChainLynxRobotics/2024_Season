@@ -4,6 +4,7 @@
     "position": {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       "x": 0.6180195217533299,
       "y": 3.9433941725026314
 =======
@@ -14,6 +15,10 @@
       "x": 0.6180195217533299,
       "y": 3.9433941725026314
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+      "x": 0.6180195217533299,
+      "y": 3.9433941725026314
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
     },
     "rotation": 0
   },
@@ -53,8 +58,11 @@
           }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         },
         {
           "type": "path",
@@ -62,10 +70,13 @@
             "pathName": "leave from amp"
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
 =======
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         }
       ]
     }
@@ -73,7 +84,11 @@
   "folder": null,
   "choreoAuto": false
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+}
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a

@@ -18,12 +18,16 @@
       "anchor": {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         "x": 2.904894952647049,
         "y": 5.541275082550166
       },
       "prevControl": {
         "x": 2.0642525926690074,
         "y": 5.267398384626121
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
         "x": 2.934213868427737,
@@ -38,6 +42,8 @@
 >>>>>>> b703c8e (added basic leave autos)
 =======
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
       },
       "nextControl": null,
       "isLocked": false,
@@ -57,6 +63,7 @@
     "velocity": 0,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "rotation": 41.02905996687005,
     "rotateFast": true
 =======
@@ -67,6 +74,10 @@
     "rotation": 41.02905996687005,
     "rotateFast": true
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+    "rotation": 41.02905996687005,
+    "rotateFast": true
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
   },
   "reversed": false,
   "folder": null,
@@ -76,7 +87,11 @@
   },
   "useDefaultConstraints": true
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> b703c8e (added basic leave autos)
+=======
+}
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a

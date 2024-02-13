@@ -35,6 +35,7 @@
           "data": {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             "pathName": "amp from piece 1 from moving"
 =======
             "pathName": "amp from piece 1"
@@ -42,6 +43,9 @@
 =======
             "pathName": "amp from piece 1 from moving"
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+            "pathName": "amp from piece 1 from moving"
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
           }
         },
         {
@@ -59,6 +63,7 @@
                 "data": {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   "pathName": "amp grab piece 2 from the left"
 =======
                   "pathName": "amp grab piece 2"
@@ -66,6 +71,9 @@
 =======
                   "pathName": "amp grab piece 2 from the left"
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+                  "pathName": "amp grab piece 2 from the left"
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
                 }
               },
               {
@@ -84,8 +92,11 @@
           }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         },
         {
           "type": "path",
@@ -93,10 +104,13 @@
             "pathName": "leave from piece 2"
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
 =======
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         }
       ]
     }
@@ -104,7 +118,11 @@
   "folder": null,
   "choreoAuto": false
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+}
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a

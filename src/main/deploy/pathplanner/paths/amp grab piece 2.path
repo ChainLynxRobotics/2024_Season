@@ -5,6 +5,9 @@
       "anchor": {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         "x": 1.8260989423002736,
         "y": 7.746998156112353
       },
@@ -12,6 +15,7 @@
       "nextControl": {
         "x": 3.0362296863062754,
         "y": 7.763258646946352
+<<<<<<< HEAD
 =======
         "x": 1.8347545266519112,
         "y": 7.842809971334229
@@ -30,6 +34,8 @@
         "x": 3.0362296863062754,
         "y": 7.763258646946352
 >>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
+=======
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
       },
       "isLocked": false,
       "linkedName": null
@@ -70,7 +76,11 @@
   },
   "useDefaultConstraints": true
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
+=======
+}
+>>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
