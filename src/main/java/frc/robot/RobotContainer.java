@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.VisionTranslateCommand;
+import frc.robot.commands.VisionTurnCommand;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.vision.Vision;
@@ -54,6 +56,14 @@ public class RobotContainer {
   private void configureBindings() {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
+
+    
+      new Trigger(() -> m_driverController.getAButton())
+        .onTrue(new VisionTranslateCommand(m_robotVision, m_robotDrive, m_driverController));
+
+      new Trigger(() -> m_driverController.getBButton())
+        .onTrue(new VisionTurnCommand(m_robotVision, m_robotDrive, m_driverController));
+    
   }
 
   public boolean triggerPressed() {
