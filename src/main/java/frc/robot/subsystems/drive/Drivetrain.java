@@ -274,8 +274,8 @@ public class Drivetrain extends SubsystemBase {
   /**
    * applies smoothing to the turning input of altDrive
    *
-   * @param stickAng the given angle of the driver turnig stick
-   * @return the commanded rotation based o the rotation input
+   * @param stickAng the given angle of the driver turning stick
+   * @return the commanded rotation based on the rotation input
    */
   private double altTurnSmooth(double stickAng) {
     return Math.tanh(
