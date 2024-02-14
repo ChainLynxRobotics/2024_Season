@@ -44,27 +44,27 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> {
-                    updateInput();
-                    m_robotDrive.drive(
-                          leftInputVec,
-                          rightInputVec,
-                          m_driverController.getRightBumper(),
-                          m_driverController.getAButton());
-                  },
+              updateInput();
+              m_robotDrive.drive(
+                  leftInputVec,
+                  rightInputVec,
+                  m_driverController.getRightBumper(),
+                  m_driverController.getAButton());
+            },
             m_robotDrive));
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void updateInput() {
-    leftInputVec.setX(MathUtil.applyDeadband(
-                              -m_driverController.getLeftY(), OIConstants.kDriveDeadband));
-                leftInputVec.setY(MathUtil.applyDeadband(
-                              -m_driverController.getLeftX(), OIConstants.kDriveDeadband));
-                rightInputVec.setX(MathUtil.applyDeadband(
-                              -m_driverController.getRightX(), OIConstants.kDriveDeadband));
-                rightInputVec.setY(MathUtil.applyDeadband(
-                              -m_driverController.getRightY(), OIConstants.kDriveDeadband));
+    leftInputVec.setX(
+        MathUtil.applyDeadband(-m_driverController.getLeftY(), OIConstants.kDriveDeadband));
+    leftInputVec.setY(
+        MathUtil.applyDeadband(-m_driverController.getLeftX(), OIConstants.kDriveDeadband));
+    rightInputVec.setX(
+        MathUtil.applyDeadband(-m_driverController.getRightX(), OIConstants.kDriveDeadband));
+    rightInputVec.setY(
+        MathUtil.applyDeadband(-m_driverController.getRightY(), OIConstants.kDriveDeadband));
   }
 
   // TODO: fill in placeholder commands with actual functionality
