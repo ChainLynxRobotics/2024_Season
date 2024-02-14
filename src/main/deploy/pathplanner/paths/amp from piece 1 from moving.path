@@ -16,36 +16,12 @@
     },
     {
       "anchor": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
         "x": 1.8260989423002736,
         "y": 7.761007194369338
       },
       "prevControl": {
         "x": 1.8554178580809622,
         "y": 7.159969420865219
-<<<<<<< HEAD
-=======
-        "x": 1.7980808657863048,
-        "y": 7.901097576939181
-      },
-      "prevControl": {
-        "x": 1.8273997815669933,
-        "y": 7.3000598034350626
->>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
-=======
-        "x": 1.8260989423002736,
-        "y": 7.761007194369338
-      },
-      "prevControl": {
-        "x": 1.8554178580809622,
-        "y": 7.159969420865219
->>>>>>> 6396fcb (added even more paths and autos, and made some of them more efficient)
-=======
->>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a
       },
       "nextControl": null,
       "isLocked": false,
@@ -73,12 +49,4 @@
     "velocity": 1.0
   },
   "useDefaultConstraints": true
-<<<<<<< HEAD
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a84bd65 (made a whole bunch of autos and paths based on the auto priority list)
-=======
-}
->>>>>>> 6396fcbcd38d6b778fd2fae5510597515902385a

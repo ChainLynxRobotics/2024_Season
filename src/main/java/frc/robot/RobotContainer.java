@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
@@ -24,39 +25,47 @@ public class RobotContainer {
   private Vision m_robotVision;
 
   // The driver's controller
-  XboxController m_driverController;
-//  SendableChooser<Command> autoChooser;
+  private XboxController m_driverController;
+  private SendableChooser<Command> autoChooser;
+
+  private Vector leftInputVec;
+  private Vector rightInputVec;
 
   public RobotContainer() {
     m_robotVision = new Vision();
     m_robotDrive = new Drivetrain(m_robotVision);
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-//    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = AutoBuilder.buildAutoChooser();
 
     configureBindings();
-//    registerCommands();
+    registerCommands();
 
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () ->
-                m_robotDrive.drive(
-                    new Vector(
-                        MathUtil.applyDeadband(
-                            -m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                        MathUtil.applyDeadband(
-                            -m_driverController.getLeftX(), OIConstants.kDriveDeadband)),
-                    new Vector(
-                        MathUtil.applyDeadband(
-                            -m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                        MathUtil.applyDeadband(
-                            -m_driverController.getRightY(), OIConstants.kDriveDeadband)),
-                    m_driverController.getRightBumper(),
-                    m_driverController.getAButton()),
+            () -> {
+                    updateInput();
+                    m_robotDrive.drive(
+                          leftInputVec,
+                          rightInputVec,
+                          m_driverController.getRightBumper(),
+                          m_driverController.getAButton());
+                  },
             m_robotDrive));
 
-//    SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
+
+  private void updateInput() {
+    leftInputVec.setX(MathUtil.applyDeadband(
+                  -m_driverController.getLeftY(), OIConstants.kDriveDeadband));
+    leftInputVec.setY(MathUtil.applyDeadband(
+                  -m_driverController.getLeftX(), OIConstants.kDriveDeadband));
+    rightInputVec.setX(MathUtil.applyDeadband(
+                  -m_driverController.getRightX(), OIConstants.kDriveDeadband));
+    rightInputVec.setY(MathUtil.applyDeadband(
+                  -m_driverController.getRightY(), OIConstants.kDriveDeadband));
   }
 
   // TODO: fill in placeholder commands with actual functionality
@@ -67,7 +76,7 @@ public class RobotContainer {
   }
 
   private Command doNothing() {
-    return new Command() {};
+    return Commands.none();
   }
 
   private void configureBindings() {
@@ -84,6 +93,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return /*autoChooser.getSelected()*/doNothing();
+    return autoChooser.getSelected();
   }
 }

@@ -117,7 +117,7 @@ public class Drivetrain extends SubsystemBase {
             m_swerveModulePositions,
             m_pose);
 
-//    configureAutoBuilder();
+    configureAutoBuilder();
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
