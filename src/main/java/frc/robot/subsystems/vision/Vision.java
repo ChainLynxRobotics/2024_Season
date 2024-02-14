@@ -2,6 +2,9 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.VisionConstants;
@@ -51,8 +54,22 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  //Pose functions
+  
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
     return poseEstimator.update();
+  }
+
+  public Pose2d getEstimatedPose2d() {
+      Optional<EstimatedRobotPose> estPose = poseEstimator.update();
+      if(estPose.isPresent()) {
+        return EstPoseToPose2d(estPose.get());
+      }
+      return null;
+  }
+  
+  public Pose2d EstPoseToPose2d(EstimatedRobotPose est) { //Converts estimated pose to pose 2d
+    return new Pose2d(est.estimatedPose.getX(), est.estimatedPose.getY(), new Rotation2d(est.estimatedPose.getRotation().getX(), est.estimatedPose.getRotation().getY()));
   }
 
   public PhotonTrackedTarget getBestTarget() {

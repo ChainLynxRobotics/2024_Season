@@ -57,13 +57,11 @@ public class RobotContainer {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
-    
-      new Trigger(() -> m_driverController.getAButton())
+    new Trigger(() -> m_driverController.getAButton())
         .onTrue(new VisionTranslateCommand(m_robotVision, m_robotDrive, m_driverController));
 
-      new Trigger(() -> m_driverController.getBButton())
+    new Trigger(() -> m_driverController.getBButton())
         .onTrue(new VisionTurnCommand(m_robotVision, m_robotDrive, m_driverController));
-    
   }
 
   public boolean triggerPressed() {

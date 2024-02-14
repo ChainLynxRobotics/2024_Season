@@ -111,25 +111,31 @@ public class Drivetrain extends SubsystemBase {
         new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, Rotation2d.fromRadians(
           -getGyroAngle().in(Units.Radians)), 
           SwerveModulePositions, 
-          null)
+          null);
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
   }
 
-  /** runs the periodic functionality of the drivetrain */
+  /** runs the periodic functionality of the drivetrain **/
   @Override
   public void periodic() {
     // Update the pose estimator in the periodic block
     m_swervePoseEstimator.update(
         Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
         SwerveModulePositions);
-    m_swervePoseEstimator.addVisionMeasurement(m_vision.getPoseEstimator(), m_currentRotationRadians);
+    
+    // Update the pose estimator with data from the vision pose estimator
+    Pose2d visPose = m_vision.getEstimatedPose2d();
+    if(visPose != null) {
+      m_swervePoseEstimator.addVisionMeasurement(m_vision.getEstimatedPose2d(), Timer.getFPGATimestamp());
+    }
 
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
+
 
     SmartDashboard.putNumber("heading", ang - m_headingOffsetRadians);
 
