@@ -25,16 +25,16 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController;
-  SendableChooser<Command> autoChooser;
+//  SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     m_robotVision = new Vision();
     m_robotDrive = new Drivetrain(m_robotVision);
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-    autoChooser = AutoBuilder.buildAutoChooser();
+//    autoChooser = AutoBuilder.buildAutoChooser();
 
     configureBindings();
-    registerCommands();
+//    registerCommands();
 
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -56,7 +56,7 @@ public class RobotContainer {
                     m_driverController.getAButton()),
             m_robotDrive));
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+//    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   // TODO: fill in placeholder commands with actual functionality
@@ -84,6 +84,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return /*autoChooser.getSelected()*/doNothing();
   }
 }

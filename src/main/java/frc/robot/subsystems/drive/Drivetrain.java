@@ -117,7 +117,7 @@ public class Drivetrain extends SubsystemBase {
             m_swerveModulePositions,
             m_pose);
 
-    configureAutoBuilder();
+//    configureAutoBuilder();
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
@@ -322,7 +322,7 @@ public class Drivetrain extends SubsystemBase {
 
     m_currentRotationRadians = rot;
 
-    if (rateLimit) {
+    if (/*rateLimit*/false) {
       spdVec = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
     }
