@@ -269,10 +269,6 @@ public class Drivetrain extends SubsystemBase {
           m_rearLeft.getState(),
           m_rearRight.getState()
         });
-
-    // CCW rotation out of chassis frame
-    //   var rotated = new Translation2d(vxMetersPerSecond, vyMetersPerSecond).rotateBy(robotAngle);
-    //   return new ChassisSpeeds(rotated.getX(), rotated.getY(), omegaRadiansPerSecond);
   }
 
   /**
@@ -418,7 +414,7 @@ public class Drivetrain extends SubsystemBase {
     if (alliance.isPresent()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
-    return (false);
+    return false;
   }
 
   /** Zeroes the heading of the robot. */
