@@ -36,6 +36,8 @@ public class RobotContainer {
     m_robotDrive = new Drivetrain(m_robotVision);
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     autoChooser = AutoBuilder.buildAutoChooser();
+    leftInputVec = new Vector();
+    rightInputVec = new Vector();
 
     configureBindings();
     registerCommands();
