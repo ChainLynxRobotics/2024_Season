@@ -51,7 +51,7 @@ public class Drivetrain extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
-  /** constructs a new Drivatrain object */
+  /** constructs a new Drivetrain object */
   public Drivetrain() {
     m_frontLeft =
         new MAXSwerveModule(
