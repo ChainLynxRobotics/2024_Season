@@ -33,7 +33,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_robotVision = new Vision();
-    m_robotDrive = new Drivetrain(m_robotVision);
+    m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     autoChooser = AutoBuilder.buildAutoChooser();
     leftInputVec = new Vector();

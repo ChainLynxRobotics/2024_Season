@@ -20,7 +20,6 @@ import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
-import frc.robot.subsystems.vision.Vision;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
@@ -61,7 +60,7 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModulePosition[] m_swerveModulePositions;
 
   /** constructs a new Drivetrain object */
-  public Drivetrain(Vision vision) {
+  public Drivetrain() {
     m_frontLeft =
         new MAXSwerveModule(
             DriveConstants.kFrontLeftDrivingCanId,
