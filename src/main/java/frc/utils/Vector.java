@@ -5,6 +5,8 @@ package frc.utils;
 // with operations for manipulating them
 
 public class Vector {
+  public static final Vector Origin = new Vector();
+
   // the array of values for the location of the Point,
   // from lowest dimension to highest,
   // ie. x-value is vals[0], y-value is vals[1], etc.
@@ -423,7 +425,7 @@ public class Vector {
    * @return this Vector
    */
   public Vector rot(double theta) {
-    Vector newXLoc = new Vector(Math.cos(theta), -Math.sin(theta));
+    Vector newXLoc = new Vector(Math.cos(theta), Math.sin(theta));
     Vector newYLoc = newXLoc.getPerpendicular();
     return matrixTransform(newXLoc, newYLoc);
   }

@@ -26,8 +26,6 @@ import frc.utils.Vector;
 
 /** an object representing the Drivetrain of a swerve drive frc robot */
 public class Drivetrain extends SubsystemBase {
-  public static final Vector ORIGIN = new Vector();
-
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft;
   private final MAXSwerveModule m_frontRight;
@@ -54,6 +52,8 @@ public class Drivetrain extends SubsystemBase {
 
   private Timer m_timer;
   private double m_prevSlewRateTime;
+
+  private MutableMeasure<Angle> m_heading;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
@@ -102,6 +102,8 @@ public class Drivetrain extends SubsystemBase {
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
     m_gyro.reset();
 
+    m_heading = MutableMeasure.ofBaseUnits(m_gyro.getAngle(), Units.Degrees);
+
     m_timer = new Timer();
 
     m_powerDistribution = new PowerDistribution();
@@ -148,7 +150,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** stops the drivetrain's movement */
   public void stop() {
-    move(ORIGIN, 0);
+    move(Vector.Origin, 0);
   }
 
   /** runs the periodic functionality of the drivetrain */
@@ -235,7 +237,8 @@ public class Drivetrain extends SubsystemBase {
    * @return the angle of the robot gyro
    */
   public Measure<Angle> getGyroAngle() {
-    return Units.Degrees.of(m_gyro.getAngle());
+    m_heading = m_heading.mut_replace(m_gyro.getAngle(), Units.Degrees);
+    return m_heading;
   }
 
   /**
