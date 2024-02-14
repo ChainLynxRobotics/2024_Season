@@ -322,7 +322,7 @@ public class Drivetrain extends SubsystemBase {
 
     m_currentRotationRadians = rot;
 
-    if (/*rateLimit*/false) {
+    if (rateLimit) {
       spdVec = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
     }
