@@ -237,8 +237,7 @@ public class Drivetrain extends SubsystemBase {
    * @return the angle of the robot gyro
    */
   public Measure<Angle> getGyroAngle() {
-    m_heading = m_heading.mut_replace(m_gyro.getAngle(), Units.Degrees);
-    return m_heading;
+    return m_heading.mut_replace(m_gyro.getAngle(), Units.Degrees);
   }
 
   /**
