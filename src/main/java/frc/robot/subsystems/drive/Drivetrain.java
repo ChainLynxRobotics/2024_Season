@@ -322,22 +322,24 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
+    Vector spdCommanded = spdVec.copy();
     m_currentRotationRadians = rot;
 
+    // Adjust input based on max speed
+    spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
+
     if (rateLimit) {
-      spdVec = limitDirectionSlewRate(spdVec);
+      spdCommanded = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
     }
 
-    // Adjust input based on max speed
-    Vector spdDelivered = spdVec.mult(DriveConfig.kMaxSpeedMetersPerSecond);
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                spdDelivered.x(),
-                spdDelivered.y(),
+                spdCommanded.x(),
+                spdCommanded.y(),
                 rotDelivered,
                 Rotation2d.fromDegrees(-m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
