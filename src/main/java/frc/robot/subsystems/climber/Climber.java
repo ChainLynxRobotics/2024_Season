@@ -53,15 +53,15 @@ public class Climber extends SubsystemBase {
     m_pidController.setReference(metersToRotations(setpoint), CANSparkMax.ControlType.kPosition);
   }
 
-  public double rotationsToMeters(double rotations) {
+  public static double rotationsToMeters(double rotations) {
     return 2*Math.PI*ClimberConstants.kClimberMotorRadius*rotations;
   }
 
-  public double metersToRotations(double meters) {
+  public static double metersToRotations(double meters) {
     return meters/(2*Math.PI*ClimberConstants.kClimberMotorRadius);
   }
 
   public void setMotorSpeed(double speed) {
-    throw new UnsupportedOperationException("Unimplemented method 'setMotorSpeed'");
+    leaderController.set(speed);
   }
 }

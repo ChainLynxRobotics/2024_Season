@@ -25,7 +25,7 @@ public class ClimberCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("Set Rotations", setPoint);
+    SmartDashboard.putNumber("Setpoint", setPoint);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,7 +42,7 @@ public class ClimberCommand extends Command {
   // If absolute value of error is less than or equal to tolerance, returns true
   @Override
   public boolean isFinished() {
-    double error = SmartDashboard.getNumber("SetPoint", 0) - m_subsystem.getEncoderPosition();
+    double error = Climber.metersToRotations(SmartDashboard.getNumber("Setpoint", 0)) - m_subsystem.getEncoderPosition();
     return Math.abs(error) <= RobotConstants.ClimberConstants.kSetPointTolerance;
   }
 }
