@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,9 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.vision.Vision;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
-import frc.robot.subsystems.vision.Vision;
 
 /** an object representing the Drivetrain of a swerve drive frc robot */
 public class Drivetrain extends SubsystemBase {
@@ -29,7 +28,7 @@ public class Drivetrain extends SubsystemBase {
   private final MAXSwerveModule m_rearLeft;
   private final MAXSwerveModule m_rearRight;
 
-  private final SwerveModulePosition[]  SwerveModulePositions;
+  private final SwerveModulePosition[] SwerveModulePositions;
 
   private Pigeon2 m_gyro;
 
@@ -83,13 +82,13 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
-    SwerveModulePositions = new SwerveModulePosition[] {
-      m_frontLeft.getPosition(),
-      m_frontRight.getPosition(),
-      m_rearLeft.getPosition(),
-      m_rearRight.getPosition(),
-
-    };
+    SwerveModulePositions =
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition(),
+        };
 
     m_currentRotationRadians = 0;
 
@@ -108,34 +107,37 @@ public class Drivetrain extends SubsystemBase {
     m_prevTime = m_timer.get();
 
     m_swervePoseEstimator =
-        new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, Rotation2d.fromRadians(
-          -getGyroAngle().in(Units.Radians)), 
-          SwerveModulePositions, 
-          null);
+        new SwerveDrivePoseEstimator(
+            DriveConstants.kDriveKinematics,
+            Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+            SwerveModulePositions,
+            new Pose2d());
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
   }
 
-  /** runs the periodic functionality of the drivetrain **/
+  /** runs the periodic functionality of the drivetrain * */
   @Override
   public void periodic() {
     // Update the pose estimator in the periodic block
     m_swervePoseEstimator.update(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-        SwerveModulePositions);
-    
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), SwerveModulePositions);
+
     // Update the pose estimator with data from the vision pose estimator
     Pose2d visPose = m_vision.getEstimatedPose2d();
-    if(visPose != null) {
-      m_swervePoseEstimator.addVisionMeasurement(m_vision.getEstimatedPose2d(), Timer.getFPGATimestamp());
+    if (visPose != null) {
+      var pipelineResult = m_vision.getCam().getLatestResult();
+      var resultTimestamp = pipelineResult.getTimestampSeconds();
+
+      m_swervePoseEstimator.addVisionMeasurement(
+          m_vision.getEstimatedPose2d(), resultTimestamp);
     }
 
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
-
 
     SmartDashboard.putNumber("heading", ang - m_headingOffsetRadians);
 
@@ -150,9 +152,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void resetPoseEstimator(Pose2d pose) {
     m_swervePoseEstimator.resetPosition(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-        SwerveModulePositions,
-        pose);
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), SwerveModulePositions, pose);
   }
 
   /**
