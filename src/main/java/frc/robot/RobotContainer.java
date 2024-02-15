@@ -55,7 +55,6 @@ public class RobotContainer {
         MathUtil.applyDeadband(-m_driverController.getRightY(), OIConstants.kDriveDeadband));
   }
 
-
   private void configureBindings() {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
