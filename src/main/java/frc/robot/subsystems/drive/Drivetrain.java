@@ -317,8 +317,9 @@ public class Drivetrain extends SubsystemBase {
 
     m_currentRotationRadians = rot;
 
-    //TODO slew rate limiter disabled; must find fix (something to do with vector implementation)
-    if (/*rateLimit*/ false) {
+    // TODO slew rate limiter disabled; must find fix (something to do with vector implementation)
+    if (
+    /*rateLimit*/ false) {
       spdVec = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
     }
