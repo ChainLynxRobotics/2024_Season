@@ -44,8 +44,8 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> {
-              //update the values of leftInputVec and rightInputVec to the values of the controller
-              //I'm avoiding re-instantiting Vectors to save memory
+              // update the values of leftInputVec and rightInputVec to the values of the controller
+              // I'm avoiding re-instantiting Vectors to save memory
               updateInput();
               m_robotDrive.drive(
                   leftInputVec,
