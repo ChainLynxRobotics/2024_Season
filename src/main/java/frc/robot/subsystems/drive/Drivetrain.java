@@ -8,13 +8,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig.DriveConfig;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.utils.SwerveUtils;
@@ -106,6 +106,10 @@ public class Drivetrain extends SubsystemBase {
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return m_speeds;
   }
 
   /** runs the periodic functionality of the drivetrain */
@@ -211,6 +215,27 @@ public class Drivetrain extends SubsystemBase {
     move(spdVec, rot);
   }
 
+  /**
+   * returns the current speed of the robot from it's reference frame
+   *
+   * @return the current speed of the robot from it's reference frame
+   */
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+        new SwerveModuleState[] {
+          m_frontLeft.getState(),
+          m_frontRight.getState(),
+          m_rearLeft.getState(),
+          m_rearRight.getState()
+        });
+  }
+
+  /**
+   * applies smoothing to the turning input of altDrive
+   *
+   * @param stickAng the given angle of the driver turnig stick
+   * @return the commanded rotation based o the rotation input
+   */
   private double altTurnSmooth(double stickAng) {
     return Math.tanh(
             ((getGyroAngle().in(Units.Radians) + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
@@ -238,7 +263,7 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    Vector spdCommanded = spdVec;
+    spdVec = spdVec.copy();
 
     m_currentRotationRadians = rot;
 
@@ -326,11 +351,5 @@ public class Drivetrain extends SubsystemBase {
   public void zeroHeading() {
     m_headingOffsetRadians = getGyroAngle().in(Units.Radians);
     m_gyro.reset();
-  }
-
-  /** run periodically when being simulated, required but not used in this implementation */
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
   }
 }
