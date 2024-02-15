@@ -16,12 +16,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
-import frc.robot.subsystems.vision.Vision;
 import frc.utils.Vector;
 
 public class RobotContainer {
   private Drivetrain m_robotDrive;
-  private Vision m_robotVision;
 
   // The driver's controller
   private XboxController m_driverController;
@@ -31,8 +29,7 @@ public class RobotContainer {
   private Vector rightInputVec;
 
   public RobotContainer() {
-    m_robotVision = new Vision();
-    m_robotDrive = new Drivetrain(m_robotVision);
+    m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     autoChooser = AutoBuilder.buildAutoChooser();
 
