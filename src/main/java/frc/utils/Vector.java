@@ -5,6 +5,8 @@ package frc.utils;
 // with operations for manipulating them
 
 public class Vector {
+  public static final Vector Origin = new Vector(0, 0);
+
   // the array of values for the location of the Point,
   // from lowest dimension to highest,
   // ie. x-value is vals[0], y-value is vals[1], etc.

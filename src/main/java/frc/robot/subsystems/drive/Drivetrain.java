@@ -52,6 +52,8 @@ public class Drivetrain extends SubsystemBase {
   private Timer m_timer;
   private double m_prevSlewRateTime;
 
+  private MutableMeasure<Angle> m_heading;
+
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
   private Pose2d m_pose;
@@ -99,6 +101,8 @@ public class Drivetrain extends SubsystemBase {
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
     m_gyro.reset();
 
+    m_heading = MutableMeasure.ofBaseUnits(m_gyro.getAngle(), Units.Degrees);
+
     m_timer = new Timer();
 
     m_powerDistribution = new PowerDistribution();
@@ -145,7 +149,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** stops the drivetrain's movement */
   public void stop() {
-    move(new Vector(0, 0), 0);
+    move(Vector.Origin, 0);
   }
 
   /** runs the periodic functionality of the drivetrain */
@@ -232,7 +236,7 @@ public class Drivetrain extends SubsystemBase {
    * @return the angle of the robot gyro
    */
   public Measure<Angle> getGyroAngle() {
-    return Units.Degrees.of(m_gyro.getAngle());
+    return m_heading.mut_replace(m_gyro.getAngle(), Units.Degrees);
   }
 
   /**
@@ -313,26 +317,24 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    spdVec = spdVec.copy();
-
+    Vector spdCommanded = spdVec.copy();
     m_currentRotationRadians = rot;
 
-    // TODO slew rate limiter disabled; must find fix (something to do with vector implementation)
-    if (
-    /*rateLimit*/ false) {
-      spdVec = limitDirectionSlewRate(spdVec);
+    // Adjust input based on max speed
+    spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
+
+    if (rateLimit) {
+      spdCommanded = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
     }
 
-    // Adjust input based on max speed
-    Vector spdDelivered = spdVec.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                spdDelivered.x(),
-                spdDelivered.y(),
+                spdCommanded.x(),
+                spdCommanded.y(),
                 rotDelivered,
                 Rotation2d.fromDegrees(-m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
