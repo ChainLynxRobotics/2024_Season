@@ -326,8 +326,8 @@ public class Drivetrain extends SubsystemBase {
     if (rateLimit) {
       spdCommanded = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
-      SmartDashboard.putNumber("translation magnitude output", spdCommanded.mag());
-      SmartDashboard.putNumber("translation dir rad", spdCommanded.angle());
+      SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationMagOutput, spdCommanded.mag());
+      SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationDirRadOutput, spdCommanded.angle());
     }
 
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
@@ -357,8 +357,6 @@ public class Drivetrain extends SubsystemBase {
     // Convert XY to polar for rate limiting
     double inputTranslationDir = spdVec.angle();
     double inputTranslationMag = spdVec.mag();
-
-    SmartDashboard.putNumber("stick ang", inputTranslationDir / Math.PI);
 
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
@@ -401,8 +399,9 @@ public class Drivetrain extends SubsystemBase {
 
       m_prevSlewRateTime = currentTime;
     }
-
-    return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
+    spdVec.setX(m_currentTranslationMag);
+    spdVec.setY(0);
+    return spdVec.rot(m_currentTranslationDirRadians);
   }
 
   /**

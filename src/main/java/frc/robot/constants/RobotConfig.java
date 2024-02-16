@@ -11,6 +11,8 @@ import frc.robot.constants.RobotConstants.DriveConstants.SwerveModuleConstants;
 public class RobotConfig {
 
   public static class DriveConfig {
+    public static final String kSlewRateTranslationMagOutput = "translation magnitude output";
+    public static final String kSlewRateTranslationDirRadOutput = "translation dir rad";
 
     public static final HolonomicPathFollowerConfig kPathFollowerConfig =
         new HolonomicPathFollowerConfig(
