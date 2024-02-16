@@ -45,13 +45,10 @@ public class ShootSpeaker extends Command {
   }
 
   public double calculateAngle(double targetX, double targetY) {
-    /*if (targetX <= 0) {
-      end(true);
-    }*/
     double time = Math.sqrt(2 * targetY / 9.8);
     double xVelocity = targetX / time;
     double yVelocity = 9.8 * time;
-    double theta = Math.atan(yVelocity / xVelocity);
+    double theta = Math.toDegrees(Math.atan2(yVelocity, xVelocity));
     return theta;
   }
 
