@@ -384,7 +384,8 @@ public class Drivetrain extends SubsystemBase {
       m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
       SmartDashboard.putNumber("translation magnitude output", inputTranslationMag);
     } else if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
-      if (m_currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality checking
+      if (m_currentTranslationMag
+          > 1e-4) { // some small number to avoid floating-point errors with equality checking
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
       } else {
         m_currentTranslationDirRadians =
