@@ -326,6 +326,8 @@ public class Drivetrain extends SubsystemBase {
     if (rateLimit) {
       spdCommanded = limitDirectionSlewRate(spdVec);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
+      SmartDashboard.putNumber("translation magnitude output", spdCommanded.mag());
+      SmartDashboard.putNumber("translation dir rad", spdCommanded.angle());
     }
 
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
@@ -356,9 +358,11 @@ public class Drivetrain extends SubsystemBase {
     double inputTranslationDir = spdVec.angle();
     double inputTranslationMag = spdVec.mag();
 
+    SmartDashboard.putNumber("stick ang", inputTranslationDir / Math.PI);
+
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
-    if (!SwerveUtils.approxEqual(m_currentTranslationMag, 0)) {
+    if (m_currentTranslationMag != 0) {
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
     } else {
       directionSlewRate =
@@ -373,36 +377,29 @@ public class Drivetrain extends SubsystemBase {
     double angleDif =
         SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
 
-    m_prevSlewRateTime = currentTime;
-
     if (angleDif < DriveConfig.MIN_ANGLE_SLEW_RATE) {
       m_currentTranslationDirRadians =
           SwerveUtils.StepTowardsCircular(
               m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
       m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-      return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
-    }
-
-    if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
-      if (SwerveUtils.approxEqual(
-          m_currentTranslationMag,
-          0)) { // some small number to avoid floating-point errors with equality checking
-        // keep currentTranslationDir unchanged
+      SmartDashboard.putNumber("translation magnitude output", inputTranslationMag);
+    } else if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
+      if (m_currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality checking
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
-        return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
+      } else {
+        m_currentTranslationDirRadians =
+            SwerveUtils.WrapAngle(m_currentTranslationDirRadians + Math.PI);
+        m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
       }
-
+    } else {
       m_currentTranslationDirRadians =
-          SwerveUtils.WrapAngle(m_currentTranslationDirRadians + Math.PI);
-      m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-      return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
+          SwerveUtils.StepTowardsCircular(
+              m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
+
+      m_currentTranslationMag = m_magLimiter.calculate(0.0);
+
+      m_prevSlewRateTime = currentTime;
     }
-
-    m_currentTranslationDirRadians =
-        SwerveUtils.StepTowardsCircular(
-            m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
-
-    m_currentTranslationMag = m_magLimiter.calculate(0.0);
 
     return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
   }
