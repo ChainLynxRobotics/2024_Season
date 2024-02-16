@@ -88,7 +88,8 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
-    // TODO: initialize this to where we place the robot on the field, will get from auto chosen from Smart Dashboard
+    // TODO: initialize this to where we place the robot on the field, will get from auto chosen
+    // from Smart Dashboard
     m_pose = new Pose2d();
 
     m_swerveModulePositions =
@@ -362,12 +363,10 @@ public class Drivetrain extends SubsystemBase {
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
     if (m_currentTranslationMag != 0) {
-      //set lower rate of change/slew rate for higher translation speeds
+      // set lower rate of change/slew rate for higher translation speeds
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
     } else {
-      directionSlewRate =
-          DriveConfig
-              .HIGH_DIRECTION_SLEW_RATE;
+      directionSlewRate = DriveConfig.HIGH_DIRECTION_SLEW_RATE;
     }
 
     double currentTime = m_timer.get();
@@ -383,8 +382,7 @@ public class Drivetrain extends SubsystemBase {
       m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
       SmartDashboard.putNumber("translation magnitude output", inputTranslationMag);
     } else if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
-      if (m_currentTranslationMag
-          > 1e-4) {
+      if (m_currentTranslationMag > 1e-4) {
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
       } else {
         m_currentTranslationDirRadians =
