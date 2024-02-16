@@ -127,11 +127,11 @@ public class Drivetrain extends SubsystemBase {
     // Update the pose estimator with data from the vision pose estimator
     Pose2d visPose = m_vision.getEstimatedPose2d();
     if (visPose != null) {
-      var pipelineResult = m_vision.getCam().getLatestResult();
-      var resultTimestamp = pipelineResult.getTimestampSeconds();
+      //var pipelineResult = m_vision.getCam().getLatestResult();
+      //var resultTimestamp = pipelineResult.getTimestampSeconds();
 
-      m_swervePoseEstimator.addVisionMeasurement(
-          m_vision.getEstimatedPose2d(), resultTimestamp);
+      /*m_swervePoseEstimator.addVisionMeasurement(
+          m_vision.getEstimatedPose2d(), Timer.getFPGATimestamp());*/
     }
 
     double ang = getGyroAngle().in(Units.Radians);
@@ -278,7 +278,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
-    if (SwerveUtils.approxEqual(m_currentTranslationMag, 0)) {
+    if (m_currentTranslationMag > 1e-4) {
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
     } else {
       directionSlewRate =
