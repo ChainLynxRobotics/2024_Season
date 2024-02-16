@@ -317,14 +317,16 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    Vector spdCommanded = spdVec.copy();
+    Vector spdCommanded = new Vector();
     m_currentRotationRadians = rot;
 
+    spdCommanded.setX(spdVec.x());
+    spdCommanded.setY(spdVec.y());
     // Adjust input based on max speed
     spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
 
     if (rateLimit) {
-      spdCommanded = limitDirectionSlewRate(spdVec);
+      limitDirectionSlewRate(spdCommanded);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
       SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationMagOutput, spdCommanded.mag());
       SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationDirRadOutput, spdCommanded.angle());
@@ -335,10 +337,7 @@ public class Drivetrain extends SubsystemBase {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                spdCommanded.x(),
-                spdCommanded.y(),
-                rotDelivered,
-                Rotation2d.fromDegrees(-m_gyro.getAngle())));
+                spdVec.x(), spdVec.y(), rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConfig.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -353,7 +352,7 @@ public class Drivetrain extends SubsystemBase {
    * @param spdVec the vector which represents the commanded speed of the drivetrain
    * @return the slew rate limited Vector for controlling the drivetrain
    */
-  private Vector limitDirectionSlewRate(Vector spdVec) {
+  private void limitDirectionSlewRate(Vector spdVec) {
     // Convert XY to polar for rate limiting
     double inputTranslationDir = spdVec.angle();
     double inputTranslationMag = spdVec.mag();
@@ -399,9 +398,10 @@ public class Drivetrain extends SubsystemBase {
 
       m_prevSlewRateTime = currentTime;
     }
+
     spdVec.setX(m_currentTranslationMag);
     spdVec.setY(0);
-    return spdVec.rot(m_currentTranslationDirRadians);
+    spdVec.rot(m_currentTranslationDirRadians);
   }
 
   /**
