@@ -48,6 +48,7 @@ public class Drivetrain extends SubsystemBase {
 
   private SlewRateLimiter m_magLimiter;
   private SlewRateLimiter m_rotLimiter;
+  private Vector spdCommanded;
 
   private Timer m_timer;
   private double m_prevSlewRateTime;
@@ -213,6 +214,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void driveChassisSpeeds(ChassisSpeeds spds) {
     Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
+    spdCommanded = spd;
     double angVel = spds.omegaRadiansPerSecond;
     move(spd, angVel);
   }
@@ -317,7 +319,7 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    Vector spdCommanded = new Vector();
+    //Vector spdCommanded = new Vector();
     m_currentRotationRadians = rot;
 
     spdCommanded.setX(spdVec.x());
