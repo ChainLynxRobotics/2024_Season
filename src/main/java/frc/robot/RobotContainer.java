@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
@@ -32,6 +33,8 @@ public class RobotContainer {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     autoChooser = AutoBuilder.buildAutoChooser();
+    leftInputVec = new Vector();
+    rightInputVec = new Vector();
 
     configureBindings();
     registerCommands();
@@ -41,6 +44,8 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> {
+              // update the values of leftInputVec and rightInputVec to the values of the controller
+              // I'm avoiding re-instantiting Vectors to save memory
               updateInput();
               m_robotDrive.drive(
                   leftInputVec,
@@ -72,7 +77,7 @@ public class RobotContainer {
   }
 
   private Command doNothing() {
-    return new Command() {};
+    return Commands.none();
   }
 
   private void configureBindings() {

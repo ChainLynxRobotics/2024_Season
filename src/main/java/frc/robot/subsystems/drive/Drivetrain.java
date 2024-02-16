@@ -272,17 +272,13 @@ public class Drivetrain extends SubsystemBase {
           m_rearLeft.getState(),
           m_rearRight.getState()
         });
-
-    // CCW rotation out of chassis frame
-    //   var rotated = new Translation2d(vxMetersPerSecond, vyMetersPerSecond).rotateBy(robotAngle);
-    //   return new ChassisSpeeds(rotated.getX(), rotated.getY(), omegaRadiansPerSecond);
   }
 
   /**
    * applies smoothing to the turning input of altDrive
    *
-   * @param stickAng the given angle of the driver turnig stick
-   * @return the commanded rotation based o the rotation input
+   * @param stickAng the given angle of the driver turning stick
+   * @return the commanded rotation based on the rotation input
    */
   private double altTurnSmooth(double stickAng) {
     return Math.tanh(
@@ -421,7 +417,7 @@ public class Drivetrain extends SubsystemBase {
     if (alliance.isPresent()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
-    return (false);
+    return false;
   }
 
   /** Zeroes the heading of the robot. */
