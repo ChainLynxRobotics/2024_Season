@@ -110,6 +110,7 @@ public class Drivetrain extends SubsystemBase {
 
     m_magLimiter = new SlewRateLimiter(OIConstants.kMagnitudeSlewRate);
     m_rotLimiter = new SlewRateLimiter(OIConstants.kRotationalSlewRate);
+    spdCommanded = new Vector();
 
     m_timer.start();
     m_prevSlewRateTime = m_timer.get();
