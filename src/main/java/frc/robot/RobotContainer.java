@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -19,33 +23,61 @@ public class RobotContainer {
   private Drivetrain m_robotDrive;
 
   // The driver's controller
-  XboxController m_driverController;
+  private XboxController m_driverController;
+  private SendableChooser<Command> autoChooser;
+
+  private Vector leftInputVec;
+  private Vector rightInputVec;
 
   public RobotContainer() {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+    autoChooser = AutoBuilder.buildAutoChooser();
+    leftInputVec = new Vector();
+    rightInputVec = new Vector();
 
     configureBindings();
+    registerCommands();
 
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () ->
-                m_robotDrive.drive(
-                    new Vector(
-                        MathUtil.applyDeadband(
-                            -m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                        MathUtil.applyDeadband(
-                            -m_driverController.getLeftX(), OIConstants.kDriveDeadband)),
-                    new Vector(
-                        MathUtil.applyDeadband(
-                            -m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                        MathUtil.applyDeadband(
-                            -m_driverController.getRightY(), OIConstants.kDriveDeadband)),
-                    m_driverController.getRightBumper(),
-                    m_driverController.getAButton()),
+            () -> {
+              // update the values of leftInputVec and rightInputVec to the values of the controller
+              // I'm avoiding re-instantiting Vectors to save memory
+              updateInput();
+              m_robotDrive.drive(
+                  leftInputVec,
+                  rightInputVec,
+                  m_driverController.getRightBumper(),
+                  m_driverController.getAButton());
+            },
             m_robotDrive));
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
+
+  private void updateInput() {
+    leftInputVec.setX(
+        MathUtil.applyDeadband(-m_driverController.getLeftY(), OIConstants.kDriveDeadband));
+    leftInputVec.setY(
+        MathUtil.applyDeadband(-m_driverController.getLeftX(), OIConstants.kDriveDeadband));
+    rightInputVec.setX(
+        MathUtil.applyDeadband(-m_driverController.getRightX(), OIConstants.kDriveDeadband));
+    rightInputVec.setY(
+        MathUtil.applyDeadband(-m_driverController.getRightY(), OIConstants.kDriveDeadband));
+  }
+
+  // TODO: fill in placeholder commands with actual functionality
+  private void registerCommands() {
+    NamedCommands.registerCommand("intakeFromFloor", doNothing());
+    NamedCommands.registerCommand("scoreAmp", doNothing());
+    NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
+  }
+
+  private Command doNothing() {
+    return Commands.none();
   }
 
   private void configureBindings() {
@@ -62,6 +94,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return autoChooser.getSelected();
   }
 }

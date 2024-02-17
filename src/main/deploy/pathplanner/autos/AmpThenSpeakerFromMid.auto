@@ -1,0 +1,81 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.3271318488029464,
+      "y": 3.4182053347041848
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "mid grab piece 1 unobtrusively"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp from piece 1 from moving"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "scoreAmp"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "amp grab piece 2 from the left"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndScoreSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leave from piece 2"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
