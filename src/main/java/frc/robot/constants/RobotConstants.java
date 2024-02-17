@@ -37,13 +37,12 @@ public final class RobotConstants {
     public static final int kGyroId = 15;
 
     // Chassis configuration
-    public static final Measure<Distance> kTrackWidth = Units.Inches.of(26.5);
+    public static final Measure<Distance> kTrackWidth = Units.Inches.of(22.5);
 
     // Distance between centers of right and left wheels on robot
-    public static final Measure<Distance> kWheelBase = Units.Inches.of(26.5);
+    public static final Measure<Distance> kWheelBase = Units.Inches.of(22.5);
 
-    public static final Measure<Distance> kWheelBaseRadius =
-        edu.wpi.first.units.Units.Inches.of(31.75 / 2);
+    public static final Measure<Distance> kWheelBaseRadius = Units.Meters.of(0.404);
 
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
