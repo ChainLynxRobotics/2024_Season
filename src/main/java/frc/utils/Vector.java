@@ -428,7 +428,7 @@ public class Vector {
     double prevX = x();
     double prevY = y();
     setX(Math.cos(theta) * prevX - Math.sin(theta) * prevY);
-    setY(Math.cos(theta) * prevY + Math.cos(theta) * prevX);
+    setY(Math.cos(theta) * prevY + Math.sin(theta) * prevX);
     return this;
   }
 
