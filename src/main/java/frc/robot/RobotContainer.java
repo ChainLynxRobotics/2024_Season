@@ -101,7 +101,7 @@ public class RobotContainer {
   /**
    * Returns true if the intake is pressed; False otherwise.
    *
-   * @see RobotConfig.IntakeBindings.kIntakeNote
+   * @see RobotConfig.IntakeConfig.Bindings.kIntakeNote
    */
   public boolean getIntakeButton() {
     return m_operatorJoystick.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
