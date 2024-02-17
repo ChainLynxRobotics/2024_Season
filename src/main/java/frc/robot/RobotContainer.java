@@ -16,12 +16,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
 import frc.utils.Vector;
 
 public class RobotContainer {
   private Drivetrain m_robotDrive;
+  private Intake m_intake;
 
   // The driver's controller
   private XboxController m_driverController;
@@ -40,6 +44,8 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     leftInputVec = new Vector();
     rightInputVec = new Vector();
+
+    m_intake = new Intake();
 
     configureBindings();
     registerCommands();
@@ -88,6 +94,17 @@ public class RobotContainer {
   private void configureBindings() {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
+
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake));
+  }
+
+  /**
+   * Returns true if the intake is pressed; False otherwise.
+   *
+   * @see RobotConfig.IntakeBindings.kIntakeNote
+   */
+  public boolean getIntakeButton() {
+    return m_operatorJoystick.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
   }
 
   public boolean triggerPressed() {
