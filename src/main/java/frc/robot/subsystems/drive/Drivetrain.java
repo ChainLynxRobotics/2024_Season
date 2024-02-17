@@ -362,7 +362,8 @@ public class Drivetrain extends SubsystemBase {
 
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
-    //if very close to zero but not exactly zero, there is no in division by zero due to floating point precision errors
+    // if very close to zero but not exactly zero, there is no in division by zero due to floating
+    // point precision errors
     if (m_currentTranslationMag != 0) {
       // set lower rate of change/slew rate for higher translation speeds
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
