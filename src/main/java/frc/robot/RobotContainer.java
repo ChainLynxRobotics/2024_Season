@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.intake.RunIntake;
-import frc.robot.constants.RobotConstants.Bindings;
+import frc.robot.constants.RobotConfig.IntakeBindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
@@ -62,12 +62,15 @@ public class RobotContainer {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
-    new Trigger(this::buttonPressed).whileTrue(new RunIntake(m_intake));
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake));
   }
 
-  // When the intake button (button 2) is pressed, return true
-  public boolean buttonPressed() {
-    return m_operatorController.getRawButton(Bindings.intakeNote);
+  /**
+   * Returns true if the intake is pressed; False otherwise.
+   * @see RobotConfig.IntakeBindings.kIntakeNote
+  */
+  public boolean getIntakeButton() {
+    return m_operatorController.getRawButton(IntakeBindings.kIntakeNote);
   }
 
   public boolean triggerPressed() {

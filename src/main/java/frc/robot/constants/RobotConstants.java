@@ -123,9 +123,4 @@ public final class RobotConstants {
     // TODO: update placeholder roller Motor ID
     public static final int kMotorID = -1;
   }
-
-  // Button bindings (There is other code on the button bindings branch)
-  public class Bindings {
-    public static final int intakeNote = 2;
-  }
 }
