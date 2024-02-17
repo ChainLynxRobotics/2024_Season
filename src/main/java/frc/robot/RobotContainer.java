@@ -18,7 +18,6 @@ import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
 import frc.utils.Vector;
-import frc.robot.constants.RobotConstants;
 
 public class RobotContainer {
   private Drivetrain m_robotDrive;
@@ -64,8 +63,7 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // TODO: make actually intake under button press
-    new Trigger(this::buttonPressed)
-        .whileTrue(new RunIntake(m_intake));
+    new Trigger(this::buttonPressed).whileTrue(new RunIntake(m_intake));
   }
 
   public boolean buttonPressed() {
