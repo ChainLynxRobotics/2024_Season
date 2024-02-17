@@ -5,7 +5,7 @@ package frc.robot.constants;
  * RobotConstants"
  */
 public class RobotConfig {
-    public static final class ClimberConfig {
-        public static double setpoint = 0;
-    }
+  public static final class ClimberConfig {
+    public static double setpoint = 0;
+  }
 }

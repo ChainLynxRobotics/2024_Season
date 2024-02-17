@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.ClimberConstants;
 
@@ -32,7 +31,8 @@ public class Climber extends SubsystemBase {
     m_pidController.setD(ClimberConstants.kClimberP);
     m_pidController.setIZone(ClimberConstants.kClimberIZone);
     m_pidController.setFF(ClimberConstants.kClimberFeedForward);
-    m_pidController.setOutputRange(ClimberConstants.kClimberMinOutput, ClimberConstants.kClimberMaxOutput);
+    m_pidController.setOutputRange(
+        ClimberConstants.kClimberMinOutput, ClimberConstants.kClimberMaxOutput);
   }
 
   @Override
@@ -47,11 +47,11 @@ public class Climber extends SubsystemBase {
   }
 
   public static double rotationsToMeters(double rotations) {
-    return 2*Math.PI*ClimberConstants.kClimberMotorRadius*rotations;
+    return 2 * Math.PI * ClimberConstants.kClimberMotorRadius * rotations;
   }
 
   public static double metersToRotations(double meters) {
-    return meters/(2*Math.PI*ClimberConstants.kClimberMotorRadius);
+    return meters / (2 * Math.PI * ClimberConstants.kClimberMotorRadius);
   }
 
   public void setMotorSpeed(double speed) {

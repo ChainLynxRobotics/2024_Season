@@ -1,8 +1,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConfig.ClimberConfig;
+import frc.robot.constants.RobotConstants;
 import frc.robot.subsystems.climber.Climber;
 
 public class ClimberCommand extends Command {
@@ -35,7 +35,8 @@ public class ClimberCommand extends Command {
   // If absolute value of error is less than or equal to tolerance, returns true
   @Override
   public boolean isFinished() {
-    double error = Climber.metersToRotations(ClimberConfig.setpoint) - m_subsystem.getEncoderPosition();
+    double error =
+        Climber.metersToRotations(ClimberConfig.setpoint) - m_subsystem.getEncoderPosition();
     return Math.abs(error) <= RobotConstants.ClimberConstants.kSetPointTolerance;
   }
 }
