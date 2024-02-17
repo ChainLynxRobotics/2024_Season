@@ -62,15 +62,12 @@ public class RobotContainer {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
-    // TODO: make actually intake under button press
     new Trigger(this::buttonPressed).whileTrue(new RunIntake(m_intake));
   }
 
+  // When the intake button (button 2) is pressed, return true
   public boolean buttonPressed() {
-    if (m_operatorController.getRawButton(Bindings.intakeNote)) {
-      return true;
-    }
-    return false;
+    return m_operatorController.getRawButton(Bindings.intakeNote);
   }
 
   public boolean triggerPressed() {
