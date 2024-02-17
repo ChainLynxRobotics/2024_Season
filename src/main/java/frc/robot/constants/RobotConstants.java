@@ -14,7 +14,9 @@ public final class RobotConstants {
     public static final int kBottomFlywheelMotorId = -1;
     public static final int kShieldMotorId = -1;
     public static final double FlywheelDiameter = 0.0762;
-    public static final double airDensity = 1.199;
-    public static final double gamePieceDiameter = 0.36;
+    public static final double ShooterLength = 0.4064;
+    public static final double Gravity = 9.81;
+    public static final int XAxis = 0;
+    public static final int YAxis = 1;
   }
 }

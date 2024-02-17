@@ -1,18 +1,25 @@
 package frc.robot.commands.shooter;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.RobotConstants.ShooterConstants;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.RobotContainer;
 
-public class ShootSpeaker extends Command {
+public class ShootSpeakerManual extends Command {
   private final Shooter m_shooter;
+  private final BooleanSupplier m_index;
+  private final DoubleSupplier m_angle;
 
-  public ShootSpeaker(Shooter shooter) {
+  public ShootSpeakerManual(Shooter shooter, BooleanSupplier indexing, DoubleSupplier launchAngle) {
     m_shooter = shooter;
-
+    m_index = indexing;
+    m_angle = launchAngle;
     addRequirements(m_shooter);
   }
 
@@ -30,24 +37,25 @@ public class ShootSpeaker extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double desiredAngle = calculateAngle(ShooterConfig.billLenght, ShooterConfig.AmpHeight);
-    m_shooter.setAngle(desiredAngle);
-    double desiredRPM = convertToRPM(calculateVelocity(ShooterConfig.billLenght, ShooterConfig.SpeakerHeight));
+    // converted from joystick axis range to rotations
+    m_shooter.setAngle(m_angle.getAsDouble() / 4);
+    double desiredRPM = ShooterConfig.kMaxFlywheelRPM;
     m_shooter.runFlywheel(
         desiredRPM);
-    if (m_shooter.getCurrentRPM() >= desiredRPM && m_shooter.getCurrentAngle() < desiredAngle + 5 && m_shooter.getCurrentAngle() > desiredAngle - 2) {
-      m_shooter.startFeedNote();
     }
-    // make it shoot the thing
-  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_shooter.stopAngleMotor();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(m_index.getAsBoolean()) {
+        return true;
+    }
     return false;
   }
 

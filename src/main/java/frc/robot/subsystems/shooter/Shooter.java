@@ -18,9 +18,7 @@ import frc.robot.constants.RobotConstants.ShooterConstants;
  */
 public class Shooter extends SubsystemBase {
   /** 1. create motor and pid controller objects */
-  private CANSparkMax m_rollerMotorLeft;
-
-  private CANSparkMax m_rollerMotorRight;
+  private CANSparkMax m_rollerMotor;
 
   private CANSparkMax m_angleMotorLeader;
   private CANSparkMax m_angleMotorFollower;
@@ -33,7 +31,6 @@ public class Shooter extends SubsystemBase {
   private SparkPIDController m_anglePidController;
   // separate pid controllers because we may need to spin them at different speeds
   private SparkPIDController m_topFlywheelPidController;
-  private SparkPIDController m_bottomFlywheelPidController;
   private SparkPIDController m_shieldPidController;
 
   private RelativeEncoder m_angleEncoder;
@@ -44,16 +41,15 @@ public class Shooter extends SubsystemBase {
   private DigitalInput m_linebreakSensor;
 
   public Shooter() {
-    m_rollerMotorLeft = new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
-    m_rollerMotorRight =
-        new CANSparkMax(ShooterConstants.kRollerMotorRightId, MotorType.kBrushless);
+    m_rollerMotor = new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
 
     m_topFlywheelMotor = new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushed);
     m_topFlywheelPidController = m_topFlywheelMotor.getPIDController();
     m_topFlywheelEncoder = m_topFlywheelMotor.getEncoder();
     m_bottomFlywheelMotor =
         new CANSparkMax(ShooterConstants.kBottomFlywheelMotorId, MotorType.kBrushed);
-    m_bottomFlywheelPidController = m_bottomFlywheelMotor.getPIDController();
+    m_bottomFlywheelMotor.follow(m_topFlywheelMotor);
+    m_bottomFlywheelMotor.setInverted(true);
     m_bottomFlywheelEncoder = m_bottomFlywheelMotor.getEncoder();
 
     m_angleMotorLeader =
@@ -92,16 +88,6 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kTopFlywheelMinOutput,
         RobotConfig.ShooterConfig.kTopFlywheelMaxOutput);
 
-    // set bottom Flywheel PID coefficients
-    m_bottomFlywheelPidController.setP(RobotConfig.ShooterConfig.kBottomFlywheelP);
-    m_bottomFlywheelPidController.setI(RobotConfig.ShooterConfig.kBottomFlywheelI);
-    m_bottomFlywheelPidController.setD(RobotConfig.ShooterConfig.kBottomFlywheelD);
-    m_bottomFlywheelPidController.setFF(RobotConfig.ShooterConfig.kBottomFlywheelFF);
-    m_bottomFlywheelPidController.setIZone(RobotConfig.ShooterConfig.kBottomFlywheelIZone);
-    m_bottomFlywheelPidController.setOutputRange(
-        RobotConfig.ShooterConfig.kBottomFlywheelMinOutput,
-        RobotConfig.ShooterConfig.kBottomFlywheelMaxOutput);
-
     // set Shield PID coefficients
     m_shieldPidController.setP(RobotConfig.ShooterConfig.kShieldP);
     m_shieldPidController.setI(RobotConfig.ShooterConfig.kShieldI);
@@ -111,9 +97,11 @@ public class Shooter extends SubsystemBase {
     m_shieldPidController.setOutputRange(
         RobotConfig.ShooterConfig.kShieldMinOutput, RobotConfig.ShooterConfig.kShieldMaxOutput);
 
+    SmartDashboard.putNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Angle Degrees", m_angleEncoder.getPosition());
+
     putAngleOnSmartDashboard();
     putTopFlywheelOnSmartDashboard();
-    putBottomFlywheelOnSmartDashboard();
     putShieldOnSmartDashboard();
   }
 
@@ -160,31 +148,6 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kTopFlywheelMaxOutput);
   }
 
-  public void putBottomFlywheelOnSmartDashboard() {
-    // display Angle PID coefficients on SmartDashboard
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kBottomFlywheelPGainKey,
-        RobotConfig.ShooterConfig.kBottomFlywheelP);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kBottomFlywheelIGainKey,
-        RobotConfig.ShooterConfig.kBottomFlywheelI);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kBottomFlywheelDGainKey,
-        RobotConfig.ShooterConfig.kBottomFlywheelD);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kBottomFlywheelFFGainKey,
-        RobotConfig.ShooterConfig.kBottomFlywheelFF);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kBottomFlywheelIZoneKey,
-        RobotConfig.ShooterConfig.kBottomFlywheelIZone);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kBottomFlywheelMinOutputKey,
-        RobotConfig.ShooterConfig.kBottomFlywheelMinOutput);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kBottomFlywheelMaxOutputKey,
-        RobotConfig.ShooterConfig.kBottomFlywheelMaxOutput);
-  }
-
   public void putShieldOnSmartDashboard() {
     // display Angle PID coefficients on SmartDashboard
     SmartDashboard.putNumber(
@@ -210,13 +173,12 @@ public class Shooter extends SubsystemBase {
     // if note is indexed, spin flywheel to set velocity
     if (hasNote()) {
       runFlywheel(
-          RobotConfig.ShooterConfig.kFlywheelDefaultRPM,
           RobotConfig.ShooterConfig.kFlywheelDefaultRPM);
     }
 
     // if note is not indexed stop flywheel
     if (!hasNote()) {
-      runFlywheel(0, 0);
+      runFlywheel(0);
     }
 
     // read PID coefficients from SmartDashboard and stores them
@@ -251,21 +213,6 @@ public class Shooter extends SubsystemBase {
     double minTopFlywheel =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kTopFlywheelMinOutputKey, 0);
 
-    // read PID coefficients from SmartDashboard and stores them
-    double pBottomFlywheel =
-        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelPGainKey, 0);
-    double iBottomFlywheel =
-        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelIGainKey, 0);
-    double dBottomFlywheel =
-        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelDGainKey, 0);
-    double izBottomFlywheel =
-        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelIZoneKey, 0);
-    double ffBottomFlywheel =
-        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelFFGainKey, 0);
-    double maxBottomFlywheel =
-        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelMaxOutputKey, 0);
-    double minBottomFlywheel =
-        SmartDashboard.getNumber(RobotConfig.ShooterConfig.kBottomFlywheelMinOutputKey, 0);
 
     // read PID coefficients from SmartDashboard and stores them
     double pShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldPGainKey, 0);
@@ -275,6 +222,9 @@ public class Shooter extends SubsystemBase {
     double ffShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldFFGainKey, 0);
     double maxShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldMaxOutputKey, 0);
     double minShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldMinOutputKey, 0);
+
+    double flywheelRPM = SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    double angleDegrees = SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     // checks PID values against Smartdash board and applies them to the PID if needed
     if (m_anglePidController.getP() != pAngleController) {
@@ -295,26 +245,6 @@ public class Shooter extends SubsystemBase {
     if (m_anglePidController.getOutputMax() != maxAngleController
         || m_anglePidController.getOutputMin() != minAngleController) {
       m_anglePidController.setOutputRange(minAngleController, maxAngleController);
-    }
-
-    if (m_bottomFlywheelPidController.getP() != pBottomFlywheel) {
-      m_bottomFlywheelPidController.setP(pBottomFlywheel);
-    }
-    if (m_bottomFlywheelPidController.getI() != iBottomFlywheel) {
-      m_bottomFlywheelPidController.setI(iBottomFlywheel);
-    }
-    if (m_bottomFlywheelPidController.getD() != dBottomFlywheel) {
-      m_bottomFlywheelPidController.setD(dBottomFlywheel);
-    }
-    if (m_bottomFlywheelPidController.getFF() != ffBottomFlywheel) {
-      m_bottomFlywheelPidController.setFF(ffBottomFlywheel);
-    }
-    if (m_bottomFlywheelPidController.getIZone() != izBottomFlywheel) {
-      m_bottomFlywheelPidController.setIZone(izBottomFlywheel);
-    }
-    if (m_bottomFlywheelPidController.getOutputMax() != maxBottomFlywheel
-        || m_bottomFlywheelPidController.getOutputMin() != minBottomFlywheel) {
-      m_bottomFlywheelPidController.setOutputRange(minBottomFlywheel, maxBottomFlywheel);
     }
 
     if (m_topFlywheelPidController.getP() != pTopFlywheel) {
@@ -356,29 +286,49 @@ public class Shooter extends SubsystemBase {
         || m_shieldPidController.getOutputMin() != minShield) {
       m_shieldPidController.setOutputRange(minShield, maxShield);
     }
+
+    if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
+      flywheelRPM = m_topFlywheelEncoder.getVelocity();
+    }
+
+    if (m_angleEncoder.getPosition() != degreeToRotations(angleDegrees)) {
+      angleDegrees = rotationsToDegree(m_angleEncoder.getPosition());
+    }
+
   }
 
   // sets the target angle the shooter should be at
   public void setAngle(double targetAngleDegrees) {
-    m_anglePidController.setReference(targetAngleDegrees, CANSparkMax.ControlType.kPosition);
+    m_anglePidController.setReference(degreeToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
+  }
+
+  public void stopAngleMotor() {
+    m_angleMotorLeader.set(0);
+  }
+
+  public double degreeToRotations(double angle) {
+    double rotation = angle/360;
+    return rotation;
+  }
+
+  public double rotationsToDegree(double rotations) {
+    double angle = rotations * 360;
+    return angle;
   }
 
   // runs the rollers
   public void startFeedNote() {
-    m_rollerMotorLeft.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
-    m_rollerMotorRight.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
+    m_rollerMotor.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
   }
 
   // stops the rollers
   public void stopFeedNote() {
-    m_rollerMotorLeft.stopMotor();
-    m_rollerMotorRight.stopMotor();
+    m_rollerMotor.stopMotor();
   }
 
   // runs the flywheel at a speed in rotations per minute
-  public void runFlywheel(double topTargetRPM, double bottomTargetRPM) {
-    m_topFlywheelPidController.setReference(topTargetRPM, CANSparkMax.ControlType.kVelocity);
-    m_bottomFlywheelPidController.setReference(bottomTargetRPM, CANSparkMax.ControlType.kVelocity);
+  public void runFlywheel(double targetRPM) {
+    m_topFlywheelPidController.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
   }
 
   // extends shield
@@ -402,5 +352,15 @@ public class Shooter extends SubsystemBase {
     m_topFlywheelEncoder.setPosition(0);
     m_bottomFlywheelEncoder.setPosition(0);
     m_shieldEncoder.setPosition(0);
+  }
+
+  public double getCurrentRPM() {
+    double currentRPM = SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    return currentRPM;
+  }
+
+  public double getCurrentAngle() {
+    double currentAngle = SmartDashboard.getNumber("Angle Degrees", degreeToRotations(m_angleEncoder.getPosition()));
+    return currentAngle;
   }
 }

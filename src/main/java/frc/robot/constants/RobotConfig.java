@@ -24,15 +24,6 @@ public class RobotConfig {
     public static final double kTopFlywheelMinOutput = 0;
     public static final double kTopFlywheelMaxOutput = 0;
 
-    // bottom Flywheel controller PID coefficients
-    public static final double kBottomFlywheelP = 0;
-    public static final double kBottomFlywheelI = 0;
-    public static final double kBottomFlywheelD = 0;
-    public static final double kBottomFlywheelFF = 0;
-    public static final double kBottomFlywheelIZone = 0;
-    public static final double kBottomFlywheelMinOutput = 0;
-    public static final double kBottomFlywheelMaxOutput = 0;
-
     // shield controller PID coefficients
     public static final double kShieldP = 0;
     public static final double kShieldI = 0;
@@ -60,15 +51,6 @@ public class RobotConfig {
     public static final String kTopFlywheelMinOutputKey = "Top Flywheel Minimum output";
     public static final String kTopFlywheelMaxOutputKey = "Top Flywheel Maximum output";
 
-    // Smart dashboard bottom Flywheel Controller keys
-    public static final String kBottomFlywheelPGainKey = "Bottom Flywheel P Gain";
-    public static final String kBottomFlywheelIGainKey = "Bottom Flywheel I Gain";
-    public static final String kBottomFlywheelDGainKey = "Bottom Flywheel D Gain";
-    public static final String kBottomFlywheelFFGainKey = "Bottom Flywheel FF Gain";
-    public static final String kBottomFlywheelIZoneKey = "Bottom Flywheel I Zone";
-    public static final String kBottomFlywheelMinOutputKey = "Bottom Flywheel Minimum output";
-    public static final String kBottomFlywheelMaxOutputKey = "Bottom Flywheel Maximum output";
-
     // Smart dashboard shield Controller keys
     public static final String kShieldPGainKey = "Shield P Gain";
     public static final String kShieldIGainKey = "Shield I Gain";
@@ -94,6 +76,14 @@ public class RobotConfig {
     public static final double kRunIntakeTimeoutTime = 0;
 
     // Speaker height
-    public static final double SpeakerHeight = 1.9812;
+    public static final double SpeakerHeight = 1.9812 - 0.28575;
+
+    public static final double AmpHeight = .46 - 0.28575;
+
+    public static final double billLenght = 0.6604;
+
+    public static final int shootButton = 1;
+
+    public static final double kMaxFlywheelRPM = 11000;
   }
 }
