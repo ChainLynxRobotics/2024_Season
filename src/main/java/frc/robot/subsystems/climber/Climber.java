@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.ClimberConstants;
 
@@ -34,22 +33,16 @@ public class Climber extends SubsystemBase {
     m_pidController.setIZone(ClimberConstants.kClimberIZone);
     m_pidController.setFF(ClimberConstants.kClimberFeedForward);
     m_pidController.setOutputRange(ClimberConstants.kClimberMinOutput, ClimberConstants.kClimberMaxOutput);
-
-    SmartDashboard.putNumber("Setpoint", 0);
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    setSetpoint();
-  }
+  public void periodic() {}
 
   public double getEncoderPosition() {
     return m_encoder.getPosition();
   }
 
-  public void setSetpoint() {
-    double setpoint = SmartDashboard.getNumber("Setpoint", 0);
+  public void setSetpoint(double setpoint) {
     m_pidController.setReference(metersToRotations(setpoint), CANSparkMax.ControlType.kPosition);
   }
 
