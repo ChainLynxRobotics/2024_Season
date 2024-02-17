@@ -5,25 +5,36 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
 import frc.utils.Vector;
+import frc.robot.constants.RobotConstants;
 
 public class RobotContainer {
   private Drivetrain m_robotDrive;
+  private Intake m_intake;
 
   // The driver's controller
   XboxController m_driverController;
 
+  // The codriver's controller
+  Joystick m_operatorController;
+
   public RobotContainer() {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+
+    m_intake = new Intake();
 
     configureBindings();
 
@@ -51,6 +62,17 @@ public class RobotContainer {
   private void configureBindings() {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
+
+    // TODO: make actually intake under button press
+    new Trigger(this::buttonPressed)
+        .whileTrue(new RunIntake(m_intake));
+  }
+
+  public boolean buttonPressed() {
+    if (m_operatorController.getRawButton(Bindings.intakeNote)) {
+      return true;
+    }
+    return false;
   }
 
   public boolean triggerPressed() {
