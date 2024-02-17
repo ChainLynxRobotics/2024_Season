@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,12 +27,16 @@ public class RobotContainer {
   private XboxController m_driverController;
   private SendableChooser<Command> autoChooser;
 
+  // The codriver's controller
+  Joystick m_operatorJoystick;
+
   private Vector leftInputVec;
   private Vector rightInputVec;
 
   public RobotContainer() {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+    m_operatorJoystick = new Joystick(OIConstants.kOperatorJoystickPort);
     autoChooser = AutoBuilder.buildAutoChooser();
     leftInputVec = new Vector();
     rightInputVec = new Vector();
