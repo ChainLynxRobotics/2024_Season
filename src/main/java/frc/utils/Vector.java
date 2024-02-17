@@ -425,9 +425,11 @@ public class Vector {
    * @return this Vector
    */
   public Vector rot(double theta) {
-    Vector newXLoc = new Vector(Math.cos(theta), Math.sin(theta));
-    Vector newYLoc = newXLoc.getPerpendicular();
-    return matrixTransform(newXLoc, newYLoc);
+    double prevX = x();
+    double prevY = y();
+    setX(Math.cos(theta) * prevX - Math.sin(theta) * prevY);
+    setY(Math.cos(theta) * prevY + Math.cos(theta) * prevX);
+    return this;
   }
 
   /**
