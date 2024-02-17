@@ -56,5 +56,9 @@ public class RobotConfig {
 
     // TODO: update timeout time (in seconds)
     public static final double kRunIntakeTimeoutSecs = 0;
+
+    public static final class Bindings {
+      public static final int kIntakeNoteButtonID = 2;
+    }
   }
 }
