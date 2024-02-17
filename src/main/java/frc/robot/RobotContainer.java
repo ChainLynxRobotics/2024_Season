@@ -67,8 +67,9 @@ public class RobotContainer {
 
   /**
    * Returns true if the intake is pressed; False otherwise.
+   *
    * @see RobotConfig.IntakeBindings.kIntakeNote
-  */
+   */
   public boolean getIntakeButton() {
     return m_operatorController.getRawButton(IntakeBindings.kIntakeNote);
   }
