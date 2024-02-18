@@ -1,5 +1,6 @@
 package frc.robot.commands.shooter;
-//done
+
+// done
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
@@ -28,5 +29,4 @@ public class StowShooter extends Command {
   public boolean isFinished() {
     return false;
   }
-
 }

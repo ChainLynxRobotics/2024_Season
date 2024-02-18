@@ -31,7 +31,7 @@ public class Aim extends Command {
   public void execute() {
     // aim for speaker
     double desiredAngle = 0;
-    switch(m_type) {
+    switch (m_type) {
       case SPEAKER:
         desiredAngle =
             m_shooter.calculateAngle(ShooterConfig.billLength, ShooterConfig.SpeakerHeight);
@@ -39,14 +39,14 @@ public class Aim extends Command {
       case AMP:
         desiredAngle = m_shooter.calculateAngle(-1, ShooterConfig.AmpHeight);
         m_shooter.setAngle(desiredAngle);
-        //TODO actuate shield
+        // TODO actuate shield
       case TRAP:
       default:
     }
 
-      if (Math.abs(m_shooter.getCurrentAngle() - desiredAngle) <= 1) {
-        m_shooter.startFeedNote();
-      }
+    if (Math.abs(m_shooter.getCurrentAngle() - desiredAngle) <= 1) {
+      m_shooter.startFeedNote();
+    }
 
     // aim for amp
 

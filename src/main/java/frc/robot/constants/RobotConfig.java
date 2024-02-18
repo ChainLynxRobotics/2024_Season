@@ -10,6 +10,7 @@ public class RobotConfig {
     AMP,
     TRAP
   }
+
   public static final class ShooterConfig {
     // Angle controller PID coefficients
     public static final double kAngleControlP = 0;

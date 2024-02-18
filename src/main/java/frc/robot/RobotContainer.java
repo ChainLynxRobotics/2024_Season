@@ -23,31 +23,34 @@ public class RobotContainer {
     m_shooter = new Shooter();
     configureBindings();
 
-    m_shooter.setDefaultCommand(new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kMaxFlywheelRPM), m_shooter));
+    m_shooter.setDefaultCommand(
+        new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kMaxFlywheelRPM), m_shooter));
   }
 
   private void configureBindings() {
     // manual shoot
     new Trigger(() -> m_operatorController.getRawButton(5))
-      //raw button pressed (0) should be trigger so shoot work
-        .toggleOnTrue(new ChangeToManual(m_shooter, () -> m_operatorController.getRawAxis(Bindings.kManualAngleSlider)));
+        // raw button pressed (0) should be trigger so shoot work
+        .toggleOnTrue(
+            new ChangeToManual(
+                m_shooter, () -> m_operatorController.getRawAxis(Bindings.kManualAngleSlider)));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
-      .onTrue(new Shoot(m_shooter));
+        .onTrue(new Shoot(m_shooter));
     // aim speaker
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
-      .onTrue(new Aim(m_shooter, FieldElement.SPEAKER));
+        .onTrue(new Aim(m_shooter, FieldElement.SPEAKER));
     // aim trap
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimTrap))
-      .onTrue(new Aim(m_shooter, FieldElement.TRAP));
+        .onTrue(new Aim(m_shooter, FieldElement.TRAP));
     // aim amp
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-      .onTrue(new Aim(m_shooter, FieldElement.AMP));
+        .onTrue(new Aim(m_shooter, FieldElement.AMP));
     // stow shooter
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
-    .onTrue(new StowShooter(m_shooter));
-    //TODO: make it work
-   /*  new Trigger(() -> m_operatorController.getRawButton(Bindings.kChangeToAutonomous))
+        .onTrue(new StowShooter(m_shooter));
+    // TODO: make it work
+    /*  new Trigger(() -> m_operatorController.getRawButton(Bindings.kChangeToAutonomous))
     .onTrue(???));
     */
   }

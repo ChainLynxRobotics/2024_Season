@@ -1,10 +1,7 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.RobotConfig.ShooterConfig;
-import frc.robot.constants.RobotConstants.ShooterConstants;
 import frc.robot.subsystems.shooter.Shooter;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class ChangeToManual extends Command {
@@ -32,7 +29,6 @@ public class ChangeToManual extends Command {
   public void execute() {
     double desiredAngle = m_angle.getAsDouble();
     m_shooter.setAngle(desiredAngle);
-
   }
 
   // Called once the command ends or is interrupted.
@@ -44,9 +40,6 @@ public class ChangeToManual extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_index.getAsBoolean()) {
-      return true;
-    }
     return false;
   }
 }

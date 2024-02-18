@@ -137,8 +137,7 @@ public class Shooter extends SubsystemBase {
 
     // if note is indexed, spin flywheel to set velocity
     if (hasNote()) {
-      runFlywheel(
-          RobotConfig.ShooterConfig.kFlywheelDefaultRPM);
+      runFlywheel(RobotConfig.ShooterConfig.kFlywheelDefaultRPM);
     }
 
     // if note is not indexed stop flywheel
@@ -171,8 +170,10 @@ public class Shooter extends SubsystemBase {
     double maxShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldMaxOutputKey, 0);
     double minShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldMinOutputKey, 0);
 
-    double flywheelRPM = SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
-    double angleDegrees = SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    double flywheelRPM =
+        SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    double angleDegrees =
+        SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     // checks PID values against Smartdash board and applies them to the PID if needed
     if (m_anglePidController.getP() != pAngleController) {
@@ -222,12 +223,12 @@ public class Shooter extends SubsystemBase {
     if (m_angleEncoder.getPosition() != degreeToRotations(angleDegrees)) {
       angleDegrees = rotationsToDegree(m_angleEncoder.getPosition());
     }
-
   }
 
   // sets the target angle the shooter should be at
   public void setAngle(double targetAngleDegrees) {
-    m_anglePidController.setReference(degreeToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
+    m_anglePidController.setReference(
+        degreeToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
   }
 
   public void stopAngleMotor() {
@@ -235,7 +236,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double degreeToRotations(double angle) {
-    double rotation = angle/360;
+    double rotation = angle / 360;
     return rotation;
   }
 
@@ -263,7 +264,6 @@ public class Shooter extends SubsystemBase {
     m_topFlywheelMotor.set(0);
   }
 
-
   // extends shield
   public void extendShield() {
     m_shieldPidController.setReference(
@@ -288,14 +288,17 @@ public class Shooter extends SubsystemBase {
   }
 
   public double getCurrentRPM() {
-    double currentRPM = SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    double currentRPM =
+        SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
     return currentRPM;
   }
 
   public double getCurrentAngle() {
-    double currentAngle = SmartDashboard.getNumber("Angle Degrees", degreeToRotations(m_angleEncoder.getPosition()));
+    double currentAngle =
+        SmartDashboard.getNumber("Angle Degrees", degreeToRotations(m_angleEncoder.getPosition()));
     return currentAngle;
   }
+
   public double calculateAngle(double targetX, double targetY) {
     double theta = Math.toDegrees(Math.atan2(targetY, targetX));
     return theta;

@@ -1,10 +1,7 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.RobotConfig.ShooterConfig;
-import frc.robot.constants.RobotConstants.ShooterConstants;
 import frc.robot.subsystems.shooter.Shooter;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class ManualAim extends Command {
@@ -30,7 +27,7 @@ public class ManualAim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.setAngle(m_angle.getAsDouble( ));
+    m_shooter.setAngle(m_angle.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
