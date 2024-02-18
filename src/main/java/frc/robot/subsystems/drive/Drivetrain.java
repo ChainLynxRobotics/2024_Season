@@ -325,12 +325,12 @@ public class Drivetrain extends SubsystemBase {
 
     spdCommanded.setX(spdVec.x());
     spdCommanded.setY(spdVec.y());
-    // Adjust input based on max speed
-    spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
 
     if (rateLimit) {
       limitDirectionSlewRate(spdCommanded);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
+      // Adjust input based on max speed
+      spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
       SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationMagOutput, spdCommanded.mag());
       SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationDirRadOutput, spdCommanded.angle());
     }
@@ -340,7 +340,10 @@ public class Drivetrain extends SubsystemBase {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                spdCommanded.x(), spdCommanded.y(), rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+                spdCommanded.x(),
+                spdCommanded.y(),
+                rotDelivered,
+                Rotation2d.fromDegrees(-m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConfig.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
