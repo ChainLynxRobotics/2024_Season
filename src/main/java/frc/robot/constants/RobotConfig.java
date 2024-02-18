@@ -5,6 +5,11 @@ package frc.robot.constants;
  * RobotConstants"
  */
 public class RobotConfig {
+  public enum FieldElement {
+    SPEAKER,
+    AMP,
+    TRAP
+  }
   public static final class ShooterConfig {
     // Angle controller PID coefficients
     public static final double kAngleControlP = 0;
@@ -80,10 +85,12 @@ public class RobotConfig {
 
     public static final double AmpHeight = .46 - 0.28575;
 
-    public static final double billLenght = 0.6604;
+    public static final double billLength = 0.6604;
 
     public static final int shootButton = 1;
 
     public static final double kMaxFlywheelRPM = 11000;
+
+    public static final double kShooterStowAngle = 0;
   }
 }
