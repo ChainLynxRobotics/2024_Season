@@ -329,11 +329,12 @@ public class Drivetrain extends SubsystemBase {
     if (rateLimit) {
       limitDirectionSlewRate(spdCommanded);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
-      // Adjust input based on max speed
-      spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
       SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationMagOutput, spdCommanded.mag());
       SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationDirRadOutput, spdCommanded.angle());
     }
+
+    // Adjust input based on max speed
+    spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
 
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
