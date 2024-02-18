@@ -340,7 +340,7 @@ public class Drivetrain extends SubsystemBase {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                spdVec.x(), spdVec.y(), rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+                spdCommanded.x(), spdCommanded.y(), rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConfig.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
