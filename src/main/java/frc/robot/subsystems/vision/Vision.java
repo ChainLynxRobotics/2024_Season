@@ -28,7 +28,7 @@ public class Vision extends SubsystemBase {
   public Vision() {
     camera = new PhotonCamera("picam");
 
-   aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
     poseEstimator =
         new PhotonPoseEstimator(
