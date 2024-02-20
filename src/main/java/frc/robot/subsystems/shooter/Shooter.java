@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
+import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.constants.RobotConstants.ShooterConstants;
 
 /**
@@ -87,6 +88,10 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Angle Degrees", m_angleEncoder.getPosition());
 
+    SmartDashboard.putNumber("Speaker Angle", ShooterConfig.kSpeakerAngle);
+    SmartDashboard.putNumber("Amp Angle", ShooterConfig.kAmpAngle);
+    SmartDashboard.putNumber("Trap Angle", ShooterConfig.kTrapAngle);
+
     putAngleOnSmartDashboard();
     putShieldOnSmartDashboard();
   }
@@ -165,6 +170,10 @@ public class Shooter extends SubsystemBase {
     double angleDegrees =
         SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
+    double speakerAngle = SmartDashboard.getNumber("Speaker Angle", ShooterConfig.kSpeakerAngle);
+    double ampAngle = SmartDashboard.getNumber("Amp Angle", ShooterConfig.kAmpAngle);
+    double trapAngle = SmartDashboard.getNumber("Trap Angle", ShooterConfig.kTrapAngle);
+
     // checks PID values against Smartdash board and applies them to the PID if needed
     if (m_anglePidController.getP() != pAngleController) {
       m_anglePidController.setP(pAngleController);
@@ -212,6 +221,16 @@ public class Shooter extends SubsystemBase {
 
     if (m_angleEncoder.getPosition() != degreeToRotations(angleDegrees)) {
       angleDegrees = rotationsToDegree(m_angleEncoder.getPosition());
+    }
+
+    if (ShooterConfig.kSpeakerAngle != speakerAngle) {
+      ShooterConfig.kSpeakerAngle = speakerAngle;
+    }
+    if (ShooterConfig.kAmpAngle != ampAngle) {
+      ShooterConfig.kAmpAngle = ampAngle;
+    }
+    if (ShooterConfig.kTrapAngle != trapAngle) {
+      ShooterConfig.kTrapAngle = trapAngle;
     }
   }
 
