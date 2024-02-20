@@ -1,6 +1,7 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.RobotConfig;
 import frc.robot.subsystems.shooter.Shooter;
 
 public class Shoot extends Command {
@@ -16,11 +17,17 @@ public class Shoot extends Command {
   public void initialize() {}
 
   @Override
-  public void execute() {}
+  public void execute() {
+    m_shooter.startFeedNote();
+    try {
+      Thread.sleep(RobotConfig.ShooterConfig.kReleaseTime);
+    } catch (InterruptedException e) {}
+  }
 
   @Override
-  public void end(boolean interrupted) {}
-
+  public void end(boolean interrupted) {
+    m_shooter.stopFeedNote();
+  }
   @Override
   public boolean isFinished() {
     return false;

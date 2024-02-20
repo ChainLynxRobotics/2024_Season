@@ -135,16 +135,6 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // if note is indexed, spin flywheel to set velocity
-    if (hasNote()) {
-      runFlywheel(RobotConfig.ShooterConfig.kFlywheelDefaultRPM);
-    }
-
-    // if note is not indexed stop flywheel
-    if (!hasNote()) {
-      runFlywheel(0);
-    }
-
     // read PID coefficients from SmartDashboard and stores them
     double pAngleController =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlPGainKey, 0);

@@ -86,12 +86,22 @@ public class RobotConfig {
 
     public static final double AmpHeight = .46 - 0.28575;
 
-    public static final double billLength = 0.6604;
+    public static final double TrapHeight = -1;
+
+    public static final double SpeakerBillLength = 0.6604;
 
     public static final int shootButton = 1;
 
     public static final double kMaxFlywheelRPM = 11000;
 
     public static final double kShooterStowAngle = 0;
+
+    public static final long kReleaseTime = 500;
+
+    public static final double kSpeakerAngle = 62.5;
+
+    public static final double kAmpAngle = 0;
+
+    public static final double kTrapAngle = 0;
   }
 }

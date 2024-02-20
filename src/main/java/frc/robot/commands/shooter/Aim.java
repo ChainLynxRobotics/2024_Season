@@ -33,19 +33,18 @@ public class Aim extends Command {
     double desiredAngle = 0;
     switch (m_type) {
       case SPEAKER:
-        desiredAngle =
-            m_shooter.calculateAngle(ShooterConfig.billLength, ShooterConfig.SpeakerHeight);
+        desiredAngle = ShooterConfig.kSpeakerAngle;
         m_shooter.setAngle(desiredAngle);
       case AMP:
-        desiredAngle = m_shooter.calculateAngle(-1, ShooterConfig.AmpHeight);
+        desiredAngle = ShooterConfig.kAmpAngle;
         m_shooter.setAngle(desiredAngle);
+        m_shooter.extendShield();
         // TODO actuate shield
       case TRAP:
+        desiredAngle = ShooterConfig.kTrapAngle;
+        m_shooter.setAngle(desiredAngle);
+        m_shooter.extendShield();
       default:
-    }
-
-    if (Math.abs(m_shooter.getCurrentAngle() - desiredAngle) <= 1) {
-      m_shooter.startFeedNote();
     }
 
     // aim for amp
@@ -54,7 +53,11 @@ public class Aim extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if (m_type == FieldElement.AMP || m_type == FieldElement.TRAP) {
+      m_shooter.retractShield();
+    }
+  }
 
   // Returns true when the command should end.
   @Override

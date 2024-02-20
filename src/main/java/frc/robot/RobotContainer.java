@@ -30,9 +30,8 @@ public class RobotContainer {
   private void configureBindings() {
     // manual shoot
     new Trigger(() -> m_operatorController.getRawButton(5))
-        // raw button pressed (0) should be trigger so shoot work
         .toggleOnTrue(
-            new ChangeToManual(
+            new ManualAim(
                 m_shooter, () -> m_operatorController.getRawAxis(Bindings.kManualAngleSlider)));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
@@ -49,10 +48,6 @@ public class RobotContainer {
     // stow shooter
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
         .onTrue(new StowShooter(m_shooter));
-    // TODO: make it work
-    /*  new Trigger(() -> m_operatorController.getRawButton(Bindings.kChangeToAutonomous))
-    .onTrue(???));
-    */
   }
 
   public Command getAutonomousCommand() {
