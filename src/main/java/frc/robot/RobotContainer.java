@@ -27,6 +27,7 @@ public class RobotContainer {
         new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kMaxFlywheelRPM), m_shooter));
   }
 
+  //TODO 8 directional switch bindings
   private void configureBindings() {
     // manual shoot
     new Trigger(() -> m_operatorController.getRawButton(5))

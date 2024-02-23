@@ -27,6 +27,7 @@ public class ManualAim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //TODO scale input correctly
     m_shooter.setAngle(m_angle.getAsDouble());
   }
 
