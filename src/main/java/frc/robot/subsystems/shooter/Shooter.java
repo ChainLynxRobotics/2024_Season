@@ -219,8 +219,8 @@ public class Shooter extends SubsystemBase {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
     }
 
-    if (m_angleEncoder.getPosition() != degreeToRotations(angleDegrees)) {
-      angleDegrees = rotationsToDegree(m_angleEncoder.getPosition());
+    if (m_angleEncoder.getPosition() != degreesToRotations(angleDegrees)) {
+      angleDegrees = rotationsToDegrees(m_angleEncoder.getPosition());
     }
 
     if (ShooterConfig.kSpeakerAngle != speakerAngle) {
@@ -237,19 +237,19 @@ public class Shooter extends SubsystemBase {
   // sets the target angle the shooter should be at
   public void setAngle(double targetAngleDegrees) {
     m_anglePidController.setReference(
-        degreeToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
+        degreesToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
   }
 
   public void stopAngleMotor() {
     m_angleMotorLeader.set(0);
   }
 
-  public double degreeToRotations(double angle) {
+  public double degreesToRotations(double angle) {
     double rotation = angle / 360;
     return rotation;
   }
 
-  public double rotationsToDegree(double rotations) {
+  public double rotationsToDegrees(double rotations) {
     double angle = rotations * 360;
     return angle;
   }
@@ -304,7 +304,7 @@ public class Shooter extends SubsystemBase {
 
   public double getCurrentAngle() {
     double currentAngle =
-        SmartDashboard.getNumber("Angle Degrees", degreeToRotations(m_angleEncoder.getPosition()));
+        SmartDashboard.getNumber("Angle Degrees", degreesToRotations(m_angleEncoder.getPosition()));
     return currentAngle;
   }
 

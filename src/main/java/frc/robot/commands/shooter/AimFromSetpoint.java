@@ -4,15 +4,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.vision.Vision;
 
-public class Aim extends Command {
+public class AimFromSetpoint extends Command {
   private final Shooter m_shooter;
-  private final Vision m_vision;
+  private final FieldElement m_type;
 
-  public Aim(Shooter shooter, Vision eyes) {
+  public AimFromSetpoint(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
-    m_vision = eyes;
+    m_type = type;
+
     addRequirements(m_shooter);
   }
 
@@ -29,16 +29,34 @@ public class Aim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // aim for speaker
+    double desiredAngle = 0;
+    switch (m_type) {
+      case SPEAKER:
+        desiredAngle = ShooterConfig.kSpeakerAngle;
+        m_shooter.setAngle(desiredAngle);
+      case AMP:
+        desiredAngle = ShooterConfig.kAmpAngle;
+        m_shooter.setAngle(desiredAngle);
+        m_shooter.extendShield();
+        // TODO actuate shield
+      case TRAP:
+        desiredAngle = ShooterConfig.kTrapAngle;
+        m_shooter.setAngle(desiredAngle);
+        m_shooter.extendShield();
+      default:
     }
 
     // aim for amp
 
-
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    if (m_type == FieldElement.AMP || m_type == FieldElement.TRAP) {
+      m_shooter.retractShield();
+    }
   }
 
   // Returns true when the command should end.
