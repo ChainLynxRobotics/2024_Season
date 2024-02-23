@@ -1,13 +1,13 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.RobotConfig;
+import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
 
-public class Shoot extends Command {
+public class RetractShield extends Command {
   private final Shooter m_shooter;
 
-  public Shoot(Shooter shooter) {
+  public RetractShield(Shooter shooter) {
     m_shooter = shooter;
 
     addRequirements(m_shooter);
@@ -18,20 +18,21 @@ public class Shoot extends Command {
 
   @Override
   public void execute() {
-    m_shooter.startFeedNote();
-    try {
-      Thread.sleep(RobotConfig.ShooterConfig.kReleaseTime);
-    } catch (InterruptedException e) {
-    }
+    m_shooter.retractShield();
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_shooter.stopFeedNote();
+    m_shooter.stopShieldMotor();
   }
 
   @Override
   public boolean isFinished() {
-    return false;
+    if(Math.abs(ShooterConfig.kShieldExtendedPosition - m_shooter.getShieldPosition()) < ShooterConfig.kPositionError) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }

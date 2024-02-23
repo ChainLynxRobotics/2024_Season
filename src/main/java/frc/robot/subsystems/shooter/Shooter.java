@@ -46,8 +46,7 @@ public class Shooter extends SubsystemBase {
     m_topFlywheelEncoder = m_topFlywheelMotor.getEncoder();
     m_bottomFlywheelMotor =
         new CANSparkMax(ShooterConstants.kBottomFlywheelMotorId, MotorType.kBrushed);
-    m_bottomFlywheelMotor.follow(m_topFlywheelMotor);
-    m_bottomFlywheelMotor.setInverted(true);
+    m_bottomFlywheelMotor.follow(m_topFlywheelMotor, true);
     m_bottomFlywheelEncoder = m_bottomFlywheelMotor.getEncoder();
 
     m_angleMotorLeader =
@@ -174,7 +173,7 @@ public class Shooter extends SubsystemBase {
     double ampAngle = SmartDashboard.getNumber("Amp Angle", ShooterConfig.kAmpAngle);
     double trapAngle = SmartDashboard.getNumber("Trap Angle", ShooterConfig.kTrapAngle);
 
-    // checks PID values against Smartdash board and applies them to the PID if needed
+    // checks PID values against Smart dashboard and applies them to the PID if needed
     if (m_anglePidController.getP() != pAngleController) {
       m_anglePidController.setP(pAngleController);
     }
@@ -236,12 +235,16 @@ public class Shooter extends SubsystemBase {
 
   // sets the target angle the shooter should be at
   public void setAngle(double targetAngleDegrees) {
-    m_anglePidController.setReference(
-        degreesToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
+    if (targetAngleDegrees < 30) {
+      m_anglePidController.setReference(degreesToRotations(30), CANSparkMax.ControlType.kPosition);
+    } else {
+      m_anglePidController.setReference(
+          degreesToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
+    }
   }
 
   public void stopAngleMotor() {
-    m_angleMotorLeader.set(0);
+    m_angleMotorLeader.stopMotor();
   }
 
   public double degreesToRotations(double angle) {
@@ -270,7 +273,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stopFlywheel() {
-    m_topFlywheelMotor.set(0);
+    m_topFlywheelMotor.stopMotor();
   }
 
   // extends shield
@@ -313,7 +316,7 @@ public class Shooter extends SubsystemBase {
     return theta;
   }
 
-  public double addHeight(double theta) {
+  public double addShooterHeight(double theta) {
     double height = Math.sin(Math.toRadians(theta)) * ShooterConstants.ShooterLength;
     return height;
   }
@@ -323,5 +326,23 @@ public class Shooter extends SubsystemBase {
     double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
     double rpm = velocity / circumference;
     return rpm;
+  }
+
+  public boolean getShieldStatus() {
+    if (Math.abs(m_shieldEncoder.getPosition()) < 4) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public double getShieldPosition() {
+    //returns as 0-1 with 0 as not extended and 1 as fully extended
+    double pos = m_shieldEncoder.getPosition() / ShooterConfig.kShieldExtendedPosition;
+    return pos;
+  }
+
+  public void stopShieldMotor() {
+    m_shieldController.stopMotor();
   }
 }

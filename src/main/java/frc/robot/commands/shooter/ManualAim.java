@@ -27,7 +27,8 @@ public class ManualAim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.setAngle(m_shooter.degreesToRotations((m_angle.getAsDouble() / 4)));
+    // its weird were adjusting for 0-120
+    m_shooter.setAngle((((m_angle.getAsDouble() - 1) + 1) * 60));
   }
 
   // Called once the command ends or is interrupted.

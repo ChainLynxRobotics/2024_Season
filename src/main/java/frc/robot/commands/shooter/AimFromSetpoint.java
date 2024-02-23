@@ -8,6 +8,7 @@ import frc.robot.subsystems.shooter.Shooter;
 public class AimFromSetpoint extends Command {
   private final Shooter m_shooter;
   private final FieldElement m_type;
+  private double desiredAngle;
 
   public AimFromSetpoint(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
@@ -16,52 +17,43 @@ public class AimFromSetpoint extends Command {
     addRequirements(m_shooter);
   }
 
-  // Called when the command is initially scheduled.
-  /**
-   * Takes in distances to calculate shot, then shoots
-   *
-   * <p>Takes vertical height from constants Takes horizontal distance from vision Calculates angle
-   * and velocity
-   */
+  //Sets shooter angle dependent on target.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    switch (m_type) {
+      case SPEAKER:
+        desiredAngle = ShooterConfig.kSpeakerAngle;
+      case AMP:
+        desiredAngle = ShooterConfig.kAmpAngle;
+      case TRAP:
+        desiredAngle = ShooterConfig.kTrapAngle;
+      default:
+        desiredAngle = 0;
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // aim for speaker
-    double desiredAngle = 0;
-    switch (m_type) {
-      case SPEAKER:
-        desiredAngle = ShooterConfig.kSpeakerAngle;
-        m_shooter.setAngle(desiredAngle);
-      case AMP:
-        desiredAngle = ShooterConfig.kAmpAngle;
-        m_shooter.setAngle(desiredAngle);
-        m_shooter.extendShield();
-        // TODO actuate shield
-      case TRAP:
-        desiredAngle = ShooterConfig.kTrapAngle;
-        m_shooter.setAngle(desiredAngle);
-        m_shooter.extendShield();
-      default:
+    if (m_type != FieldElement.SPEAKER) {
+      m_shooter.extendShield();
     }
-
-    // aim for amp
-
+    m_shooter.setAngle(desiredAngle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (m_type == FieldElement.AMP || m_type == FieldElement.TRAP) {
-      m_shooter.retractShield();
-    }
+    m_shooter.stopAngleMotor();
+    m_shooter.stopShieldMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Math.abs(m_shooter.getCurrentAngle() - desiredAngle) < ShooterConfig.kAngleError && Math.abs(ShooterConfig.kShieldExtendedPosition - m_shooter.getShieldPosition()) <  ShooterConfig.kPositionError) {
+      return true;
+    }
     return false;
   }
 }

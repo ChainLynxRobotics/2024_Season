@@ -1,8 +1,6 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.RobotConfig.FieldElement;
-import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 
@@ -13,7 +11,7 @@ public class Aim extends Command {
   public Aim(Shooter shooter, Vision eyes) {
     m_shooter = shooter;
     m_vision = eyes;
-    addRequirements(m_shooter);
+    addRequirements(m_shooter, m_vision);
   }
 
   // Called when the command is initially scheduled.
@@ -29,21 +27,15 @@ public class Aim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (m_vision.getHasTarget()) {
+      double desiredAngle = m_vision.getBestTarget().getPitch();
+      m_shooter.setAngle(desiredAngle);
     }
-
-    // aim for amp
-
-
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+    m_shooter.stopAngleMotor();
   }
 }
