@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.units.*;
@@ -209,7 +211,7 @@ public class Shooter extends SubsystemBase {
   // sets the target angle the shooter should be at
   public void setAngle(Measure<Angle> targetAngle) {
     // TODO
-    m_anglePidController.setReference(degreesToRotations(targetAngle) - 30);
+    m_anglePidController.setReference(degreesToRotations(targetAngle.in(Units.Degrees) - 30), ControlType.kPosition);
   }
 
   public void stopAngleMotor() {
@@ -268,10 +270,9 @@ public class Shooter extends SubsystemBase {
     return m_targetAngle.mut_replace(Math.atan2(targetY, targetX), Units.Degrees);
   }
 
-  /*public Measure<Velocity> calculateVelocity(double targetX, double targetY) {
-    
-    return m_targetVelocity.mut_replace();
-  }*/
+  public Measure<Velocity> calculateVelocity(double targetX, double targetY, Measure<Angle> targetAngle) {
+    return m_targetVelocity.mut_replace(1/(Math.sin(targetAngle.in(Units.Degrees))/Math.sqrt(2 * ShooterConstants.Gravity * targetY)), Units.MetersPerSecond);
+  }
 
   public double convertToRPM(double velocity) {
     // 0.0762 is diameter of flywheel
