@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intake.RunIntakeReversed;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
@@ -96,6 +97,7 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntakeReversed(m_intake));
   }
 
   /**
@@ -105,6 +107,16 @@ public class RobotContainer {
    */
   public boolean getIntakeButton() {
     return m_operatorJoystick.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
+  }
+
+  /**
+   * Returns true if the reverse intake button is pressed; False otherwise.
+   *
+   * @see RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID
+   */
+  public boolean getReverseIntakeButton() {
+    return m_operatorJoystick.getRawButton(
+        RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID);
   }
 
   public boolean triggerPressed() {

@@ -59,6 +59,7 @@ public class RobotConfig {
 
     public static final class Bindings {
       public static final int kIntakeNoteButtonID = 2;
+      public static final int kReverseIntakeButtonID = 8;
     }
   }
 }
