@@ -22,6 +22,9 @@ public final class RobotConstants {
     public static final int kToggleFlywheel = 5;
     public static final int kManualAngleSlider = 3;
     public static final int kRetractShield = 16;
+    public static final int kExtendShield = 17;
+    public static final int kManualAdjustDown = 18;
+    public static final int kManualAdjustUp = 19;
   }
 
   public static final class VisionConstants {

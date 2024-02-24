@@ -5,6 +5,10 @@ package frc.robot.constants;
  * RobotConstants"
  */
 public class RobotConfig {
+  public enum AdjustType {
+    up,
+    down
+  }
   public enum FieldElement {
     SPEAKER,
     AMP,
@@ -55,10 +59,10 @@ public class RobotConfig {
     public static final double kFlywheelDefaultRPM = 0;
 
     // Shield Extended position
-    public static final double kShieldExtendedPosition = 124.140855612;
+    public static final double kShieldExtendedRotations = 124.140855612;
 
     // Shield Retracted position
-    public static final double kShieldRetractedPosition = 0;
+    public static final double kShieldRetractedRotations = 0;
 
     // Shield Position error
     public static final double kPositionError = 0;
@@ -92,6 +96,10 @@ public class RobotConfig {
     public static double kAmpAngle = 109;
 
     public static double kTrapAngle = 105;
+// degrees
+    public static double kAdjustAmountDegrees = 0.5;
+
+
 
     public static class DriveConfig {
       public static class TranslateConfig {
