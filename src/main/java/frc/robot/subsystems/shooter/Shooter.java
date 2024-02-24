@@ -23,18 +23,17 @@ public class Shooter extends SubsystemBase {
 
   private CANSparkMax m_angleMotorLeader;
   private CANSparkMax m_angleMotorFollower;
+  private SparkPIDController m_anglePidController;
+
+  private RelativeEncoder m_angleEncoder;
 
   private CANSparkMax m_topFlywheelMotor;
   private CANSparkMax m_bottomFlywheelMotor;
-
-  private CANSparkMax m_shieldController;
-
-  private SparkPIDController m_anglePidController;
-  private SparkPIDController m_shieldPidController;
-
-  private RelativeEncoder m_angleEncoder;
   private RelativeEncoder m_topFlywheelEncoder;
   private RelativeEncoder m_bottomFlywheelEncoder;
+  private SparkPIDController m_topFlywheelPIDController;
+
+  private CANSparkMax m_shieldController;
   private RelativeEncoder m_shieldEncoder;
 
   private DigitalInput m_linebreakSensor;
@@ -44,6 +43,7 @@ public class Shooter extends SubsystemBase {
 
     m_topFlywheelMotor = new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushed);
     m_topFlywheelEncoder = m_topFlywheelMotor.getEncoder();
+    m_topFlywheelPIDController = m_topFlywheelMotor.getPIDController();
     m_bottomFlywheelMotor =
         new CANSparkMax(ShooterConstants.kBottomFlywheelMotorId, MotorType.kBrushed);
     m_bottomFlywheelMotor.follow(m_topFlywheelMotor, true);
@@ -55,10 +55,6 @@ public class Shooter extends SubsystemBase {
         new CANSparkMax(ShooterConstants.kAngleMotorFollowerId, MotorType.kBrushless);
     // sets follower motor to run inversely to the leader
     m_angleMotorFollower.follow(m_angleMotorLeader, true);
-
-    m_shieldController = new CANSparkMax(ShooterConstants.kShieldMotorId, MotorType.kBrushless);
-    m_shieldPidController = m_shieldController.getPIDController();
-    m_shieldEncoder = m_shieldController.getEncoder();
 
     m_anglePidController = m_angleMotorLeader.getPIDController();
     m_angleEncoder = m_angleMotorLeader.getEncoder();
@@ -75,14 +71,14 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kAngleControlMinOutput,
         RobotConfig.ShooterConfig.kAngleControlMaxOutput);
 
-    // set Shield PID coefficients
-    m_shieldPidController.setP(RobotConfig.ShooterConfig.kShieldP);
-    m_shieldPidController.setI(RobotConfig.ShooterConfig.kShieldI);
-    m_shieldPidController.setD(RobotConfig.ShooterConfig.kShieldD);
-    m_shieldPidController.setFF(RobotConfig.ShooterConfig.kShieldFF);
-    m_shieldPidController.setIZone(RobotConfig.ShooterConfig.kShieldIZone);
-    m_shieldPidController.setOutputRange(
-        RobotConfig.ShooterConfig.kShieldMinOutput, RobotConfig.ShooterConfig.kShieldMaxOutput);
+    //set Flywheel PID coefficients
+    m_topFlywheelPIDController.setP(RobotConfig.ShooterConfig.kTopFlywheelP);
+    m_topFlywheelPIDController.setI(RobotConfig.ShooterConfig.kTopFlywheelI);
+    m_topFlywheelPIDController.setD(RobotConfig.ShooterConfig.kTopFlywheelD);
+    m_topFlywheelPIDController.setFF(RobotConfig.ShooterConfig.kTopFlywheelD);
+    m_topFlywheelPIDController.setIZone(RobotConfig.ShooterConfig.kTopFlywheelIZone);
+    m_topFlywheelPIDController.setOutputRange(
+        RobotConfig.ShooterConfig.kTopFlywheelMinOutput, RobotConfig.ShooterConfig.kTopFlywheelMaxOutput);
 
     SmartDashboard.putNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Angle Degrees", m_angleEncoder.getPosition());
@@ -91,12 +87,15 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Amp Angle", ShooterConfig.kAmpAngle);
     SmartDashboard.putNumber("Trap Angle", ShooterConfig.kTrapAngle);
 
-    putAngleOnSmartDashboard();
-    putShieldOnSmartDashboard();
+    if(DriverStation.isTest())
+    {
+      putAngleOnSmartDashboard();
+    }
   }
 
   public void putAngleOnSmartDashboard() {
     // display Angle PID coefficients on SmartDashboard
+  
     SmartDashboard.putNumber(
         RobotConfig.ShooterConfig.kAngleControlPGainKey, RobotConfig.ShooterConfig.kAngleControlP);
     SmartDashboard.putNumber(
