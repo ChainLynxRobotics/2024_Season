@@ -33,7 +33,7 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser;
 
   // The codriver's controller
-  Joystick m_operatorJoystick;
+  Joystick m_operatorController;
 
   private Vector leftInputVec;
   private Vector rightInputVec;
@@ -41,7 +41,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-    m_operatorJoystick = new Joystick(OIConstants.kOperatorJoystickPort);
+    m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
     autoChooser = AutoBuilder.buildAutoChooser();
     leftInputVec = new Vector();
     rightInputVec = new Vector();
@@ -106,7 +106,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kIntakeNote
    */
   public boolean getIntakeButton() {
-    return m_operatorJoystick.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
+    return m_operatorController.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
   }
 
   /**
@@ -115,7 +115,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID
    */
   public boolean getReverseIntakeButton() {
-    return m_operatorJoystick.getRawButton(
+    return m_operatorController.getRawButton(
         RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID);
   }
 
