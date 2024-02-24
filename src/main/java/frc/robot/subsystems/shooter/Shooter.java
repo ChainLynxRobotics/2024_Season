@@ -117,29 +117,17 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kAngleControlMaxOutput);
   }
 
-  public void putShieldOnSmartDashboard() {
-    // display Angle PID coefficients on SmartDashboard
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kShieldPGainKey, RobotConfig.ShooterConfig.kShieldP);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kShieldIGainKey, RobotConfig.ShooterConfig.kShieldI);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kShieldDGainKey, RobotConfig.ShooterConfig.kShieldD);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kShieldFFGainKey, RobotConfig.ShooterConfig.kShieldFF);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kShieldIZoneKey, RobotConfig.ShooterConfig.kShieldIZone);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kShieldMinOutputKey, RobotConfig.ShooterConfig.kShieldMinOutput);
-    SmartDashboard.putNumber(
-        RobotConfig.ShooterConfig.kShieldMaxOutputKey, RobotConfig.ShooterConfig.kShieldMaxOutput);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if(DriverStation.isTest())
+    {
+      testPeriodic();
+    }
+  }
 
-    // read PID coefficients from SmartDashboard and stores them
+  void testPeriodic()
+  {
     double pAngleController =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlPGainKey, 0);
     double iAngleController =
@@ -154,15 +142,6 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMaxOutputKey, 0);
     double minAngleController =
         SmartDashboard.getNumber(RobotConfig.ShooterConfig.kAngleControlMinOutputKey, 0);
-
-    // read PID coefficients from SmartDashboard and stores them
-    double pShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldPGainKey, 0);
-    double iShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldIGainKey, 0);
-    double dShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldDGainKey, 0);
-    double izShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldIZoneKey, 0);
-    double ffShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldFFGainKey, 0);
-    double maxShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldMaxOutputKey, 0);
-    double minShield = SmartDashboard.getNumber(RobotConfig.ShooterConfig.kShieldMinOutputKey, 0);
 
     double flywheelRPM =
         SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
@@ -192,26 +171,6 @@ public class Shooter extends SubsystemBase {
     if (m_anglePidController.getOutputMax() != maxAngleController
         || m_anglePidController.getOutputMin() != minAngleController) {
       m_anglePidController.setOutputRange(minAngleController, maxAngleController);
-    }
-
-    if (m_shieldPidController.getP() != pShield) {
-      m_shieldPidController.setP(pShield);
-    }
-    if (m_shieldPidController.getI() != iShield) {
-      m_shieldPidController.setI(iShield);
-    }
-    if (m_shieldPidController.getD() != dShield) {
-      m_shieldPidController.setD(dShield);
-    }
-    if (m_shieldPidController.getFF() != ffShield) {
-      m_shieldPidController.setFF(ffShield);
-    }
-    if (m_shieldPidController.getIZone() != izShield) {
-      m_shieldPidController.setIZone(izShield);
-    }
-    if (m_shieldPidController.getOutputMax() != maxShield
-        || m_shieldPidController.getOutputMin() != minShield) {
-      m_shieldPidController.setOutputRange(minShield, maxShield);
     }
 
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
