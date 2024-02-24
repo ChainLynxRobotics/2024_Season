@@ -1,5 +1,9 @@
 package frc.robot.constants;
 
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Units;
+
 /**
  * Software config settings (e.g. max speed, PID values). For hardware constants @see
  * RobotConstants"
@@ -89,15 +93,15 @@ public class RobotConfig {
 
     public static final long kReleaseTime = 500;
 
-    public static final double kAngleError = 0.5;
+    public static final Measure<Angle> kAngleError = Units.Degrees.of(0.5);
 
-    public static double kSpeakerAngle = 75;
+    public static final Measure<Angle> kSpeakerAngle = Units.Degrees.of(75);
 
-    public static double kAmpAngle = 109;
+    public static final Measure<Angle> kAmpAngle = Units.Degrees.of(109);
 
-    public static double kTrapAngle = 105;
+    public static final Measure<Angle> kTrapAngle = Units.Degrees.of(105);
 // degrees
-    public static double kAdjustAmountDegrees = 0.5;
+    public static final Measure<Angle> kAdjustAmountDegrees = Units.Degrees.of(0.5);
 
 
 

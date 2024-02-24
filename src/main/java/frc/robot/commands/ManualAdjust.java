@@ -40,8 +40,7 @@ public class ManualAdjust extends Command {
 
   @Override
   public boolean isFinished() {
-    // TODO: put method from subsystem
-    return false;
+    return m_shooter.getCurrentAngle ;
   }
 
 }

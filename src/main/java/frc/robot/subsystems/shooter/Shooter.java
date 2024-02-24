@@ -110,7 +110,7 @@ public class Shooter extends SubsystemBase {
 
   public void putAngleOnSmartDashboard() {
     // display Angle PID coefficients on SmartDashboard
-  
+
     SmartDashboard.putNumber(
         RobotConfig.ShooterConfig.kAngleControlPGainKey, RobotConfig.ShooterConfig.kAngleControlP);
     SmartDashboard.putNumber(
@@ -162,9 +162,9 @@ public class Shooter extends SubsystemBase {
     double angleDegrees =
         SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
-    double speakerAngle = SmartDashboard.getNumber("Speaker Angle", ShooterConfig.kSpeakerAngle);
-    double ampAngle = SmartDashboard.getNumber("Amp Angle", ShooterConfig.kAmpAngle);
-    double trapAngle = SmartDashboard.getNumber("Trap Angle", ShooterConfig.kTrapAngle);
+    double speakerAngle = SmartDashboard.getNumber("Speaker Angle", ShooterConfig.kSpeakerAngle.in(Units.Degrees));
+    double ampAngle = SmartDashboard.getNumber("Amp Angle", ShooterConfig.kAmpAngle.in(Units.Degrees));
+    double trapAngle = SmartDashboard.getNumber("Trap Angle", ShooterConfig.kTrapAngle.in(Units.Degrees));
 
     // checks PID values against Smart dashboard and applies them to the PID if needed
     if (m_anglePidController.getP() != pAngleController) {
@@ -269,7 +269,7 @@ public class Shooter extends SubsystemBase {
   }
 
   /*public Measure<Velocity> calculateVelocity(double targetX, double targetY) {
-    
+
     return m_targetVelocity.mut_replace();
   }*/
 
