@@ -279,9 +279,19 @@ public class Shooter extends SubsystemBase {
     double rpm = velocity / circumference;
     return rpm;
   }
+<<<<<<< Updated upstream
 
   public boolean isShieldExtended() {
     return (Math.abs(getShieldPosition().in(Units.Rotations)) > ShooterConstants.kShieldExtentionAngle.in(Units.Rotations));
+=======
+// returns true if extended
+  public boolean getShieldStatus() {
+    if (Math.abs(m_shieldEncoder.getPosition()) < ShooterConfig.kShieldExtendedPosition) {
+      return false;
+    } else {
+      return true;
+    }
+>>>>>>> Stashed changes
   }
 
   public Measure<Angle> getShieldPosition() {
