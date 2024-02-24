@@ -30,15 +30,6 @@ public class RobotConfig {
     public static final double kTopFlywheelMinOutput = 0;
     public static final double kTopFlywheelMaxOutput = 0;
 
-    // shield controller PID coefficients
-    public static final double kShieldP = 0;
-    public static final double kShieldI = 0;
-    public static final double kShieldD = 0;
-    public static final double kShieldFF = 0;
-    public static final double kShieldIZone = 0;
-    public static final double kShieldMinOutput = 0;
-    public static final double kShieldMaxOutput = 0;
-
     // Smart dashboard Angle Controller keys
     public static final String kAngleControlPGainKey = "Angle Controller P Gain";
     public static final String kAngleControlIGainKey = "Angle Controller I Gain";
@@ -56,15 +47,6 @@ public class RobotConfig {
     public static final String kTopFlywheelIZoneKey = "Top Flywheel I Zone";
     public static final String kTopFlywheelMinOutputKey = "Top Flywheel Minimum output";
     public static final String kTopFlywheelMaxOutputKey = "Top Flywheel Maximum output";
-
-    // Smart dashboard shield Controller keys
-    public static final String kShieldPGainKey = "Shield P Gain";
-    public static final String kShieldIGainKey = "Shield I Gain";
-    public static final String kShieldDGainKey = "Shield D Gain";
-    public static final String kShieldFFGainKey = "Shield FF Gain";
-    public static final String kShieldIZoneKey = "Shield I Zone";
-    public static final String kShieldMinOutputKey = "Shield Minimum output";
-    public static final String kShieldMaxOutputKey = "Shield Maximum output";
 
     // Roller Default Speed
     public static final double kRollerDefaultSpeed = 0;

@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.*;
 
 /**
  * Software/hardware constants (e.g. CAN IDs, gear ratios, field measurements, etc.). For software
@@ -53,6 +53,7 @@ public final class RobotConstants {
     public static final double FlywheelDiameter = 0.0762;
     public static final double ShooterLength = 0.4064;
     public static final double Gravity = 9.81;
+    public static final Measure<Angle> kShieldExtentionAngle = Units.Rotations.of(1); // TODO - Set to number of rotations to fully extend shield
   }
 
   public static final class DriveConstants {
@@ -80,10 +81,10 @@ public final class RobotConstants {
     public static final int kGyroId = 15;
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(26.5);
+    public static final double kTrackWidth = 26.5 * 2.54e-2;
 
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(26.5);
+    public static final double kWheelBase = 26.5 * 2.54e-2;
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(

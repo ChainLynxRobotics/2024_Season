@@ -1,10 +1,15 @@
 package frc.robot.subsystems.shooter;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
@@ -36,7 +41,10 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_shieldController;
   private RelativeEncoder m_shieldEncoder;
 
-  private DigitalInput m_linebreakSensor;
+  private MutableMeasure<Velocity<Angle>> m_shooterSpeed;
+  private MutableMeasure<Angle> m_shooterAngle;
+  private MutableMeasure<Angle> m_targetAngle;
+  private MutableMeasure<Angle> m_shieldPosition;
 
   public Shooter() {
     m_rollerMotor = new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
@@ -192,13 +200,9 @@ public class Shooter extends SubsystemBase {
   }
 
   // sets the target angle the shooter should be at
-  public void setAngle(double targetAngleDegrees) {
-    if (targetAngleDegrees < 30) {
-      m_anglePidController.setReference(degreesToRotations(30), CANSparkMax.ControlType.kPosition);
-    } else {
-      m_anglePidController.setReference(
-          degreesToRotations(targetAngleDegrees), CANSparkMax.ControlType.kPosition);
-    }
+  public void setAngle(Measure<Angle> targetAngle) {
+    // TODO
+    m_anglePidController.setReference(degreesToRotations(targetAngle) - 30);
   }
 
   public void stopAngleMotor() {
@@ -257,21 +261,16 @@ public class Shooter extends SubsystemBase {
     m_shieldEncoder.setPosition(0);
   }
 
-  public double getCurrentRPM() {
-    double currentRPM =
-        SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
-    return currentRPM;
+  public Measure<Velocity<Angle>> getCurrentRPM() {
+    return m_shooterSpeed.mut_replace(m_topFlywheelEncoder.getVelocity(), Units.RPM);
   }
 
-  public double getCurrentAngle() {
-    double currentAngle =
-        SmartDashboard.getNumber("Angle Degrees", rotationsToDegrees(m_angleEncoder.getPosition()));
-    return currentAngle;
+  public Measure<Angle> getCurrentAngle() {
+    return m_shooterAngle.mut_replace(m_angleEncoder.getPosition(), Units.Revolutions);
   }
 
-  public double calculateAngle(double targetX, double targetY) {
-    double theta = Math.toDegrees(Math.atan2(targetY, targetX));
-    return theta;
+  public Measure<Angle> calculateAngle(double targetX, double targetY) {
+    return m_targetAngle.mut_replace(Math.atan2(targetY, targetX), Units.Degrees);
   }
 
   public double addShooterHeight(double theta) {
@@ -286,18 +285,12 @@ public class Shooter extends SubsystemBase {
     return rpm;
   }
 
-  public boolean getShieldStatus() {
-    if (Math.abs(m_shieldEncoder.getPosition()) < 4) {
-      return false;
-    } else {
-      return true;
-    }
+  public boolean isShieldExtended() {
+    return (Math.abs(getShieldPosition().in(Units.Rotations)) > ShooterConstants.kShieldExtentionAngle.in(Units.Rotations));
   }
 
-  public double getShieldPosition() {
-    //returns as 0-1 with 0 as not extended and 1 as fully extended
-    double pos = m_shieldEncoder.getPosition() / ShooterConfig.kShieldExtendedPosition;
-    return pos;
+  public Measure<Angle> getShieldPosition() {
+    return m_shieldPosition.mut_replace(m_shieldEncoder.getPosition(), Units.Rotations);
   }
 
   public void stopShieldMotor() {
