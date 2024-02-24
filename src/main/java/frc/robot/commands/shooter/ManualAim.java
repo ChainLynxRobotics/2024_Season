@@ -22,13 +22,16 @@ public class ManualAim extends Command {
    * and velocity
    */
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO scale input correctly
-    m_shooter.setAngle(m_angle.getAsDouble());
+    // its weird were adjusting for 0-120
+    double desiredAngle = -m_angle.getAsDouble() + 1 / 2 * 120;
+    m_shooter.setAngle(desiredAngle);
   }
 
   // Called once the command ends or is interrupted.
