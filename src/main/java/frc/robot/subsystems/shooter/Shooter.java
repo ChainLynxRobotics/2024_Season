@@ -307,7 +307,7 @@ public class Shooter extends SubsystemBase {
 
   public double getCurrentAngle() {
     double currentAngle =
-        SmartDashboard.getNumber("Angle Degrees", degreesToRotations(m_angleEncoder.getPosition()));
+        SmartDashboard.getNumber("Angle Degrees", rotationsToDegrees(m_angleEncoder.getPosition()));
     return currentAngle;
   }
 

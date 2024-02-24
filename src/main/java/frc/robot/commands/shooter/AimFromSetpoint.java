@@ -30,14 +30,14 @@ public class AimFromSetpoint extends Command {
       default:
         desiredAngle = 0;
     }
+    if (m_type != FieldElement.SPEAKER) {
+      m_shooter.extendShield();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_type != FieldElement.SPEAKER) {
-      m_shooter.extendShield();
-    }
     m_shooter.setAngle(desiredAngle);
   }
 
@@ -51,7 +51,9 @@ public class AimFromSetpoint extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(m_shooter.getCurrentAngle() - desiredAngle) < ShooterConfig.kAngleError && Math.abs(ShooterConfig.kShieldExtendedPosition - m_shooter.getShieldPosition()) <  ShooterConfig.kPositionError) {
+    if (Math.abs(m_shooter.getCurrentAngle() - desiredAngle) < ShooterConfig.kAngleError) {
+      if(Math.abs(ShooterConfig.kShieldExtendedPosition - m_shooter.getShieldPosition()) <  ShooterConfig.kPositionError ||
+       m_type != FieldElement.SPEAKER)
       return true;
     }
     return false;
