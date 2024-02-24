@@ -27,13 +27,6 @@ public class Aim extends Command {
     addRequirements(m_shooter, m_vision);
   }
 
-  // Called when the command is initially scheduled.
-  /**
-   * Takes in distances to calculate shot, then shoots
-   *
-   * <p>Takes vertical height from constants Takes horizontal distance from vision Calculates angle
-   * and velocity
-   */
   @Override
   public void initialize() {
     if (m_type == null) {
@@ -45,12 +38,14 @@ public class Aim extends Command {
       switch (m_type) {
         case AMP:
           m_shooter.setAngle(ShooterConfig.kAmpAngle);
+          m_shooter.extendShield();
           break;
         case SPEAKER:
           m_shooter.setAngle(ShooterConfig.kSpeakerAngle);
           break;
         case TRAP:
           m_shooter.setAngle(ShooterConfig.kTrapAngle);
+          m_shooter.extendShield();
           break;
         default:
           m_shooter.setAngle(0.0);
@@ -63,12 +58,13 @@ public class Aim extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooter.stopAngleMotor();
+  }
+  public boolean isFinished() {
+    return false;
   }
 }
