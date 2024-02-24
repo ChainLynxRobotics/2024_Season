@@ -1,0 +1,125 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.0556018381661334,
+      "y": 2.255455159374483
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "bottom grab piece 3 from below and point towards speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndScoreSpeaker"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "grab piece 2 from speaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndScoreSpeaker"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "grab piece 1 from piece 2 from the right and keep moving"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "amp from piece 1 from moving"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "scoreAmp"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "grab mid piece 1 and point towards speaker from amp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndScoreSpeaker"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
