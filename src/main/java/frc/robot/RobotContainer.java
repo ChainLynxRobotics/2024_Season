@@ -37,7 +37,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-    m_operatorController = new Joystick(1);
+    m_operatorController = new Joystick(OIConstants.kOperatorControllerPort);
     m_shooter = new Shooter();
     m_vision = new Vision();
     m_robotDrive = new Drivetrain(m_vision);
