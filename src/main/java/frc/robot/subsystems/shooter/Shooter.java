@@ -47,8 +47,10 @@ public class Shooter extends SubsystemBase {
   private MutableMeasure<Angle> m_shieldPosition;
 
   public Shooter() {
+    //Roller
     m_rollerMotor = new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
 
+    //Flywheel
     m_topFlywheelMotor = new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushed);
     m_topFlywheelEncoder = m_topFlywheelMotor.getEncoder();
     m_topFlywheelPIDController = m_topFlywheelMotor.getPIDController();
@@ -57,6 +59,7 @@ public class Shooter extends SubsystemBase {
     m_bottomFlywheelMotor.follow(m_topFlywheelMotor, true);
     m_bottomFlywheelEncoder = m_bottomFlywheelMotor.getEncoder();
 
+    //Angle
     m_angleMotorLeader =
         new CANSparkMax(ShooterConstants.kAngleMotorLeaderId, MotorType.kBrushless);
     m_angleMotorFollower =
@@ -66,6 +69,10 @@ public class Shooter extends SubsystemBase {
 
     m_anglePidController = m_angleMotorLeader.getPIDController();
     m_angleEncoder = m_angleMotorLeader.getEncoder();
+
+    //Shield
+    m_shieldController = new CANSparkMax(ShooterConstants.kShieldMotorId, MotorType.kBrushless);
+    m_shieldEncoder = m_shieldController.getEncoder();
 
     zeroEncoders();
 
@@ -224,6 +231,10 @@ public class Shooter extends SubsystemBase {
     m_rollerMotor.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
   }
 
+  public void setShieldPosition(double position) {
+    m_shieldController.getEncoder().setPosition(position);
+  }
+
   // stops the rollers
   public void stopFeedNote() {
     m_rollerMotor.stopMotor();
@@ -231,27 +242,11 @@ public class Shooter extends SubsystemBase {
 
   // runs the flywheel at a speed in rotations per minute
   public void runFlywheel(double targetRPM) {
-    m_topFlywheelMotor.set(targetRPM);
+    m_topFlywheelPIDController.setReference(targetRPM, CANSparkBase.ControlType.kVelocity);
   }
 
   public void stopFlywheel() {
-    m_topFlywheelMotor.stopMotor();
-  }
-
-  // extends shield
-  public void extendShield() {
-    m_shieldPidController.setReference(
-        RobotConfig.ShooterConfig.kShieldExtendedPosition, CANSparkMax.ControlType.kPosition);
-  }
-
-  // retracts shield
-  public void retractShield() {
-    m_shieldPidController.setReference(
-        RobotConfig.ShooterConfig.kShieldRetractedPosition, CANSparkMax.ControlType.kPosition);
-  }
-
-  public boolean hasNote() {
-    return m_linebreakSensor.get();
+    m_topFlywheelMotor.stopMotor();;
   }
 
   public void zeroEncoders() {
@@ -273,10 +268,10 @@ public class Shooter extends SubsystemBase {
     return m_targetAngle.mut_replace(Math.atan2(targetY, targetX), Units.Degrees);
   }
 
-  public double addShooterHeight(double theta) {
-    double height = Math.sin(Math.toRadians(theta)) * ShooterConstants.ShooterLength;
-    return height;
-  }
+  /*public Measure<Velocity> calculateVelocity(double targetX, double targetY) {
+    
+    return m_targetVelocity.mut_replace();
+  }*/
 
   public double convertToRPM(double velocity) {
     // 0.0762 is diameter of flywheel
