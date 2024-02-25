@@ -15,7 +15,7 @@ public class Aim extends Command {
   private final FieldElement m_type;
   private Measure<Angle> desiredAngle;
 
-  public Aim.(Shooter shooter, FieldElement type) {
+  public Aim(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
     m_vision = new Vision();
     m_type = type;
