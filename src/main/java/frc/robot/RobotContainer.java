@@ -27,7 +27,6 @@ public class RobotContainer {
   private Joystick m_operatorController;
   private XboxController m_driverController;
 
-  private POVButton m_manualAim;
   private POVButton m_autoAim;
   private POVButton m_speakerAim;
 
@@ -47,9 +46,9 @@ public class RobotContainer {
         new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kMaxFlywheelRPM), m_shooter));
   }
 
-  //TODO 8 directional switch bindings
+  // TODO 8 directional switch bindings
   private void configureBindings() {
-    m_manualAim = new POVButton(m_operatorController, 180);
+    // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_speakerAim = new POVButton(m_operatorController, 90);
 
@@ -75,27 +74,27 @@ public class RobotContainer {
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
         .onTrue(new Shoot(m_shooter));
-    // aim trap
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimTrap))
-        .onTrue(new AimFromSetpoint(m_shooter, FieldElement.TRAP));
     // aim amp
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .onTrue(new AimFromSetpoint(m_shooter, FieldElement.AMP));
+        .onTrue(new Aim(m_shooter, FieldElement.AMP));
     // stow shooter
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
         .onTrue(new StowShooter(m_shooter));
-    m_speakerAim.onTrue(new AimFromSetpoint(m_shooter, FieldElement.SPEAKER));
-    m_manualAim.toggleOnTrue(
-        new ManualAim(
-            m_shooter, () -> m_operatorController.getRawAxis(Bindings.kManualAngleSlider)));
+    m_speakerAim.onTrue(new Aim(m_shooter, FieldElement.SPEAKER));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kToggleFlywheel))
-        .toggleOnTrue(new ToggleFlywheel(m_shooter));
+    // triggers for manual adjust up and down, both assigned to different buttons
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kManualAdjustDown))
+        .onTrue(new ManualAdjust(m_shooter, AdjustType.down));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kManualAdjustUp))
+        .onTrue(new ManualAdjust(m_shooter, AdjustType.up));
 
+    // triggers for extending and retracting shield manually
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
-        .onTrue(new RetractShield(m_shooter));
+        .onTrue(new ActuateShield(m_shooter, false));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
+        .onTrue(new ActuateShield(m_shooter, true));
 
-    m_autoAim.toggleOnTrue(new Aim(m_shooter, m_vision));
+    m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 

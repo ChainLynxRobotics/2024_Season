@@ -22,6 +22,9 @@ public final class RobotConstants {
     public static final int kToggleFlywheel = 5;
     public static final int kManualAngleSlider = 3;
     public static final int kRetractShield = 16;
+    public static final int kExtendShield = 17;
+    public static final int kManualAdjustDown = 18;
+    public static final int kManualAdjustUp = 19;
   }
 
   public static final class VisionConstants {
@@ -53,7 +56,8 @@ public final class RobotConstants {
     public static final double FlywheelDiameter = 0.0762;
     public static final double ShooterLength = 0.4064;
     public static final double Gravity = 9.81;
-    public static final Measure<Angle> kShieldExtentionAngle = Units.Rotations.of(1); // TODO - Set to number of rotations to fully extend shield
+    public static final Measure<Angle> kShieldExtentionAngle =
+        Units.Rotations.of(1); // TODO - Set to number of rotations to fully extend shield
   }
 
   public static final class DriveConstants {

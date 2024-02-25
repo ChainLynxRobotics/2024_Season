@@ -1,5 +1,6 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.units.Units;
 // done
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.ShooterConfig;
@@ -19,7 +20,7 @@ public class StowShooter extends Command {
 
   @Override
   public void execute() {
-    m_shooter.setAngle(ShooterConfig.kShooterStowAngle);
+    m_shooter.setAngle(Units.Degrees.of(ShooterConfig.kShooterStowAngle));
   }
 
   @Override
