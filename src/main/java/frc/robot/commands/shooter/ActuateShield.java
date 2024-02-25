@@ -25,9 +25,6 @@ public class ActuateShield extends Command {
   }
 
   @Override
-  public void execute() {}
-
-  @Override
   public void end(boolean interrupted) {
     m_shooter.stopShieldMotor();
   }

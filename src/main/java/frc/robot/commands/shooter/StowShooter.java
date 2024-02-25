@@ -28,6 +28,6 @@ public class StowShooter extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return m_shooter.isAtAngleSetpoint(ShooterConfig.kShooterStowAngle);
   }
 }

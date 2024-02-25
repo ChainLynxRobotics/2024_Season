@@ -46,7 +46,6 @@ public class RobotContainer {
         new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kMaxFlywheelRPM), m_shooter));
   }
 
-  // TODO 8 directional switch bindings
   private void configureBindings() {
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
@@ -71,16 +70,20 @@ public class RobotContainer {
                     m_driverController.getRightBumper(),
                     m_driverController.getAButton()),
             m_robotDrive));
+
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
         .onTrue(new Shoot(m_shooter));
     // aim amp
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .onTrue(new Aim(m_shooter, FieldElement.AMP));
+
+    m_speakerAim.onTrue(new Aim(m_shooter, FieldElement.SPEAKER));
+    m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
+
     // stow shooter
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
-        .onTrue(new StowShooter(m_shooter));
-    m_speakerAim.onTrue(new Aim(m_shooter, FieldElement.SPEAKER));
+    .onTrue(new StowShooter(m_shooter));
 
     // triggers for manual adjust up and down, both assigned to different buttons
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kManualAdjustDown))
@@ -94,7 +97,6 @@ public class RobotContainer {
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
         .onTrue(new ActuateShield(m_shooter, true));
 
-    m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 

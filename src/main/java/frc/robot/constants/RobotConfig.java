@@ -81,7 +81,7 @@ public class RobotConfig {
 
     public static final double kMaxFlywheelRPM = 11000;
 
-    public static final double kShooterStowAngle = 30;
+    public static final double kShooterStowAngle = 0;
 
     public static final long kReleaseTime = 500;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);

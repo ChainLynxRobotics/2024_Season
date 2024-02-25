@@ -37,9 +37,6 @@ public class ManualAdjust extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
-
-  @Override
   public boolean isFinished() {
     return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude());
   }

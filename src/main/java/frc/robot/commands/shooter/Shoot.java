@@ -28,6 +28,6 @@ public class Shoot extends Command {
 
   @Override
   public boolean isFinished() {
-    return (Timer.getFPGATimestamp() - timer > RobotConfig.ShooterConfig.kReleaseTime);
+    return Timer.getFPGATimestamp() - timer > RobotConfig.ShooterConfig.kReleaseTime;
   }
 }

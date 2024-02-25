@@ -58,15 +58,8 @@ public class Aim extends Command {
     }
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
   public boolean isFinished() {
-    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude());
+    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude())
+    && ((m_type == FieldElement.AMP || m_type == FieldElement.TRAP) && m_shooter.getShieldStatus()); //check if shield is extended
   }
 }
