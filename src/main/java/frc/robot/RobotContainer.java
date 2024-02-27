@@ -83,7 +83,7 @@ public class RobotContainer {
 
     // stow shooter
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
-    .onTrue(new StowShooter(m_shooter));
+        .onTrue(new StowShooter(m_shooter));
 
     // triggers for manual adjust up and down, both assigned to different buttons
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kManualAdjustDown))

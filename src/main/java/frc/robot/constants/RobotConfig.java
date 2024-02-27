@@ -79,17 +79,17 @@ public class RobotConfig {
 
     public static final int shootButton = 1;
 
-    public static final double kMaxFlywheelRPM = 11000;
+    public static final double kMaxFlywheelRPM = 1000;
 
     public static final double kShooterStowAngle = 0;
 
     public static final long kReleaseTime = 500;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
-    public static final Measure<Angle> kAngleError = Units.Degrees.of(0.5);
-    public static final Measure<Angle> kSpeakerAngle = Units.Degrees.of(75);
-    public static final Measure<Angle> kAmpAngle = Units.Degrees.of(109);
-    public static final Measure<Angle> kTrapAngle = Units.Degrees.of(105);
-    public static final Measure<Angle> kAdjustAmountDegrees = Units.Degrees.of(0.5);
+    public static final Measure<Angle> kAngleError = Units.Radians.of(0.5*Math.PI/180);
+    public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75*Math.PI/180);
+    public static final Measure<Angle> kAmpAngle = Units.Radians.of(109*Math.PI/180);
+    public static final Measure<Angle> kTrapAngle = Units.Radians.of(105*Math.PI/180);
+    public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5*Math.PI/180);
   }
 
   public static class DriveConfig {

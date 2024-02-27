@@ -2,17 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.DriveConfig.TranslateConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
-import frc.robot.constants.RobotConstants.VisionConstants;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.vision.Vision;
 import frc.utils.Vector;
-import org.photonvision.PhotonUtils;
 
 public class VisionTranslateCommand extends Command {
 
@@ -44,12 +41,7 @@ public class VisionTranslateCommand extends Command {
     double forwardSpeed = 0.0;
 
     if (vision.getHasTarget()) {
-      double range =
-          PhotonUtils.calculateDistanceToTargetMeters(
-              VisionConstants.kCameraHeight,
-              VisionConstants.kTargetHeight,
-              VisionConstants.kCameraPitchRadians,
-              Units.degreesToRadians(vision.getBestTarget().getPitch()));
+      double range = vision.getDistToTarget();
 
       forwardSpeed = forwardController.calculate(range, 0);
     }
