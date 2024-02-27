@@ -18,18 +18,11 @@ public class ActuateShield extends Command {
   @Override
   public void initialize() {
     if (m_shieldState) {
-      // 1 is extneded
       m_shooter.setShieldPosition(ShooterConfig.kShieldExtendedRotations);
-    }
-    else {
-      // 0 is retracted
+    } else {
       m_shooter.setShieldPosition(ShooterConfig.kShieldRetractedRotations);
     }
-
   }
-
-  @Override
-  public void execute() {}
 
   @Override
   public void end(boolean interrupted) {
@@ -39,11 +32,10 @@ public class ActuateShield extends Command {
   @Override
   public boolean isFinished() {
     // if we want the shield to be out, return true if that is the status
-    if(m_shieldState) {
+    if (m_shieldState) {
       return m_shooter.getShieldStatus();
-    }
-    else {
+    } else {
       return !m_shooter.getShieldStatus();
     }
-    }
+  }
 }

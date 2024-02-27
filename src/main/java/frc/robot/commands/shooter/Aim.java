@@ -40,34 +40,26 @@ public class Aim extends Command {
     } else {
       switch (m_type) {
         case AMP:
-          m_shooter.setAngle(ShooterConfig.kAmpAngle);
+          desiredAngle = ShooterConfig.kAmpAngle;
           m_shooter.setShieldPosition(ShooterConfig.kShieldExtendedRotations);
           break;
         case SPEAKER:
-          m_shooter.setAngle(ShooterConfig.kSpeakerAngle);
+          desiredAngle = ShooterConfig.kSpeakerAngle;
           break;
         case TRAP:
-          m_shooter.setAngle(ShooterConfig.kTrapAngle);
+          desiredAngle = ShooterConfig.kTrapAngle;
           m_shooter.setShieldPosition(ShooterConfig.kShieldRetractedRotations);
           break;
         default:
-          m_shooter.setAngle(Units.Degrees.of(0));
+          desiredAngle = Units.Degrees.of(0);
           break;
-
       }
+      m_shooter.setAngle(desiredAngle);
     }
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
   public boolean isFinished() {
-    m_shooter.isWithinBounds()
+    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude())
+    && ((m_type == FieldElement.AMP || m_type == FieldElement.TRAP) && m_shooter.getShieldStatus()); //check if shield is extended
   }
 }

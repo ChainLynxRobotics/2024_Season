@@ -1,14 +1,16 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.RobotConfig.*;
 import frc.robot.constants.RobotConfig.AdjustType;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.constants.RobotConfig.*;
 
 public class ManualAdjust extends Command {
   private final Shooter m_shooter;
   private final AdjustType m_type;
-  private double desiredAngle;
+  private Measure<Angle> desiredAngle;
 
   public ManualAdjust(Shooter shooter, AdjustType type) {
     m_shooter = shooter;
@@ -20,11 +22,11 @@ public class ManualAdjust extends Command {
   public void initialize() {
     switch (m_type) {
       case up:
-        desiredAngle = m_shooter.getCurrentAngle() + ShooterConfig.kAdjustAmountDegrees;
+        desiredAngle = m_shooter.getCurrentAngle().plus(ShooterConfig.kAdjustAmountDegrees);
         m_shooter.setAngle(desiredAngle);
         break;
       case down:
-        desiredAngle = m_shooter.getCurrentAngle() - ShooterConfig.kAdjustAmountDegrees;
+        desiredAngle = m_shooter.getCurrentAngle().minus(ShooterConfig.kAdjustAmountDegrees);
         m_shooter.setAngle(desiredAngle);
         break;
       default:
@@ -35,12 +37,7 @@ public class ManualAdjust extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {
-  }
-
-  @Override
   public boolean isFinished() {
-    return m_shooter.getCurrentAngle ;
+    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude());
   }
-
 }

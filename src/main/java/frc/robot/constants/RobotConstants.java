@@ -56,7 +56,8 @@ public final class RobotConstants {
     public static final double FlywheelDiameter = 0.0762;
     public static final double ShooterLength = 0.4064;
     public static final double Gravity = 9.81;
-    public static final Measure<Angle> kShieldExtentionAngle = Units.Rotations.of(1); // TODO - Set to number of rotations to fully extend shield
+    public static final Measure<Angle> kShieldExtentionAngle =
+        Units.Rotations.of(1); // TODO - Set to number of rotations to fully extend shield
   }
 
   public static final class DriveConstants {
