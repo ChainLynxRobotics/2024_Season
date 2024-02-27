@@ -1,8 +1,10 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
@@ -14,6 +16,7 @@ public class Aim extends Command {
   private final Vision m_vision;
   private final FieldElement m_type;
   private Measure<Angle> desiredAngle;
+  private double desiredVelocity;
 
   public Aim(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
@@ -34,32 +37,47 @@ public class Aim extends Command {
   public void initialize() {
     if (m_type == null) {
       if (m_vision.getHasTarget()) {
-        Measure<Angle> desiredAngle = Units.Degrees.of(m_vision.getBestTarget().getPitch());
-        m_shooter.setAngle(desiredAngle);
+        double desiredAngle =
+            Units.Degrees.of(m_vision.getBestTarget().getPitch()).in(Units.Radians);
+        Measure<Velocity<Distance>> desiredVelocity =
+            m_shooter.calculateVelocity(
+                m_vision.getDistToTarget() * Math.atan(desiredAngle),
+                Units.Radians.of(desiredAngle));
+        m_shooter.setAngle(Units.Radians.of(desiredAngle));
+        m_shooter.runFlywheel(m_shooter.convertToRPM(desiredVelocity.magnitude()));
       }
     } else {
       switch (m_type) {
         case AMP:
           desiredAngle = ShooterConfig.kAmpAngle;
+          desiredVelocity = getVelocity(ShooterConfig.AmpHeight);
           m_shooter.setShieldPosition(ShooterConfig.kShieldExtendedRotations);
           break;
         case SPEAKER:
           desiredAngle = ShooterConfig.kSpeakerAngle;
+          desiredVelocity = getVelocity(ShooterConfig.SpeakerHeight);
           break;
         case TRAP:
           desiredAngle = ShooterConfig.kTrapAngle;
           m_shooter.setShieldPosition(ShooterConfig.kShieldRetractedRotations);
+          desiredVelocity = getVelocity(ShooterConfig.TrapHeight);
           break;
         default:
           desiredAngle = Units.Degrees.of(0);
           break;
       }
       m_shooter.setAngle(desiredAngle);
+      m_shooter.runFlywheel(desiredVelocity);
     }
+  }
+
+  public double getVelocity(double elementHeight) {
+    return m_shooter.convertToRPM(m_shooter.calculateVelocity(ShooterConfig.AmpHeight, desiredAngle).magnitude());
   }
 
   public boolean isFinished() {
     return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude())
-    && ((m_type == FieldElement.AMP || m_type == FieldElement.TRAP) && m_shooter.getShieldStatus()); //check if shield is extended
+        && ((m_type == FieldElement.AMP || m_type == FieldElement.TRAP)
+            && m_shooter.getShieldStatus()); // check if shield is extended
   }
 }

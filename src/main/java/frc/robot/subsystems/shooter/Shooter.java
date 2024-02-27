@@ -241,8 +241,7 @@ public class Shooter extends SubsystemBase {
     return m_targetAngle.mut_replace(Math.atan2(targetY, targetX), Units.Degrees);
   }
 
-  public Measure<Velocity<Distance>> calculateVelocity(
-      double targetX, double targetY, Measure<Angle> targetAngle) {
+  public Measure<Velocity<Distance>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {
     return m_targetVelocity.mut_replace(
         Math.sqrt(2 * ShooterConstants.Gravity * targetY)
             / (Math.sin(targetAngle.in(Units.Degrees))),
@@ -250,7 +249,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double convertToRPM(double velocity) {
-    // 0.0762 is diameter of flywheel
+    // 0.0762 meters is diameter of flywheel
     double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
     double rpm = velocity / circumference;
     return rpm;
