@@ -79,11 +79,11 @@ public class RobotConfig {
 
     public static final int shootButton = 1;
 
-    public static final double kMaxFlywheelRPM = 1000;
+    public static final double kDefaultFlywheelRPM = 1000;
 
     public static final double kShooterStowAngle = 0;
 
-    public static final long kReleaseTime = 500;
+    public static final long kReleaseTime = 5000;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
     public static final Measure<Angle> kAngleError = Units.Radians.of(0.5*Math.PI/180);
     public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75*Math.PI/180);

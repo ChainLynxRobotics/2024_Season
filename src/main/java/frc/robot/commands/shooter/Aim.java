@@ -43,7 +43,7 @@ public class Aim extends Command {
             m_shooter.calculateVelocity(
                 m_vision.getDistToTarget() * Math.atan(desiredAngle),
                 Units.Radians.of(desiredAngle));
-        m_shooter.setAngle(Units.Radians.of(desiredAngle));
+
         m_shooter.runFlywheel(m_shooter.convertToRPM(desiredVelocity.magnitude()));
       }
     } else {
@@ -66,7 +66,6 @@ public class Aim extends Command {
           desiredAngle = Units.Degrees.of(0);
           break;
       }
-      m_shooter.setAngle(desiredAngle);
       m_shooter.runFlywheel(desiredVelocity);
     }
   }
@@ -76,8 +75,6 @@ public class Aim extends Command {
   }
 
   public boolean isFinished() {
-    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude())
-        && ((m_type == FieldElement.AMP || m_type == FieldElement.TRAP)
-            && m_shooter.getShieldStatus()); // check if shield is extended
+    return m_shooter.isAtFlywheelSetpoint(desiredVelocity);
   }
 }
