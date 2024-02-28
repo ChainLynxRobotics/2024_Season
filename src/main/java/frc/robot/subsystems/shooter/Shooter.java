@@ -114,7 +114,6 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-
   public double degreesToRotations(double angle) {
     double rotation = angle / 360;
     return rotation;
@@ -175,11 +174,7 @@ public class Shooter extends SubsystemBase {
 
   // returns true if extended
   public boolean getShieldStatus() {
-    if (Math.abs(m_shieldEncoder.getPosition()) < ShooterConfig.kShieldExtendedPosition) {
-      return false;
-    } else {
-      return true;
-    }
+    return (Math.abs(m_shieldEncoder.getPosition()) > ShooterConfig.kShieldExtendedPosition);
   }
 
   public Measure<Angle> getShieldPosition() {

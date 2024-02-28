@@ -51,14 +51,12 @@ public class RobotContainer {
     m_speakerAim.onTrue(new Aim(m_shooter, FieldElement.SPEAKER));
     m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
 
-
     // triggers for extending and retracting shield manually
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
         .onTrue(new ActuateShield(m_shooter, true));
   }
-
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

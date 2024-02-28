@@ -85,11 +85,11 @@ public class RobotConfig {
 
     public static final long kReleaseTime = 5000;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
-    public static final Measure<Angle> kAngleError = Units.Radians.of(0.5*Math.PI/180);
-    public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75*Math.PI/180);
-    public static final Measure<Angle> kAmpAngle = Units.Radians.of(109*Math.PI/180);
-    public static final Measure<Angle> kTrapAngle = Units.Radians.of(105*Math.PI/180);
-    public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5*Math.PI/180);
+    public static final Measure<Angle> kAngleError = Units.Radians.of(0.5 * Math.PI / 180);
+    public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75 * Math.PI / 180);
+    public static final Measure<Angle> kAmpAngle = Units.Radians.of(109 * Math.PI / 180);
+    public static final Measure<Angle> kTrapAngle = Units.Radians.of(105 * Math.PI / 180);
+    public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5 * Math.PI / 180);
   }
 
   public static class DriveConfig {

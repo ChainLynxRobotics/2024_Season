@@ -71,7 +71,8 @@ public class Aim extends Command {
   }
 
   public double getVelocity(double elementHeight) {
-    return m_shooter.convertToRPM(m_shooter.calculateVelocity(ShooterConfig.AmpHeight, desiredAngle).magnitude());
+    return m_shooter.convertToRPM(
+        m_shooter.calculateVelocity(ShooterConfig.AmpHeight, desiredAngle).magnitude());
   }
 
   public boolean isFinished() {
