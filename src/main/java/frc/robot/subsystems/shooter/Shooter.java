@@ -40,11 +40,11 @@ public class Shooter extends SubsystemBase {
     m_rollerMotor = new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
 
     // Flywheel
-    m_topFlywheelMotor = new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushed);
+    m_topFlywheelMotor = new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushless);
     m_topFlywheelEncoder = m_topFlywheelMotor.getEncoder();
     m_topFlywheelPIDController = m_topFlywheelMotor.getPIDController();
     m_bottomFlywheelMotor =
-        new CANSparkMax(ShooterConstants.kBottomFlywheelMotorId, MotorType.kBrushed);
+        new CANSparkMax(ShooterConstants.kBottomFlywheelMotorId, MotorType.kBrushless);
     m_bottomFlywheelMotor.follow(m_topFlywheelMotor, true);
     m_bottomFlywheelEncoder = m_bottomFlywheelMotor.getEncoder();
 
@@ -140,6 +140,7 @@ public class Shooter extends SubsystemBase {
 
   // runs the flywheel at a speed in rotations per minute
   public void runFlywheel(double targetRPM) {
+    System.out.println("running flywheel");
     m_topFlywheelPIDController.setReference(targetRPM, CANSparkBase.ControlType.kVelocity);
   }
 
