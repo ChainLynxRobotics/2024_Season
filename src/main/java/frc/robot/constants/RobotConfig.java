@@ -59,7 +59,7 @@ public class RobotConfig {
     public static final String kTopFlywheelMaxOutputKey = "Top Flywheel Maximum output";
 
     // Roller Default Speed
-    public static final double kRollerDefaultSpeed = 0.4;
+    public static final double kRollerDefaultSpeed = -0.4;
     // Flywheel default speed
     public static final double kFlywheelDefaultRPM = 1000;
     // Shield Extended position
@@ -73,7 +73,7 @@ public class RobotConfig {
     public static final double SpeakerHeight = 1.9812;
     public static final double AmpHeight = .46;
     public static final double ShooterHeight = 0.28575;
-    public static final double TrapHeight = -1;
+    public static final double TrapHeight = 1;
 
     public static final double SpeakerBillLength = 0.6604;
 

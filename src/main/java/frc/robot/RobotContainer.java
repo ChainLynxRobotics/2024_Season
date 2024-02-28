@@ -43,7 +43,9 @@ public class RobotContainer {
 
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
-        .onTrue(new Shoot(m_shooter));
+        .whileTrue(new Shoot(m_shooter, false));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
+        .whileTrue(new Shoot(m_shooter, true));
     // aim amp (velocity only rn)
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .onTrue(new Aim(m_shooter, FieldElement.AMP));

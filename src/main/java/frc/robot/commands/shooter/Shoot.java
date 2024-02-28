@@ -8,9 +8,11 @@ import frc.robot.subsystems.shooter.Shooter;
 public class Shoot extends Command {
   private final Shooter m_shooter;
   private double timer;
+  private boolean m_reverse;
 
-  public Shoot(Shooter shooter) {
+  public Shoot(Shooter shooter, boolean reverse) {
     m_shooter = shooter;
+    m_reverse = reverse;
 
     addRequirements(m_shooter);
   }
@@ -18,7 +20,7 @@ public class Shoot extends Command {
   @Override
   public void initialize() {
     timer = Timer.getFPGATimestamp();
-    m_shooter.startFeedNote();
+    m_shooter.startFeedNote(m_reverse);
   }
 
   @Override

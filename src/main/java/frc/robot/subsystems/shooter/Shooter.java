@@ -70,6 +70,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Amp Angle", ShooterConfig.kAmpAngle.magnitude());
     SmartDashboard.putNumber("Trap Angle", ShooterConfig.kTrapAngle.magnitude());
 
+    m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
+
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
     }
@@ -106,8 +108,9 @@ public class Shooter extends SubsystemBase {
   }
 
   void testPeriodic() {
+    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
     double flywheelRPM =
-        SmartDashboard.getNumber("Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+        SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
@@ -125,8 +128,12 @@ public class Shooter extends SubsystemBase {
   }
 
   // runs the rollers
-  public void startFeedNote() {
-    m_rollerMotor.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
+  public void startFeedNote(boolean reverse) {
+    if (reverse) {
+      m_rollerMotor.set(-RobotConfig.ShooterConfig.kRollerDefaultSpeed);
+    } else {
+      m_rollerMotor.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
+    }
   }
 
   public void setShieldPosition(double position) {
@@ -140,7 +147,6 @@ public class Shooter extends SubsystemBase {
 
   // runs the flywheel at a speed in rotations per minute
   public void runFlywheel(double targetRPM) {
-    System.out.println("running flywheel");
     m_topFlywheelPIDController.setReference(targetRPM, CANSparkBase.ControlType.kVelocity);
   }
 

@@ -63,6 +63,7 @@ public class Aim extends Command {
           desiredVelocity = getVelocity(ShooterConfig.TrapHeight);
           break;
         default:
+          desiredVelocity = 0;
           desiredAngle = Units.Degrees.of(0);
           break;
       }
