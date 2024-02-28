@@ -124,10 +124,8 @@ public final class RobotConstants {
   }
 
   public static final class IntakeConstants {
-
     public static final int kLineBreakSensor = 0;
 
-    // TODO: update placeholder roller Motor ID
     public static final int kMotorID = 10;
   }
 }
