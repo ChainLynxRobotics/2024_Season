@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,16 +16,24 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intake.RunIntakeReversed;
+import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
 import frc.utils.Vector;
 
 public class RobotContainer {
   private Drivetrain m_robotDrive;
+  private Intake m_intake;
 
   // The driver's controller
   private XboxController m_driverController;
   private SendableChooser<Command> autoChooser;
+
+  // The codriver's controller
+  Joystick m_operatorController;
 
   private Vector leftInputVec;
   private Vector rightInputVec;
@@ -32,9 +41,12 @@ public class RobotContainer {
   public RobotContainer() {
     m_robotDrive = new Drivetrain();
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+    m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
     autoChooser = AutoBuilder.buildAutoChooser();
     leftInputVec = new Vector();
     rightInputVec = new Vector();
+
+    m_intake = new Intake();
 
     configureBindings();
     registerCommands();
@@ -83,6 +95,28 @@ public class RobotContainer {
   private void configureBindings() {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
+
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntakeReversed(m_intake));
+  }
+
+  /**
+   * Returns true if the intake is pressed; False otherwise.
+   *
+   * @see RobotConfig.IntakeConfig.Bindings.kIntakeNote
+   */
+  public boolean getIntakeButton() {
+    return m_operatorController.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
+  }
+
+  /**
+   * Returns true if the reverse intake button is pressed; False otherwise.
+   *
+   * @see RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID
+   */
+  public boolean getReverseIntakeButton() {
+    return m_operatorController.getRawButton(
+        RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID);
   }
 
   public boolean triggerPressed() {
