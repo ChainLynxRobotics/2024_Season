@@ -126,6 +126,7 @@ public final class RobotConstants {
   public static final class IntakeConstants {
     public static final int kLineBreakSensor = 0;
 
+    // Roller motor ID
     public static final int kMotorID = 10;
   }
 }
