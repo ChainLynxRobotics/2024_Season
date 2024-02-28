@@ -32,7 +32,7 @@ public class RobotConfig {
     public static final double kAngleControlMaxOutput = 0;
 
     // top Flywheel controller PID coefficients
-    public static final double kTopFlywheelP = 0;
+    public static final double kTopFlywheelP = 0.2;
     public static final double kTopFlywheelI = 0;
     public static final double kTopFlywheelD = 0;
     public static final double kTopFlywheelFF = 0;
@@ -59,9 +59,9 @@ public class RobotConfig {
     public static final String kTopFlywheelMaxOutputKey = "Top Flywheel Maximum output";
 
     // Roller Default Speed
-    public static final double kRollerDefaultSpeed = 0;
+    public static final double kRollerDefaultSpeed = 0.4;
     // Flywheel default speed
-    public static final double kFlywheelDefaultRPM = 0;
+    public static final double kFlywheelDefaultRPM = 1000;
     // Shield Extended position
     public static final double kShieldExtendedRotations = 124.140855612;
     // Shield Retracted position
