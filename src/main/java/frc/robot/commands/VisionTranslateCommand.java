@@ -13,7 +13,6 @@ import frc.utils.Vector;
 
 public class VisionTranslateCommand extends Command {
 
-  // private VisionSubsystem vision;
   private Vision vision;
   private Drivetrain drive;
   private XboxController controller;
