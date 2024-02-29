@@ -6,6 +6,7 @@ import frc.robot.subsystems.intake.Intake;
 
 public class RunIntake extends Command {
   private final Intake m_intake;
+  private boolean m_reversed;
 
   /**
    * Creates a new RunIntake command, which runs the roller motor on the intake subsystem to intake
@@ -13,8 +14,9 @@ public class RunIntake extends Command {
    *
    * @param intake The subsystem used by this command.
    */
-  public RunIntake(Intake intake) {
+  public RunIntake(Intake intake, boolean reversed) {
     m_intake = intake;
+    m_reversed = reversed;
 
     addRequirements(intake);
   }
@@ -22,7 +24,8 @@ public class RunIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.run(RobotConfig.IntakeConfig.kDefaultSpeed);
+    int multiplier = m_reversed ? -1 : 1;
+    m_intake.run(RobotConfig.IntakeConfig.kDefaultSpeed * multiplier);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
