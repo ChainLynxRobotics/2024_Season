@@ -1,22 +1,25 @@
 package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.*;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.RobotConfig.*;
-import frc.robot.constants.RobotConstants.*;
+import frc.robot.constants.RobotConfig;
+import frc.robot.constants.RobotConfig.DriveConfig;
+import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
-import frc.robot.subsystems.vision.Vision;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
@@ -27,8 +30,6 @@ public class Drivetrain extends SubsystemBase {
   private final MAXSwerveModule m_frontRight;
   private final MAXSwerveModule m_rearLeft;
   private final MAXSwerveModule m_rearRight;
-
-  private final SwerveModulePosition[] SwerveModulePositions;
 
   private Pigeon2 m_gyro;
 
@@ -47,17 +48,22 @@ public class Drivetrain extends SubsystemBase {
 
   private SlewRateLimiter m_magLimiter;
   private SlewRateLimiter m_rotLimiter;
+  private Vector spdCommanded;
 
   private Timer m_timer;
-  private double m_prevTime;
+  private double m_prevSlewRateTime;
 
-  private Vision m_vision;
+  private MutableMeasure<Angle> m_heading;
 
-  // Pose estimator class for tracking robot pose
-  SwerveDrivePoseEstimator m_swervePoseEstimator;
+  // Odometry class for tracking robot pose
+  SwerveDriveOdometry m_odometry;
+  private Pose2d m_pose;
+  private ChassisSpeeds m_relativeSpeeds;
 
-  /** constructs a new Drivatrain object */
-  public Drivetrain(Vision vision) {
+  private SwerveModulePosition[] m_swerveModulePositions;
+
+  /** constructs a new Drivetrain object */
+  public Drivetrain() {
     m_frontLeft =
         new MAXSwerveModule(
             DriveConstants.kFrontLeftDrivingCanId,
@@ -82,19 +88,22 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
-    SwerveModulePositions =
+    // TODO: initialize this to where we place the robot on the field, will get from auto chosen
+    // from Smart Dashboard
+    m_pose = new Pose2d();
+
+    m_swerveModulePositions =
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
-          m_rearRight.getPosition(),
+          m_rearRight.getPosition()
         };
 
-    m_currentRotationRadians = 0;
-
-    m_vision = vision;
-
     m_gyro = new Pigeon2(DriveConstants.kGyroId);
+    m_gyro.reset();
+
+    m_heading = MutableMeasure.ofBaseUnits(m_gyro.getAngle(), Units.Degrees);
 
     m_timer = new Timer();
 
@@ -102,42 +111,60 @@ public class Drivetrain extends SubsystemBase {
 
     m_magLimiter = new SlewRateLimiter(OIConstants.kMagnitudeSlewRate);
     m_rotLimiter = new SlewRateLimiter(OIConstants.kRotationalSlewRate);
+    spdCommanded = new Vector();
 
     m_timer.start();
-    m_prevTime = m_timer.get();
+    m_prevSlewRateTime = m_timer.get();
 
-    m_swervePoseEstimator =
-        new SwerveDrivePoseEstimator(
+    m_odometry =
+        new SwerveDriveOdometry(
             DriveConstants.kDriveKinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
-            SwerveModulePositions,
-            new Pose2d());
+            m_swerveModulePositions,
+            m_pose);
+
+    configureAutoBuilder();
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
   }
 
-  /** runs the periodic functionality of the drivetrain * */
+  /** configures the pathplanner AutoBuilder */
+  private void configureAutoBuilder() {
+    AutoBuilder.configureHolonomic(
+        this::getPose,
+        this::resetOdometry,
+        this::getSpeeds,
+        this::driveChassisSpeeds,
+        RobotConfig.DriveConfig.kPathFollowerConfig,
+        this::allianceCheck,
+        this);
+  }
+
+  /**
+   * returns the current speed of the drivetrain
+   *
+   * @return the current speed of the drivetrain
+   */
+  public ChassisSpeeds getSpeeds() {
+    return m_relativeSpeeds;
+  }
+
+  /** stops the drivetrain's movement */
+  public void stop() {
+    move(Vector.Origin, 0);
+  }
+
+  /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
-    // Update the pose estimator in the periodic block
-    m_swervePoseEstimator.update(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), SwerveModulePositions);
-
-    // Update the pose estimator with data from the vision pose estimator
-    Pose2d visPose = m_vision.getEstimatedPose2d();
-    if (visPose != null) {
-      // var pipelineResult = m_vision.getCam().getLatestResult();
-      // var resultTimestamp = pipelineResult.getTimestampSeconds();
-
-      /*m_swervePoseEstimator.addVisionMeasurement(
-      m_vision.getEstimatedPose2d(), Timer.getFPGATimestamp());*/
-    }
-
+    m_odometry.update(m_gyro.getRotation2d(), m_swerveModulePositions);
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
+    m_relativeSpeeds = getRobotRelativeSpeeds();
+    m_pose = m_odometry.getPoseMeters();
 
     SmartDashboard.putNumber("heading", ang - m_headingOffsetRadians);
 
@@ -148,11 +175,18 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Resets the pose estimator to the specified pose.
    *
-   * @param pose The pose to which to set the pose estimator.
+   * @param pose The pose to which to set the estimator.
    */
-  public void resetPoseEstimator(Pose2d pose) {
-    m_swervePoseEstimator.resetPosition(
-        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)), SwerveModulePositions, pose);
+  public void resetOdometry(Pose2d pose) {
+    m_odometry.resetPosition(
+        Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition(),
+        },
+        pose);
   }
 
   /**
@@ -176,13 +210,25 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
+   * moves the divetrain based on the given ChassisSpeeds
+   *
+   * @param spds the target speeds of the drivetrain chassis
+   */
+  public void driveChassisSpeeds(ChassisSpeeds spds) {
+    Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
+    spdCommanded = spd;
+    double angVel = spds.omegaRadiansPerSecond;
+    move(spd, angVel);
+  }
+
+  /**
    * moves the drivetrain using the main turning mode
    *
    * @param xSpeed the proportion of the robot's max velocity to move in the x direction
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param xRot the speed to rotate with (-1, 1)
    */
-  private void mainDrive(Vector spdVec, double xRot) {
+  public void mainDrive(Vector spdVec, double xRot) {
     double rot = xRot * DriveConfig.kMaxAngularSpeed;
     move(spdVec, rot);
   }
@@ -193,8 +239,8 @@ public class Drivetrain extends SubsystemBase {
    * @see Measure
    * @return the angle of the robot gyro
    */
-  private Measure<Angle> getGyroAngle() {
-    return Units.Degrees.of(m_gyro.getAngle());
+  public Measure<Angle> getGyroAngle() {
+    return m_heading.mut_replace(m_gyro.getAngle(), Units.Degrees);
   }
 
   /**
@@ -205,7 +251,7 @@ public class Drivetrain extends SubsystemBase {
    * @param xRot the x component of the direction vector to point towards
    * @param yRot the y component of the direction vector to point towards
    */
-  private void altDrive(Vector spdVec, Vector rotVec) {
+  public void altDrive(Vector spdVec, Vector rotVec) {
     double rot = 0;
     m_rightAngGoalRadians = rotVec.angle();
     if (rotVec.squaredMag() > 0) {
@@ -217,11 +263,42 @@ public class Drivetrain extends SubsystemBase {
     move(spdVec, rot);
   }
 
+  /**
+   * returns the current speed of the robot from it's reference frame
+   *
+   * @return the current speed of the robot from it's reference frame
+   */
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+        new SwerveModuleState[] {
+          m_frontLeft.getState(),
+          m_frontRight.getState(),
+          m_rearLeft.getState(),
+          m_rearRight.getState()
+        });
+  }
+
+  /**
+   * applies smoothing to the turning input of altDrive
+   *
+   * @param stickAng the given angle of the driver turning stick
+   * @return the commanded rotation based on the rotation input
+   */
   private double altTurnSmooth(double stickAng) {
     return Math.tanh(
             ((getGyroAngle().in(Units.Radians) + stickAng + Math.PI) % (2 * Math.PI) - Math.PI)
                 / DriveConfig.altTurnSmoothing)
         * DriveConfig.kMaxAngularSpeed;
+  }
+
+  /**
+   * returns the current position of the robot on the field
+   *
+   * @return the current position of the robot on the field
+   */
+  private Pose2d getPose() {
+    Pose2d pose = m_odometry.getPoseMeters();
+    return pose;
   }
 
   /**
@@ -231,7 +308,7 @@ public class Drivetrain extends SubsystemBase {
    * @param ySpeed the proportion of the robot's max velocity to move in the y direction
    * @param rot the angular velocity to rotate the drivetrain in radians/s
    */
-  private void move(Vector spdVec, double rot) {
+  public void move(Vector spdVec, double rot) {
     move(spdVec, rot, true);
   }
 
@@ -244,23 +321,28 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit whether or not to use slew rate limiting
    */
   private void move(Vector spdVec, double rot, boolean rateLimit) {
-    Vector spdCommanded = spdVec;
     m_currentRotationRadians = rot;
 
+    spdCommanded.setX(spdVec.x());
+    spdCommanded.setY(spdVec.y());
+
     if (rateLimit) {
-      spdVec = limitDirectionSlewRate(spdVec);
+      limitDirectionSlewRate(spdCommanded);
       m_currentRotationRadians = m_rotLimiter.calculate(rot);
+      SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationMagOutput, spdCommanded.mag());
+      SmartDashboard.putNumber(DriveConfig.kSlewRateTranslationDirRadOutput, spdCommanded.angle());
     }
 
     // Adjust input based on max speed
-    Vector spdDelivered = spdCommanded.copy().mult(DriveConfig.kMaxSpeedMetersPerSecond);
+    spdCommanded.mult(DriveConfig.kMaxSpeedMetersPerSecond);
+
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
-                spdDelivered.x(),
-                spdDelivered.y(),
+                spdCommanded.x(),
+                spdCommanded.y(),
                 rotDelivered,
                 Rotation2d.fromDegrees(-m_gyro.getAngle())));
     SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -271,71 +353,79 @@ public class Drivetrain extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
-  private Vector limitDirectionSlewRate(Vector spdVec) {
+  /**
+   * applies slewrate limiting to the given control vector
+   *
+   * @param spdVec the vector which represents the commanded speed of the drivetrain
+   * @return the slew rate limited Vector for controlling the drivetrain
+   */
+  private void limitDirectionSlewRate(Vector spdVec) {
     // Convert XY to polar for rate limiting
     double inputTranslationDir = spdVec.angle();
     double inputTranslationMag = spdVec.mag();
 
     // Calculate the direction slew rate based on an estimate of the lateral acceleration
     double directionSlewRate;
-    if (m_currentTranslationMag > 1e-4) {
+    // if very close to zero but not exactly zero, there is no in division by zero due to floating
+    // point precision errors
+    if (m_currentTranslationMag != 0) {
+      // set lower rate of change/slew rate for higher translation speeds
       directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
     } else {
-      directionSlewRate =
-          DriveConfig
-              .HIGH_DIRECTION_SLEW_RATE; // some high number that means the slew rate is effectively
-      // instantaneous
+      directionSlewRate = DriveConfig.HIGH_DIRECTION_SLEW_RATE;
     }
 
     double currentTime = m_timer.get();
-    double elapsedTime = currentTime - m_prevTime;
+    double elapsedTime = currentTime - m_prevSlewRateTime;
 
     double angleDif =
         SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDirRadians);
-
-    m_prevTime = currentTime;
 
     if (angleDif < DriveConfig.MIN_ANGLE_SLEW_RATE) {
       m_currentTranslationDirRadians =
           SwerveUtils.StepTowardsCircular(
               m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
       m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-      return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
-    }
-
-    if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
-      if (SwerveUtils.approxEqual(
-          m_currentTranslationMag,
-          0)) { // some small number to avoid floating-point errors with equality checking
-        // keep currentTranslationDir unchanged
+      SmartDashboard.putNumber("translation magnitude output", inputTranslationMag);
+    } else if (angleDif > DriveConfig.MAX_ANGLE_SLEW_RATE) {
+      if (m_currentTranslationMag > 1e-4) {
         m_currentTranslationMag = m_magLimiter.calculate(0.0);
-        return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
+      } else {
+        m_currentTranslationDirRadians =
+            SwerveUtils.WrapAngle(m_currentTranslationDirRadians + Math.PI);
+        m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
       }
-
+    } else {
       m_currentTranslationDirRadians =
-          SwerveUtils.WrapAngle(m_currentTranslationDirRadians + Math.PI);
-      m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-      return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
+          SwerveUtils.StepTowardsCircular(
+              m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
+
+      m_currentTranslationMag = m_magLimiter.calculate(0.0);
+
+      m_prevSlewRateTime = currentTime;
     }
 
-    m_currentTranslationDirRadians =
-        SwerveUtils.StepTowardsCircular(
-            m_currentTranslationDirRadians, inputTranslationDir, directionSlewRate * elapsedTime);
+    spdVec.setX(m_currentTranslationMag);
+    spdVec.setY(0);
+    spdVec.rot(m_currentTranslationDirRadians);
+  }
 
-    m_currentTranslationMag = m_magLimiter.calculate(0.0);
-
-    return (new Vector(m_currentTranslationMag, 0)).rot(m_currentTranslationDirRadians);
+  /**
+   * checks whether pathplanner paths should be flipped based on the current alliance
+   *
+   * @return whether pathplanner paths should be flipped
+   */
+  private boolean allianceCheck() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
   }
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_headingOffsetRadians = getGyroAngle().in(Units.Radians);
     m_gyro.reset();
-  }
-
-  /** run periodically when being simulated, required but not used in this implementation */
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
   }
 }
