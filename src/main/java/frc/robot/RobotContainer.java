@@ -14,10 +14,12 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.shooter.*;
+import frc.robot.commands.shooter.ActuateShield;
+import frc.robot.commands.shooter.Aim;
+import frc.robot.commands.shooter.Shoot;
 import frc.robot.constants.RobotConfig;
-import frc.robot.constants.RobotConfig.*;
-import frc.robot.constants.RobotConstants.*;
+import frc.robot.constants.RobotConfig.FieldElement;
+import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
@@ -93,7 +95,6 @@ public class RobotContainer {
         .whileTrue(new Shoot(m_intake, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
         .whileTrue(new Shoot(m_intake, true));
-    // aim amp (velocity only rn)
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .whileTrue(new Aim(m_shooter, FieldElement.AMP));
 
@@ -101,8 +102,10 @@ public class RobotContainer {
     m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
 
     // triggers for extending and retracting shield manually
+    //don't extend shield
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
         .onTrue(new ActuateShield(m_shooter, false));
+    //extend shield
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
 

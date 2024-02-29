@@ -24,7 +24,6 @@ public class ActuateShield extends Command {
 
   @Override
   public void execute() {
-    System.out.println("executing shield");
     double timeDiff = Timer.getFPGATimestamp() - initTime;
     if (timeDiff < ShooterConfig.kShieldTime) {
       m_shooter.setShield(m_shieldState);
