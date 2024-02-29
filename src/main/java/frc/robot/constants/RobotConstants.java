@@ -15,7 +15,7 @@ import edu.wpi.first.units.*;
 public final class RobotConstants {
 
   public final class Bindings {
-    public static final int kAimAmp = 3;
+    public static final int kAimAmp = 4;
     public static final int kShoot = 1;
     public static final int kShootReverse = 13;
     public static final int kAimTrap = 2;

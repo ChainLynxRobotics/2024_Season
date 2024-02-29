@@ -50,7 +50,8 @@ public class Aim extends Command {
       switch (m_type) {
         case AMP:
           desiredAngle = ShooterConfig.kAmpAngle;
-          desiredVelocity = getVelocity(ShooterConfig.AmpHeight);
+          //desiredVelocity = getVelocity(ShooterConfig.AmpHeight);
+          desiredVelocity = ShooterConfig.ampVelocity;
           m_shooter.setShieldPosition(ShooterConfig.kShieldExtendedRotations);
           break;
         case SPEAKER:
@@ -60,7 +61,8 @@ public class Aim extends Command {
         case TRAP:
           desiredAngle = ShooterConfig.kTrapAngle;
           m_shooter.setShieldPosition(ShooterConfig.kShieldRetractedRotations);
-          desiredVelocity = getVelocity(ShooterConfig.TrapHeight);
+          //desiredVelocity = getVelocity(ShooterConfig.TrapHeight);
+          desiredVelocity = ShooterConfig.trapVelocity;
           break;
         default:
           desiredVelocity = 0;
@@ -73,9 +75,15 @@ public class Aim extends Command {
 
   public double getVelocity(double elementHeight) {
     return m_shooter.convertToRPM(
-        m_shooter.calculateVelocity(ShooterConfig.AmpHeight, desiredAngle).magnitude());
+        m_shooter.calculateVelocity(elementHeight, desiredAngle).magnitude());
   }
 
+  @Override
+  public void end(boolean interrupted) {
+    m_shooter.stopFlywheel();
+  }
+
+  @Override
   public boolean isFinished() {
     return m_shooter.isAtFlywheelSetpoint(desiredVelocity);
   }

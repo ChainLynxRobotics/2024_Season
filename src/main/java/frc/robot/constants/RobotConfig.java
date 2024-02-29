@@ -34,11 +34,11 @@ public class RobotConfig {
     // top Flywheel controller PID coefficients
     public static final double kTopFlywheelP = 0.2;
     public static final double kTopFlywheelI = 0;
-    public static final double kTopFlywheelD = 0;
+    public static final double kTopFlywheelD = 0.001;
     public static final double kTopFlywheelFF = 0;
-    public static final double kTopFlywheelIZone = 0;
-    public static final double kTopFlywheelMinOutput = 0;
-    public static final double kTopFlywheelMaxOutput = 0;
+    public static final double kTopFlywheelIZone = 0.0001;
+    public static final double kTopFlywheelMinOutput = -1;
+    public static final double kTopFlywheelMaxOutput = 1;
 
     // Smart dashboard Angle Controller keys
     public static final String kAngleControlPGainKey = "Angle Controller P Gain";
@@ -90,6 +90,10 @@ public class RobotConfig {
     public static final Measure<Angle> kAmpAngle = Units.Radians.of(109 * Math.PI / 180);
     public static final Measure<Angle> kTrapAngle = Units.Radians.of(105 * Math.PI / 180);
     public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5 * Math.PI / 180);
+
+    //TODO placeholders
+    public static final double ampVelocity = 2500; //rpm
+    public static final double trapVelocity = 2000; //rpm
   }
 
   public static class DriveConfig {

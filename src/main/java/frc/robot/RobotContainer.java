@@ -14,6 +14,7 @@ import frc.robot.commands.shooter.*;
 import frc.robot.constants.RobotConfig.*;
 import frc.robot.constants.RobotConstants.*;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 
@@ -25,15 +26,17 @@ public class RobotContainer {
 
   private Vision m_vision;
   private Shooter m_shooter;
+  private Intake m_intake;
 
   public RobotContainer() {
     m_operatorController = new Joystick(OIConstants.kOperatorControllerPort);
     m_shooter = new Shooter();
     m_vision = new Vision();
+    m_intake = new Intake();
     configureBindings();
 
-    m_shooter.setDefaultCommand(
-        new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));
+    /*m_shooter.setDefaultCommand(
+        new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
   }
 
   private void configureBindings() {
@@ -43,14 +46,14 @@ public class RobotContainer {
 
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
-        .whileTrue(new Shoot(m_shooter, false));
+        .whileTrue(new Shoot(m_intake, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
-        .whileTrue(new Shoot(m_shooter, true));
+        .whileTrue(new Shoot(m_intake, true));
     // aim amp (velocity only rn)
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .onTrue(new Aim(m_shooter, FieldElement.AMP));
+        .whileTrue(new Aim(m_shooter, FieldElement.AMP));
 
-    m_speakerAim.onTrue(new Aim(m_shooter, FieldElement.SPEAKER));
+    m_speakerAim.whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
     m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
 
     // triggers for extending and retracting shield manually
