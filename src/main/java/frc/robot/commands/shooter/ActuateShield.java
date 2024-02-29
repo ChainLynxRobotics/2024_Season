@@ -1,12 +1,15 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
 
 public class ActuateShield extends Command {
   private final Shooter m_shooter;
   private final boolean m_shieldState;
+  private double initTime;
 
   public ActuateShield(Shooter shooter, boolean extend) {
     m_shooter = shooter;
@@ -17,10 +20,15 @@ public class ActuateShield extends Command {
 
   @Override
   public void initialize() {
-    if (m_shieldState) {
-      m_shooter.setShieldPosition(ShooterConfig.kShieldExtendedRotations);
-    } else {
-      m_shooter.setShieldPosition(ShooterConfig.kShieldRetractedRotations);
+    initTime = Timer.getFPGATimestamp();
+  }
+
+  @Override
+  public void execute() {
+    System.out.println("executing shield");
+    double timeDiff = Timer.getFPGATimestamp() - initTime;
+    if (timeDiff < ShooterConfig.kShieldTime) {
+      m_shooter.setShield(m_shieldState);
     }
   }
 
@@ -31,11 +39,6 @@ public class ActuateShield extends Command {
 
   @Override
   public boolean isFinished() {
-    // if we want the shield to be out, return true if that is the status
-    if (m_shieldState) {
-      return m_shooter.getShieldStatus();
-    } else {
-      return !m_shooter.getShieldStatus();
-    }
+    return m_shooter.getShieldStatus(m_shieldState);
   }
 }

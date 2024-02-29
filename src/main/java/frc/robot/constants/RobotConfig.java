@@ -62,13 +62,11 @@ public class RobotConfig {
     public static final double kRollerDefaultSpeed = -0.4;
     // Flywheel default speed
     public static final double kFlywheelDefaultRPM = 1000;
-    // Shield Extended position
-    public static final double kShieldExtendedRotations = 124.140855612;
     // Shield Retracted position
-    public static final double kShieldRetractedRotations = 0;
+    public static final double kShieldRetractedPosition = 15;
     // Timeout time (in seconds)
     public static final double kRunIntakeTimeoutTime = 0;
-    public static final double kShieldExtendedPosition = 10; // TODO get correct value
+    public static final double kShieldExtendedPosition = 85; // TODO get correct value
     // Speaker height
     public static final double SpeakerHeight = 1.9812;
     public static final double AmpHeight = .46;
@@ -84,6 +82,8 @@ public class RobotConfig {
     public static final double kShooterStowAngle = 0;
 
     public static final long kReleaseTime = 5000;
+    public static final long kShieldTime = 2; //seconds
+    public static final double kShieldDefaultSpeed = 0.3;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
     public static final Measure<Angle> kAngleError = Units.Radians.of(0.5 * Math.PI / 180);
     public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75 * Math.PI / 180);

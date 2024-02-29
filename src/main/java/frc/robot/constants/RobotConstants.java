@@ -19,11 +19,11 @@ public final class RobotConstants {
     public static final int kShoot = 1;
     public static final int kShootReverse = 13;
     public static final int kAimTrap = 2;
-    public static final int kStowShooter = 15;
+    public static final int kStowShooter = 14;
     public static final int kToggleFlywheel = 5;
     public static final int kManualAngleSlider = 3;
     public static final int kRetractShield = 16;
-    public static final int kExtendShield = 17;
+    public static final int kExtendShield = 15;
     public static final int kManualAdjustDown = 18;
     public static final int kManualAdjustUp = 19;
   }

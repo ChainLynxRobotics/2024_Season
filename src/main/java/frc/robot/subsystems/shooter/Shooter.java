@@ -103,6 +103,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
     if (DriverStation.isTest()) {
       testPeriodic();
     }
@@ -145,8 +146,9 @@ public class Shooter extends SubsystemBase {
   }
 
 
-  public void setShieldPosition(double position) {
-    m_shieldController.getEncoder().setPosition(position);
+  public void setShield(boolean forward) {
+    double multiplier = forward ? 1 : -1;
+    m_shieldController.set(ShooterConfig.kShieldDefaultSpeed*multiplier);
   }
 
   // runs the flywheel at a speed in rotations per minute
@@ -184,8 +186,12 @@ public class Shooter extends SubsystemBase {
   }
 
   // returns true if extended
-  public boolean getShieldStatus() {
-    return (Math.abs(m_shieldEncoder.getPosition()) > ShooterConfig.kShieldExtendedPosition);
+  public boolean getShieldStatus(boolean extend) {
+    if (extend) {
+      return Math.abs(m_shieldEncoder.getPosition()) > ShooterConfig.kShieldExtendedPosition;
+    } else {
+      return Math.abs(m_shieldEncoder.getPosition()) < ShooterConfig.kShieldRetractedPosition;
+    }
   }
 
   public Measure<Angle> getShieldPosition() {
