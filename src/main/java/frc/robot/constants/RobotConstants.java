@@ -55,6 +55,8 @@ public final class RobotConstants {
     public static final class OIConstants {
 
       public static final int kDriverControllerPort = 0;
+      public static final int kOperatorJoystickPort = 1;
+
       public static final double kDriveDeadband = 0.06;
       public static final double kMagnitudeDeadband = 0.06;
       public static final double kDirectionSlewRate = 10; // radians per second
@@ -122,11 +124,9 @@ public final class RobotConstants {
   }
 
   public static final class IntakeConstants {
+    public static final int kLineBreakSensor = 0;
 
-    // TODO: update placeholder digital input ID
-    public static final int kLineBreakSensor = -1;
-
-    // TODO: update placeholder roller Motor ID
-    public static final int kMotorID = -1;
+    // Roller motor ID
+    public static final int kMotorID = 10;
   }
 }
