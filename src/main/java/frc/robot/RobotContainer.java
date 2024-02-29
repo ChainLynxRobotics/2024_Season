@@ -88,6 +88,7 @@ public class RobotContainer {
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
+    // RunIntake constructor boolean is whether or not the intake should run reversed.
     new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, true));
     new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, false));
     // just shoot on trigger
