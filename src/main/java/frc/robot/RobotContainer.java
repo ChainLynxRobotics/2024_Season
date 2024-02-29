@@ -82,10 +82,11 @@ public class RobotContainer {
                   m_driverController.getAButton());
             },
             m_robotDrive));
-
+    
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
+    // RunIntake constructor boolean is whether or not the intake should run reversed.
     new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, true));
     new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, false));
     // just shoot on trigger
@@ -100,7 +101,6 @@ public class RobotContainer {
     m_speakerAim.whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
     m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
 
-    // triggers for extending and retracting shield manually
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
         .onTrue(new ActuateShield(m_shooter, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
