@@ -23,5 +23,4 @@ public class Shoot extends Command {
   public void end(boolean interrupted) {
     m_intake.stopFeedNote();
   }
-
 }
