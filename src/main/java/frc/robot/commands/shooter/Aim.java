@@ -53,7 +53,7 @@ public class Aim extends Command {
       switch (m_type) {
         case AMP:
           desiredAngle = ShooterConfig.kAmpAngle;
-          //desiredVelocity = getVelocity(ShooterConfig.AmpHeight);
+          // desiredVelocity = getVelocity(ShooterConfig.AmpHeight);
           desiredVelocity = ShooterConfig.ampVelocity;
           break;
         case SPEAKER:
@@ -62,7 +62,7 @@ public class Aim extends Command {
           break;
         case TRAP:
           desiredAngle = ShooterConfig.kTrapAngle;
-          //desiredVelocity = getVelocity(ShooterConfig.TrapHeight);
+          // desiredVelocity = getVelocity(ShooterConfig.TrapHeight);
           desiredVelocity = ShooterConfig.trapVelocity;
           break;
         default:
@@ -74,11 +74,11 @@ public class Aim extends Command {
     }
   }
 
-
   @Override
   public void execute() {
     double timeDiff = Timer.getFPGATimestamp() - initTime;
-    if (m_type == FieldElement.AMP || m_type == FieldElement.TRAP && timeDiff < ShooterConfig.kShieldTime) {
+    if (m_type == FieldElement.AMP
+        || m_type == FieldElement.TRAP && timeDiff < ShooterConfig.kShieldTime) {
       m_shooter.setShield(true);
     }
   }

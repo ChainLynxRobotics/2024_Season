@@ -82,7 +82,7 @@ public class RobotConfig {
     public static final double kShooterStowAngle = 0;
 
     public static final long kReleaseTime = 5000;
-    public static final long kShieldTime = 2; //seconds
+    public static final long kShieldTime = 2; // seconds
     public static final double kShieldDefaultSpeed = 0.3;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
     public static final Measure<Angle> kAngleError = Units.Radians.of(0.5 * Math.PI / 180);
@@ -91,9 +91,9 @@ public class RobotConfig {
     public static final Measure<Angle> kTrapAngle = Units.Radians.of(105 * Math.PI / 180);
     public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5 * Math.PI / 180);
 
-    //TODO placeholders
-    public static final double ampVelocity = 2500; //rpm
-    public static final double trapVelocity = 2000; //rpm
+    // TODO placeholders
+    public static final double ampVelocity = 2500; // rpm
+    public static final double trapVelocity = 2000; // rpm
   }
 
   public static class DriveConfig {

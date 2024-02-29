@@ -20,8 +20,8 @@ import frc.robot.constants.RobotConstants.ShooterConstants;
  */
 public class Shooter extends SubsystemBase {
   /** 1. create motor and pid controller objects */
-
   private CANSparkMax m_topFlywheelMotor;
+
   private CANSparkMax m_bottomFlywheelMotor;
   private RelativeEncoder m_topFlywheelEncoder;
   private RelativeEncoder m_bottomFlywheelEncoder;
@@ -37,7 +37,8 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
 
     // Flywheel
-    m_topFlywheelMotor = new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushless);
+    m_topFlywheelMotor =
+        new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushless);
     m_topFlywheelEncoder = m_topFlywheelMotor.getEncoder();
     m_topFlywheelPIDController = m_topFlywheelMotor.getPIDController();
     m_bottomFlywheelMotor =
@@ -111,7 +112,8 @@ public class Shooter extends SubsystemBase {
 
   void testPeriodic() {
     SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
-    SmartDashboard.putNumber("Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
     double flywheelRPM =
         SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
@@ -145,10 +147,9 @@ public class Shooter extends SubsystemBase {
     return angle;
   }
 
-
   public void setShield(boolean forward) {
     double multiplier = forward ? 1 : -1;
-    m_shieldController.set(ShooterConfig.kShieldDefaultSpeed*multiplier);
+    m_shieldController.set(ShooterConfig.kShieldDefaultSpeed * multiplier);
   }
 
   // runs the flywheel at a speed in rotations per minute
