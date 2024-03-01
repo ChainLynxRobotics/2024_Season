@@ -63,17 +63,18 @@ public class RobotConfig {
     // Flywheel default speed
     public static final double kFlywheelDefaultRPM = 0;
     // Shield Extended position
-    public static final double kShieldExtendedRotations = 124.140855612;
-    // Shield Retracted position
-    public static final double kShieldRetractedRotations = 0;
+    public static final double kShieldDefaultSpeed = 0.3;
+
     // Timeout time (in seconds)
     public static final double kRunIntakeTimeoutTime = 0;
-    public static final double kShieldExtendedPosition = 10; // TODO get correct value
+
+    public static final double kShieldExtendedPosition = 85;
+    public static final double kShieldRetractedPosition = 15;
     // Speaker height
     public static final double SpeakerHeight = 1.9812;
     public static final double AmpHeight = .46;
     public static final double ShooterHeight = 0.28575;
-    public static final double TrapHeight = -1;
+    public static final double TrapHeight = 1;
 
     public static final double SpeakerBillLength = 0.6604;
 
@@ -85,11 +86,16 @@ public class RobotConfig {
 
     public static final long kReleaseTime = 500;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
-    public static final Measure<Angle> kAngleError = Units.Radians.of(0.5*Math.PI/180);
-    public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75*Math.PI/180);
-    public static final Measure<Angle> kAmpAngle = Units.Radians.of(109*Math.PI/180);
-    public static final Measure<Angle> kTrapAngle = Units.Radians.of(105*Math.PI/180);
-    public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5*Math.PI/180);
+    public static final Measure<Angle> kAngleError = Units.Radians.of(0.5 * Math.PI / 180);
+    public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75 * Math.PI / 180);
+    public static final Measure<Angle> kAmpAngle = Units.Radians.of(109 * Math.PI / 180);
+    public static final Measure<Angle> kTrapAngle = Units.Radians.of(105 * Math.PI / 180);
+    public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5 * Math.PI / 180);
+
+    // rpm
+    public static final double kDefaultTrapVelocity = 1000;
+    public static final double kDefaultAmpVelocity = 600;
+    public static final double kDefaultSpeakerVelocity = 2000;
   }
 
   public static class DriveConfig {

@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
-import frc.robot.commands.VisionTurnCommand;
 import frc.robot.commands.shooter.*;
 import frc.robot.constants.RobotConfig.*;
 import frc.robot.constants.RobotConstants.*;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 import frc.utils.Vector;
@@ -33,6 +33,7 @@ public class RobotContainer {
   private Vision m_vision;
   private Drivetrain m_robotDrive;
   private Shooter m_shooter;
+  private Intake m_intake;
 
   public RobotContainer() {
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -40,6 +41,7 @@ public class RobotContainer {
     m_shooter = new Shooter();
     m_vision = new Vision();
     m_robotDrive = new Drivetrain(m_vision);
+    m_intake = new Intake();
     configureBindings();
 
     m_shooter.setDefaultCommand(
@@ -73,7 +75,7 @@ public class RobotContainer {
 
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
-        .onTrue(new Shoot(m_shooter));
+        .onTrue(new Shoot(m_intake));
     // aim amp
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .onTrue(new Aim(m_shooter, FieldElement.AMP));
@@ -99,9 +101,6 @@ public class RobotContainer {
 
     new Trigger(() -> triggerPressed())
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
-
-    new Trigger(() -> m_driverController.getBButton())
-        .onTrue(new VisionTurnCommand(m_vision, m_robotDrive, m_driverController));
   }
 
   public boolean triggerPressed() {

@@ -46,13 +46,12 @@ public final class RobotConstants {
   }
 
   public final class ShooterConstants {
-    public static final int kRollerMotorLeftId = -1;
-    public static final int kRollerMotorRightId = -1;
+    public static final int kRollerMotorId = 15;
     public static final int kAngleMotorLeaderId = -1;
     public static final int kAngleMotorFollowerId = -1;
-    public static final int kTopFlywheelMotorId = -1;
-    public static final int kBottomFlywheelMotorId = -1;
-    public static final int kShieldMotorId = -1;
+    public static final int kTopFlywheelMotorId = 16;
+    public static final int kBottomFlywheelMotorId = 17;
+    public static final int kShieldMotorId = 18;
     public static final double FlywheelDiameter = 0.0762;
     public static final double ShooterLength = 0.4064;
     public static final double Gravity = 9.81;
@@ -70,17 +69,17 @@ public final class RobotConstants {
 
     public static final double kDriveDeadband = 0.06;
 
-    public static final int kFrontLeftDrivingCanId = 6;
-    public static final int kFrontLeftTurningCanId = 5;
+    public static final int kFrontLeftDrivingCanId = 2;
+    public static final int kFrontLeftTurningCanId = 1;
 
-    public static final int kFrontRightDrivingCanId = 8;
-    public static final int kFrontRightTurningCanId = 7;
+    public static final int kFrontRightDrivingCanId = 6;
+    public static final int kFrontRightTurningCanId = 5;
 
     public static final int kRearLeftDrivingCanId = 4;
     public static final int kRearLeftTurningCanId = 3;
 
-    public static final int kRearRightDrivingCanId = 2;
-    public static final int kRearRightTurningCanId = 1;
+    public static final int kRearRightDrivingCanId = 8;
+    public static final int kRearRightTurningCanId = 7;
 
     public static final int kGyroId = 15;
 
@@ -163,5 +162,12 @@ public final class RobotConstants {
       public static final int kDrivingMotorCurrentLimit = 50; // amps
       public static final int kTurningMotorCurrentLimit = 20; // amps
     }
+  }
+
+  public static final class IntakeConstants {
+    public static final int kLineBreakSensor = 0;
+
+    // Roller motor ID
+    public static final int kMotorID = 10;
   }
 }

@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.units.*;
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,8 +20,6 @@ import frc.robot.constants.RobotConstants.ShooterConstants;
  */
 public class Shooter extends SubsystemBase {
   /** 1. create motor and pid controller objects */
-  private CANSparkMax m_rollerMotor;
-
   private CANSparkMax m_angleMotorLeader;
   private CANSparkMax m_angleMotorFollower;
   private SparkPIDController m_anglePIDController;
@@ -38,16 +35,13 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_shieldController;
   private RelativeEncoder m_shieldEncoder;
 
-  private MutableMeasure<Velocity<Angle>> m_shooterSpeed;
+  private MutableMeasure<Velocity<Distance>> m_shooterSpeed;
+  private MutableMeasure<Velocity<Distance>> m_targetVelocity;
   private MutableMeasure<Angle> m_shooterAngle;
   private MutableMeasure<Angle> m_targetAngle;
   private MutableMeasure<Angle> m_shieldPosition;
-  private MutableMeasure<Velocity<Distance>> m_targetVelocity;
 
   public Shooter() {
-    // Roller
-    m_rollerMotor = new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
-
     // Flywheel
     m_topFlywheelMotor = new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushed);
     m_topFlywheelEncoder = m_topFlywheelMotor.getEncoder();
@@ -99,6 +93,12 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Speaker Angle", ShooterConfig.kSpeakerAngle.magnitude());
     SmartDashboard.putNumber("Amp Angle", ShooterConfig.kAmpAngle.magnitude());
     SmartDashboard.putNumber("Trap Angle", ShooterConfig.kTrapAngle.magnitude());
+
+    m_targetAngle = MutableMeasure.zero(Units.Degrees);
+    m_shooterAngle = MutableMeasure.mutable(getCurrentAngle());
+    m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
+    m_shooterSpeed = MutableMeasure.zero(Units.MetersPerSecond);
+    m_shieldPosition = MutableMeasure.zero(Units.Rotations);
 
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
@@ -198,18 +198,10 @@ public class Shooter extends SubsystemBase {
     return angle;
   }
 
-  // runs the rollers
-  public void startFeedNote() {
-    m_rollerMotor.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
-  }
 
-  public void setShieldPosition(double position) {
-    m_shieldController.getEncoder().setPosition(position);
-  }
-
-  // stops the rollers
-  public void stopFeedNote() {
-    m_rollerMotor.stopMotor();
+  public void setShield(boolean forward) {
+    double multiplier = forward ? 1 : -1;
+    m_shieldController.set(ShooterConfig.kShieldDefaultSpeed * multiplier);
   }
 
   // runs the flywheel at a speed in rotations per minute
@@ -229,8 +221,8 @@ public class Shooter extends SubsystemBase {
     m_shieldEncoder.setPosition(0);
   }
 
-  public Measure<Velocity<Angle>> getCurrentRPM() {
-    return m_shooterSpeed.mut_replace(m_topFlywheelEncoder.getVelocity(), Units.RPM);
+  public Measure<Velocity<Distance>> getCurrentRPM() {
+    return m_shooterSpeed.mut_replace(m_topFlywheelEncoder.getVelocity(), Units.MetersPerSecond);
   }
 
   public Measure<Angle> getCurrentAngle() {
@@ -243,24 +235,23 @@ public class Shooter extends SubsystemBase {
 
   public Measure<Velocity<Distance>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {
     return m_targetVelocity.mut_replace(
-        Math.sqrt(2 * ShooterConstants.Gravity * targetY)
-            / (Math.sin(targetAngle.in(Units.Degrees))),
+        Math.abs(
+            Math.sqrt(2 * ShooterConstants.Gravity * targetY)
+                / (Math.sin(targetAngle.magnitude()))),
         Units.MetersPerSecond);
   }
 
   public double convertToRPM(double velocity) {
-    // 0.0762 meters is diameter of flywheel
     double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
-    double rpm = velocity / circumference;
+    double rpm = velocity / circumference * 60;
     return rpm;
   }
 
-  // returns true if extended
-  public boolean getShieldStatus() {
-    if (Math.abs(m_shieldEncoder.getPosition()) < ShooterConfig.kShieldExtendedPosition) {
-      return false;
+  public boolean getShieldStatus(boolean extend) {
+    if (extend) {
+      return Math.abs(m_shieldEncoder.getPosition()) > ShooterConfig.kShieldExtendedPosition;
     } else {
-      return true;
+      return Math.abs(m_shieldEncoder.getPosition()) < ShooterConfig.kShieldRetractedPosition;
     }
   }
 
