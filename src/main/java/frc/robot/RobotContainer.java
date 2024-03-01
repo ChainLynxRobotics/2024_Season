@@ -57,12 +57,15 @@ public class RobotContainer {
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
 
-    autoChooser = AutoBuilder.buildAutoChooser();
+
     leftInputVec = new Vector();
     rightInputVec = new Vector();
 
-    configureBindings();
+
     registerCommands();
+    //adds all autos in deploy dir to chooser
+    autoChooser = AutoBuilder.buildAutoChooser();
+    configureBindings();
 
     /*m_shooter.setDefaultCommand(
     new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
@@ -113,6 +116,7 @@ public class RobotContainer {
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
 
+    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -129,7 +133,7 @@ public class RobotContainer {
 
   // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", doNothing());
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
     NamedCommands.registerCommand("scoreAmp", doNothing());
     NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
   }

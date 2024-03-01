@@ -129,9 +129,8 @@ public class Shooter extends SubsystemBase {
         "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
     double flywheelRPM =
         SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter/Flywheel RPM", flywheelRPM);
 
-    
 
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
@@ -139,7 +138,7 @@ public class Shooter extends SubsystemBase {
   }
 
   void testPeriodic() {
-    
+
   }
 
   public double degreesToRotations(double angle) {
@@ -186,7 +185,7 @@ public class Shooter extends SubsystemBase {
 
   public double convertToRPM(double velocity) {
     // 0.0762 meters is diameter of flywheel
-    double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
+    double circumference = ShooterConstants.FlywheelDiameter * Math.PI * 60;
     double rpm = velocity / circumference;
     return rpm;
   }

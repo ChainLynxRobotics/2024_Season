@@ -51,7 +51,6 @@ public class Aim extends Command {
         case AMP:
           desiredAngle = ShooterConfig.kAmpAngle;
           desiredVelocity = ShooterConfig.ampVelocity;
-          m_shooter.setShield(true);
           break;
         case SPEAKER:
           desiredAngle = ShooterConfig.kSpeakerAngle;
@@ -60,7 +59,6 @@ public class Aim extends Command {
         case TRAP:
           desiredAngle = ShooterConfig.kTrapAngle;
           desiredVelocity = ShooterConfig.trapVelocity;
-          m_shooter.setShield(true);
           break;
         default:
           desiredVelocity = 0;
