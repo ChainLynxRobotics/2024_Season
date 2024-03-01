@@ -51,12 +51,12 @@ public final class RobotConstants {
   }
 
   public final class ShooterConstants {
-    public static final int kRollerMotorLeftId = 1;
-    public static final int kTopFlywheelMotorId = 2;
-    public static final int kBottomFlywheelMotorId = 3;
-    public static final int kShieldMotorId = 4;
-    public static final int kAngleMotorLeaderId = -1;
-    public static final int kAngleMotorFollowerId = -1;
+    public static final int kRollerMotorLeftId = 15;
+    public static final int kTopFlywheelMotorId = 16;
+    public static final int kBottomFlywheelMotorId = 17;
+    public static final int kShieldMotorId = 18;
+    public static final int kAngleMotorLeaderId = 13;
+    public static final int kAngleMotorFollowerId = 14;
     public static final double FlywheelDiameter = 0.0762;
     public static final double ShooterLength = 0.4064;
     public static final double Gravity = 9.81;
