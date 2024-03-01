@@ -6,7 +6,11 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.*;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Velocity;
 
 /**
  * Software/hardware constants (e.g. CAN IDs, gear ratios, field measurements, etc.). For software
@@ -15,14 +19,15 @@ import edu.wpi.first.units.*;
 public final class RobotConstants {
 
   public final class Bindings {
-    public static final int kAimAmp = 3;
+    public static final int kAimAmp = 4;
     public static final int kShoot = 1;
+    public static final int kShootReverse = 13;
     public static final int kAimTrap = 2;
-    public static final int kStowShooter = 15;
+    public static final int kStowShooter = 14;
     public static final int kToggleFlywheel = 5;
     public static final int kManualAngleSlider = 3;
     public static final int kRetractShield = 16;
-    public static final int kExtendShield = 17;
+    public static final int kExtendShield = 15;
     public static final int kManualAdjustDown = 18;
     public static final int kManualAdjustUp = 19;
   }
@@ -46,13 +51,12 @@ public final class RobotConstants {
   }
 
   public final class ShooterConstants {
-    public static final int kRollerMotorLeftId = -1;
-    public static final int kRollerMotorRightId = -1;
+    public static final int kRollerMotorLeftId = 1;
+    public static final int kTopFlywheelMotorId = 2;
+    public static final int kBottomFlywheelMotorId = 3;
+    public static final int kShieldMotorId = 4;
     public static final int kAngleMotorLeaderId = -1;
     public static final int kAngleMotorFollowerId = -1;
-    public static final int kTopFlywheelMotorId = -1;
-    public static final int kBottomFlywheelMotorId = -1;
-    public static final int kShieldMotorId = -1;
     public static final double FlywheelDiameter = 0.0762;
     public static final double ShooterLength = 0.4064;
     public static final double Gravity = 9.81;
@@ -61,46 +65,48 @@ public final class RobotConstants {
   }
 
   public static final class DriveConstants {
-    // placeholder CAN IDs, fix these later
-
-    public static final double kFrontLeftChassisAngularOffset = 0.0;
-    public static final double kFrontRightChassisAngularOffset = 0.0;
-    public static final double kBackLeftChassisAngularOffset = 0.0;
-    public static final double kBackRightChassisAngularOffset = 0.0;
+    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+    public static final double kFrontRightChassisAngularOffset = 0;
+    public static final double kBackLeftChassisAngularOffset = Math.PI;
+    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     public static final double kDriveDeadband = 0.06;
 
-    public static final int kFrontLeftDrivingCanId = 6;
-    public static final int kFrontLeftTurningCanId = 5;
+    public static final int kFrontLeftDrivingCanId = 2;
+    public static final int kFrontLeftTurningCanId = 1;
 
-    public static final int kFrontRightDrivingCanId = 8;
-    public static final int kFrontRightTurningCanId = 7;
+    public static final int kFrontRightDrivingCanId = 6;
+    public static final int kFrontRightTurningCanId = 5;
 
     public static final int kRearLeftDrivingCanId = 4;
     public static final int kRearLeftTurningCanId = 3;
 
-    public static final int kRearRightDrivingCanId = 2;
-    public static final int kRearRightTurningCanId = 1;
+    public static final int kRearRightDrivingCanId = 8;
+    public static final int kRearRightTurningCanId = 7;
 
-    public static final int kGyroId = 15;
+    public static final int kGyroId = 9;
 
     // Chassis configuration
-    public static final double kTrackWidth = 26.5 * 2.54e-2;
+    public static final Measure<Distance> kTrackWidth = Units.Inches.of(22.5);
 
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = 26.5 * 2.54e-2;
+    public static final Measure<Distance> kWheelBase = Units.Inches.of(22.5);
+
+    public static final Measure<Distance> kWheelBaseRadius = Units.Meters.of(0.404);
+
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+            new Translation2d(kWheelBase.in(Units.Meters) / 2, kTrackWidth.in(Units.Meters) / 2),
+            new Translation2d(kWheelBase.in(Units.Meters) / 2, -kTrackWidth.in(Units.Meters) / 2),
+            new Translation2d(-kWheelBase.in(Units.Meters) / 2, kTrackWidth.in(Units.Meters) / 2),
+            new Translation2d(-kWheelBase.in(Units.Meters) / 2, -kTrackWidth.in(Units.Meters) / 2));
 
     public static final class OIConstants {
 
       public static final int kDriverControllerPort = 0;
-      public static final int kOperatorControllerPort = 1;
+      public static final int kOperatorJoystickPort = 1;
+
       public static final double kDriveDeadband = 0.06;
       public static final double kMagnitudeDeadband = 0.06;
       public static final double kDirectionSlewRate = 10; // radians per second
@@ -114,6 +120,8 @@ public final class RobotConstants {
       // This changes the drive speed of the module (a pinion gear with more teeth will result in a
       // robot that drives faster).
       public static final int kDrivingMotorPinionTeeth = 14;
+
+      public static final Measure<Velocity<Distance>> kMaxModuleSpeed = Units.MetersPerSecond.of(1);
 
       // Invert the turning encoder, since the output shaft rotates in the opposite direction of
       // the steering motor in the MAXSwerve Module.
@@ -163,5 +171,12 @@ public final class RobotConstants {
       public static final int kDrivingMotorCurrentLimit = 50; // amps
       public static final int kTurningMotorCurrentLimit = 20; // amps
     }
+  }
+
+  public static final class IntakeConstants {
+    public static final int kLineBreakSensor = 0;
+
+    // Roller motor ID
+    public static final int kMotorID = 10;
   }
 }

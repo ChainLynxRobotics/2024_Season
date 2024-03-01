@@ -1,33 +1,26 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.RobotConfig;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.intake.Intake;
 
 public class Shoot extends Command {
-  private final Shooter m_shooter;
-  private double timer;
+  private final Intake m_intake;
+  private boolean m_reverse;
 
-  public Shoot(Shooter shooter) {
-    m_shooter = shooter;
+  public Shoot(Intake intake, boolean reverse) {
+    m_reverse = reverse;
+    m_intake = intake;
 
-    addRequirements(m_shooter);
+    addRequirements(m_intake);
   }
 
   @Override
   public void initialize() {
-    timer = Timer.getFPGATimestamp();
-    m_shooter.startFeedNote();
+    m_intake.startFeedNote(m_reverse);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_shooter.stopFeedNote();
-  }
-
-  @Override
-  public boolean isFinished() {
-    return Timer.getFPGATimestamp() - timer > RobotConfig.ShooterConfig.kReleaseTime;
+    m_intake.stopFeedNote();
   }
 }

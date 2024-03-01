@@ -32,10 +32,6 @@ public class ActuateShield extends Command {
   @Override
   public boolean isFinished() {
     // if we want the shield to be out, return true if that is the status
-    if (m_shieldState) {
-      return m_shooter.getShieldStatus();
-    } else {
-      return !m_shooter.getShieldStatus();
-    }
+    return m_shooter.getShieldStatus(m_shieldState);
   }
 }

@@ -1,7 +1,6 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.units.Angle;
-import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
@@ -39,7 +38,7 @@ public class Aim extends Command {
       if (m_vision.getHasTarget()) {
         double desiredAngle =
             Units.Degrees.of(m_vision.getBestTarget().getPitch()).in(Units.Radians);
-        Measure<Velocity<Distance>> desiredVelocity =
+        Measure<Velocity<Angle>> desiredVelocity =
             m_shooter.calculateVelocity(
                 m_vision.getDistToTarget() * Math.atan(desiredAngle),
                 Units.Radians.of(desiredAngle));
@@ -78,6 +77,6 @@ public class Aim extends Command {
   public boolean isFinished() {
     return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude())
         && ((m_type == FieldElement.AMP || m_type == FieldElement.TRAP)
-            && m_shooter.getShieldStatus()); // check if shield is extended
+            && m_shooter.getShieldStatus(true)); // check if shield is extended
   }
 }
