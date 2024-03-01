@@ -108,14 +108,6 @@ public class Shooter extends SubsystemBase {
     if (DriverStation.isTest()) {
       testPeriodic();
     }
-  }
-
-  void testPeriodic() {
-    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
-    SmartDashboard.putNumber(
-        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
-    double flywheelRPM =
-        SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     double pval = SmartDashboard.getNumber("flywheel p", 0.1);
     if (pval != m_topFlywheelPIDController.getP()) {
@@ -132,9 +124,22 @@ public class Shooter extends SubsystemBase {
       m_topFlywheelPIDController.setP(dval);
     }
 
+    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
+    double flywheelRPM =
+        SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+
+    
+
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
     }
+  }
+
+  void testPeriodic() {
+    
   }
 
   public double degreesToRotations(double angle) {

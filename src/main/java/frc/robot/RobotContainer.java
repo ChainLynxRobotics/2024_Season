@@ -22,6 +22,7 @@ import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
@@ -37,6 +38,7 @@ public class RobotContainer {
   private Shooter m_shooter;
   private Intake m_intake;
   private Drivetrain m_robotDrive;
+  private Indexer m_indexer;
 
   // The driver's controller
   private XboxController m_driverController;
@@ -50,6 +52,7 @@ public class RobotContainer {
     m_vision = new Vision();
     m_intake = new Intake();
     m_robotDrive = new Drivetrain();
+    m_indexer = new Indexer();
 
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
@@ -89,13 +92,13 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, true));
-    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, false));
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, false));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
-        .whileTrue(new Shoot(m_intake, false));
+        .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
-        .whileTrue(new Shoot(m_intake, true));
+        .whileTrue(new Shoot(m_indexer, true));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .whileTrue(new Aim(m_shooter, FieldElement.AMP));
 
