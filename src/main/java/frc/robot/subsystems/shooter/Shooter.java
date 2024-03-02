@@ -108,14 +108,6 @@ public class Shooter extends SubsystemBase {
     if (DriverStation.isTest()) {
       testPeriodic();
     }
-  }
-
-  void testPeriodic() {
-    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
-    SmartDashboard.putNumber(
-        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
-    double flywheelRPM =
-        SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     double pval = SmartDashboard.getNumber("flywheel p", 0.1);
     if (pval != m_topFlywheelPIDController.getP()) {
@@ -132,10 +124,19 @@ public class Shooter extends SubsystemBase {
       m_topFlywheelPIDController.setP(dval);
     }
 
+    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
+    double flywheelRPM =
+        SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter/Flywheel RPM", flywheelRPM);
+
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
     }
   }
+
+  void testPeriodic() {}
 
   public double degreesToRotations(double angle) {
     double rotation = angle / 360;
@@ -174,14 +175,15 @@ public class Shooter extends SubsystemBase {
 
   public Measure<Velocity<Distance>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {
     return m_targetVelocity.mut_replace(
-        Math.sqrt(2 * ShooterConstants.Gravity * targetY)
-            / (Math.sin(targetAngle.in(Units.Degrees))),
+        Math.abs(
+            Math.sqrt(2 * ShooterConstants.Gravity * targetY)
+                / (Math.sin(targetAngle.in(Units.Degrees)))),
         Units.MetersPerSecond);
   }
 
   public double convertToRPM(double velocity) {
     // 0.0762 meters is diameter of flywheel
-    double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
+    double circumference = ShooterConstants.FlywheelDiameter * Math.PI * 60;
     double rpm = velocity / circumference;
     return rpm;
   }

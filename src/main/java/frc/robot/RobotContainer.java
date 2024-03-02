@@ -22,21 +22,21 @@ import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.vision.Vision;
 import frc.utils.Vector;
 
 public class RobotContainer {
   private Joystick m_operatorController;
 
   private POVButton m_autoAim;
-  private POVButton m_speakerAim;
+  private POVButton m_trapAim;
 
-  private Vision m_vision;
   private Shooter m_shooter;
   private Intake m_intake;
   private Drivetrain m_robotDrive;
+  private Indexer m_indexer;
 
   // The driver's controller
   private XboxController m_driverController;
@@ -47,19 +47,20 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_shooter = new Shooter();
-    m_vision = new Vision();
     m_intake = new Intake();
     m_robotDrive = new Drivetrain();
+    m_indexer = new Indexer();
 
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
 
-    autoChooser = AutoBuilder.buildAutoChooser();
     leftInputVec = new Vector();
     rightInputVec = new Vector();
 
-    configureBindings();
     registerCommands();
+    // adds all autos in deploy dir to chooser
+    autoChooser = AutoBuilder.buildAutoChooser();
+    configureBindings();
 
     /*m_shooter.setDefaultCommand(
     new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
@@ -68,7 +69,7 @@ public class RobotContainer {
   private void configureBindings() {
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
-    m_speakerAim = new POVButton(m_operatorController, 90);
+    m_trapAim = new POVButton(m_operatorController, 90);
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
@@ -89,18 +90,19 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, true));
-    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, false));
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, false));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
-        .whileTrue(new Shoot(m_intake, false));
+        .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
-        .whileTrue(new Shoot(m_intake, true));
+        .whileTrue(new Shoot(m_indexer, true));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .whileTrue(new Aim(m_shooter, FieldElement.AMP));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
+        .whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
 
-    m_speakerAim.whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
-    m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
+    m_trapAim.whileTrue(new Aim(m_shooter, FieldElement.TRAP));
 
     // triggers for extending and retracting shield manually
     // don't extend shield
@@ -110,6 +112,7 @@ public class RobotContainer {
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
 
+    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -126,7 +129,7 @@ public class RobotContainer {
 
   // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", doNothing());
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
     NamedCommands.registerCommand("scoreAmp", doNothing());
     NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
   }
