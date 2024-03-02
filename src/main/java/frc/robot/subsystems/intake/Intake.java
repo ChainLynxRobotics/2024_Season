@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax m_rollerMotor; // Intake roller motor
+  private final CANSparkMax m_intakeRollerMotor; // Intake roller motor
   private final DigitalInput m_linebreak;
 
-  // Constructs intake and initializes motor
+  /** Creates a new ExampleSubsystem. */
   public Intake() {
-    m_rollerMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
+    m_intakeRollerMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
     // TODO maybe use to terminate intake command
     m_linebreak = new DigitalInput(IntakeConstants.kLineBreakSensor);
   }
@@ -30,11 +30,11 @@ public class Intake extends SubsystemBase {
    * @param motorOutput Motor speed from -1.0 to 1.0 as a percentage
    */
   public void run(double motorOutput) {
-    m_rollerMotor.set(motorOutput);
+    m_intakeRollerMotor.set(motorOutput);
   }
 
   /** Stops the roller motor */
   public void stop() {
-    m_rollerMotor.stopMotor();
+    m_intakeRollerMotor.stopMotor();
   }
 }

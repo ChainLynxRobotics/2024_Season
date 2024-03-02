@@ -1,17 +1,65 @@
 package frc.robot.constants;
 
 import com.revrobotics.CANSparkBase.IdleMode;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 
-// IDs and stuff
+/**
+ * Software/hardware constants (e.g. CAN IDs, gear ratios, field measurements, etc.). For software
+ * configs @see RobotConfig
+ */
 public final class RobotConstants {
+
+  public final class Bindings {
+    public static final int kAimAmp = 4;
+    public static final int kAimSpeaker = 3;
+    public static final int kShoot = 1;
+    public static final int kShootReverse = 7;
+    public static final int kAimTrap = 2;
+    public static final int kStowShooter = 14;
+    public static final int kToggleFlywheel = 5;
+    public static final int kRetractShield = 10;
+    public static final int kExtendShield = 9;
+    public static final int kManualAdjustDown = 18;
+    public static final int kManualAdjustUp = 19;
+  }
+
+  public static final class VisionConstants {
+    public static final double camChassisXOffset = -1;
+    public static final double camChassisYOffset = -1;
+    public static final double camChassisZOffset = -1;
+
+    public static final double kCameraHeight = -1;
+    public static final double kTargetHeight = -1;
+    public static final double kCameraPitchRadians = 0;
+    public static final Transform3d robotToCam =
+        new Transform3d(
+            new Translation3d(camChassisXOffset, camChassisYOffset, camChassisZOffset),
+            new Rotation3d(0, 0, 0));
+  }
+
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+  }
+
+  public final class ShooterConstants {
+    public static final int kRollerMotorLeftId = 15;
+    public static final int kTopFlywheelMotorId = 16;
+    public static final int kBottomFlywheelMotorId = 17;
+    public static final int kShieldMotorId = 18;
+    public static final double FlywheelDiameter = 0.0762;
+    public static final double ShooterLength = 0.4064;
+    public static final double Gravity = 9.81;
+    public static final Measure<Angle> kShieldExtentionAngle =
+        Units.Rotations.of(1); // TODO - Set to number of rotations to fully extend shield
   }
 
   public static final class DriveConstants {
