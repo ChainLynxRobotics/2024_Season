@@ -72,7 +72,6 @@ public class RobotConfig {
     // Timeout time (in seconds)
     public static final double kRunIntakeTimeoutTime = 0;
     public static final double kShieldExtendedPosition = 85; // TODO get correct value
-
     // Speaker height
     public static final double SpeakerHeight = 1.9812;
     public static final double AmpHeight = .46;
@@ -97,16 +96,9 @@ public class RobotConfig {
     public static final Measure<Angle> kTrapAngle = Units.Radians.of(105 * Math.PI / 180);
     public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5 * Math.PI / 180);
 
-    public static final double kShieldExtendedRotations = 124.140855612;
-    public static final double kShieldRetractedRotations = 5;
-
-    // TODO placeholders
-    public static final double ampVelocity = 2500; // rpm
-    public static final double trapVelocity = 2000; // rpm
-    // rpm
-    public static final double kDefaultTrapVelocity = 1000;
-    public static final double kDefaultAmpVelocity = 600;
-    public static final double kDefaultSpeakerVelocity = 2000;
+    public static final double kDefaultAmpVelocity = 1500; // rpm
+    public static final double kDefaultTrapVelocity = 2000; // rpm
+    public static final double kDefaultSpeakerVelocity = 2500; // rpm
   }
 
   public static class DriveConfig {

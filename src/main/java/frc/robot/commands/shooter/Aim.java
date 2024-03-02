@@ -43,7 +43,7 @@ public class Aim extends Command {
             m_shooter.calculateVelocity(
                 m_vision.getDistToTarget() * Math.atan(desiredAngle),
                 Units.Radians.of(desiredAngle));
-        m_shooter.setAngle(Units.Radians.of(desiredAngle));
+
         m_shooter.runFlywheel(m_shooter.convertToRPM(desiredVelocity.magnitude()));
       }
     } else {
@@ -61,6 +61,7 @@ public class Aim extends Command {
           desiredVelocity = ShooterConfig.kDefaultTrapVelocity;
           break;
         default:
+          desiredVelocity = 0;
           desiredAngle = Units.Degrees.of(0);
           desiredVelocity = 0;
           break;
@@ -74,4 +75,15 @@ public class Aim extends Command {
   public boolean isFinished() {
     return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude()) && m_shooter.isAtFlywheelSetpoint(desiredVelocity);
   }
+
+  public double getVelocity(double elementHeight) {
+    return m_shooter.convertToRPM(
+        m_shooter.calculateVelocity(elementHeight, desiredAngle).magnitude());
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_shooter.stopFlywheel();
+  }
+
 }

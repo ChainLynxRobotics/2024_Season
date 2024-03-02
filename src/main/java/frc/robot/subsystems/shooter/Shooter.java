@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_shieldController;
   private RelativeEncoder m_shieldEncoder;
 
-  private MutableMeasure<Velocity<Distance>> m_shooterSpeed;
+  private MutableMeasure<Velocity<Angle>> m_shooterSpeed;
   private MutableMeasure<Angle> m_shieldPosition;
   private MutableMeasure<Velocity<Distance>> m_targetVelocity;
   private MutableMeasure<Angle> m_shooterAngle;
@@ -101,7 +101,7 @@ public class Shooter extends SubsystemBase {
     m_shooterAngle = MutableMeasure.zero(Units.Degrees);
     m_shooterAngle = MutableMeasure.mutable(getCurrentAngle());
     m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
-    m_shooterSpeed = MutableMeasure.zero(Units.MetersPerSecond);
+    m_shooterSpeed = MutableMeasure.zero(Units.RPM);
     m_shieldPosition = MutableMeasure.zero(Units.Rotations);
 
     if (DriverStation.isTest()) {
@@ -135,17 +135,6 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
-    if (DriverStation.isTest()) {
-      testPeriodic();
-    }
-  }
-
-  void testPeriodic() {
-    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
-    SmartDashboard.putNumber(
-        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
-    double flywheelRPM =
-        SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     double pval = SmartDashboard.getNumber("flywheel p", 0.1);
     if (pval != m_topFlywheelPIDController.getP()) {
@@ -161,6 +150,13 @@ public class Shooter extends SubsystemBase {
     if (pval != m_topFlywheelPIDController.getD()) {
       m_topFlywheelPIDController.setP(dval);
     }
+
+    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
+    SmartDashboard.putNumber(
+        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
+    double flywheelRPM =
+        SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter/Flywheel RPM", flywheelRPM);
 
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
@@ -211,8 +207,8 @@ public class Shooter extends SubsystemBase {
     m_shieldEncoder.setPosition(0);
   }
 
-  public Measure<Velocity<Distance>> getCurrentRPM() {
-    return m_shooterSpeed.mut_replace(m_topFlywheelEncoder.getVelocity(), Units.MetersPerSecond);
+  public Measure<Velocity<Angle>> getCurrentRPM() {
+    return m_shooterSpeed.mut_replace(m_topFlywheelEncoder.getVelocity(), Units.RPM);
   }
 
   public Measure<Velocity<Distance>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {

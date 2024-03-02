@@ -5,20 +5,14 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConstants.IntakeConstants;
-import frc.robot.constants.RobotConstants.ShooterConstants;
 
 public class Intake extends SubsystemBase {
-  private CANSparkMax m_shooterRollerMotor;
   private final CANSparkMax m_intakeRollerMotor; // Intake roller motor
   private final DigitalInput m_linebreak;
 
   /** Creates a new ExampleSubsystem. */
   public Intake() {
-    // Roller
-    m_shooterRollerMotor =
-        new CANSparkMax(ShooterConstants.kRollerMotorLeftId, MotorType.kBrushless);
     m_intakeRollerMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
     // TODO maybe use to terminate intake command
     m_linebreak = new DigitalInput(IntakeConstants.kLineBreakSensor);
@@ -28,20 +22,6 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Intake/linebreak sensor", m_linebreak.get());
-  }
-
-  // runs the rollers
-  public void startFeedNote(boolean reverse) {
-    if (reverse) {
-      m_shooterRollerMotor.set(-RobotConfig.ShooterConfig.kRollerDefaultSpeed);
-    } else {
-      m_shooterRollerMotor.set(RobotConfig.ShooterConfig.kRollerDefaultSpeed);
-    }
-  }
-
-  // stops the rollers
-  public void stopFeedNote() {
-    m_shooterRollerMotor.stopMotor();
   }
 
   /**
@@ -57,4 +37,10 @@ public class Intake extends SubsystemBase {
   public void stop() {
     m_intakeRollerMotor.stopMotor();
   }
+
+  // stops the rollers
+  public void stopFeedNote() {
+    m_intakeRollerMotor.stopMotor();
+  }
+
 }
