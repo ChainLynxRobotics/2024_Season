@@ -131,15 +131,12 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter/Flywheel RPM", flywheelRPM);
 
-
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
     }
   }
 
-  void testPeriodic() {
-
-  }
+  void testPeriodic() {}
 
   public double degreesToRotations(double angle) {
     double rotation = angle / 360;
@@ -178,8 +175,9 @@ public class Shooter extends SubsystemBase {
 
   public Measure<Velocity<Distance>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {
     return m_targetVelocity.mut_replace(
-        Math.abs(Math.sqrt(2 * ShooterConstants.Gravity * targetY)
-            / (Math.sin(targetAngle.in(Units.Degrees)))),
+        Math.abs(
+            Math.sqrt(2 * ShooterConstants.Gravity * targetY)
+                / (Math.sin(targetAngle.in(Units.Degrees)))),
         Units.MetersPerSecond);
   }
 

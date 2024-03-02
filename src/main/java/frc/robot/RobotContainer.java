@@ -54,13 +54,11 @@ public class RobotContainer {
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
 
-
     leftInputVec = new Vector();
     rightInputVec = new Vector();
 
-
     registerCommands();
-    //adds all autos in deploy dir to chooser
+    // adds all autos in deploy dir to chooser
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
