@@ -19,6 +19,10 @@ import frc.robot.constants.RobotConstants.ShooterConstants;
  */
 public class Shooter extends SubsystemBase {
   /** 1. create motor and pid controller objects */
+  private CANSparkMax m_angleMotorLeader;
+  private CANSparkMax m_angleMotorFollower;
+  private SparkPIDController m_anglePIDController;
+
   private CANSparkMax m_topFlywheelMotor;
 
   private CANSparkMax m_bottomFlywheelMotor;
@@ -29,14 +33,10 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_shieldController;
   private RelativeEncoder m_shieldEncoder;
 
-  private MutableMeasure<Velocity<Angle>> m_shooterSpeed;
+  private MutableMeasure<Velocity<Distance>> m_shooterSpeed;
   private MutableMeasure<Angle> m_shieldPosition;
-  private MutableMeasure<Velocity<Angle>> m_targetVelocity;
+  private MutableMeasure<Velocity<Distance>> m_targetVelocity;
   private MutableMeasure<Angle> m_shooterAngle;
-
-  private CANSparkMax m_angleMotorLeader;
-  private CANSparkMax m_angleMotorFollower;
-  private SparkPIDController m_anglePIDController;
 
   public Shooter() {
 
@@ -76,7 +76,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("flywheel i", m_topFlywheelPIDController.getI());
     SmartDashboard.putNumber("flywheel d", m_topFlywheelPIDController.getD());
 
-    m_targetVelocity = MutableMeasure.zero(Units.RPM);
+    m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
 
 
      // Angle
@@ -99,6 +99,10 @@ public class Shooter extends SubsystemBase {
     m_anglePIDController.setIZone(ShooterConfig.kAngleControlIZone);
 
     m_shooterAngle = MutableMeasure.zero(Units.Degrees);
+    m_shooterAngle = MutableMeasure.mutable(getCurrentAngle());
+    m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
+    m_shooterSpeed = MutableMeasure.zero(Units.MetersPerSecond);
+    m_shieldPosition = MutableMeasure.zero(Units.Rotations);
 
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
@@ -207,21 +211,21 @@ public class Shooter extends SubsystemBase {
     m_shieldEncoder.setPosition(0);
   }
 
-  public Measure<Velocity<Angle>> getCurrentRPM() {
-    return m_shooterSpeed.mut_replace(m_topFlywheelEncoder.getVelocity(), Units.RPM);
+  public Measure<Velocity<Distance>> getCurrentRPM() {
+    return m_shooterSpeed.mut_replace(m_topFlywheelEncoder.getVelocity(), Units.MetersPerSecond);
   }
 
-  public Measure<Velocity<Angle>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {
+  public Measure<Velocity<Distance>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {
     return m_targetVelocity.mut_replace(
-        convertToRPM(Math.sqrt(2 * ShooterConstants.Gravity * targetY)
-            / (Math.sin(targetAngle.in(Units.Degrees)))),
-        Units.RPM);
+        Math.abs(
+            Math.sqrt(2 * ShooterConstants.Gravity * targetY)
+                / (Math.sin(targetAngle.magnitude()))),
+        Units.MetersPerSecond);
   }
 
   public double convertToRPM(double velocity) {
-    // 0.0762 meters is diameter of flywheel
     double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
-    double rpm = velocity / circumference;
+    double rpm = velocity / circumference * 60;
     return rpm;
   }
 

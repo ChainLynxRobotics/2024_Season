@@ -1,7 +1,6 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
 
 public class ActuateShield extends Command {
@@ -17,11 +16,7 @@ public class ActuateShield extends Command {
 
   @Override
   public void initialize() {
-    if (m_shieldState) {
-      m_shooter.setShieldPosition(ShooterConfig.kShieldExtendedRotations);
-    } else {
-      m_shooter.setShieldPosition(ShooterConfig.kShieldRetractedRotations);
-    }
+    m_shooter.setShield(m_shieldState);
   }
 
   @Override
@@ -31,7 +26,6 @@ public class ActuateShield extends Command {
 
   @Override
   public boolean isFinished() {
-    // if we want the shield to be out, return true if that is the status
     return m_shooter.getShieldStatus(m_shieldState);
   }
 }
