@@ -89,6 +89,7 @@ public class Shooter extends SubsystemBase {
     // sets follower motor to run inversely to the leader
     m_angleMotorFollower.follow(m_angleMotorLeader, true);
     m_angleEncoder = m_angleMotorLeader.getAbsoluteEncoder();
+    m_angleEncoder.setZeroOffset(0);
 
     m_anglePIDController = m_angleMotorLeader.getPIDController();
     m_anglePIDController.setP(RobotConfig.ShooterConfig.kAngleControlP);
