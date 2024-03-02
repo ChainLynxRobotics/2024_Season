@@ -54,7 +54,9 @@ public class Aim extends Command {
           break;
         case SPEAKER:
           desiredAngle = ShooterConfig.kSpeakerAngle;
-          desiredVelocity = getVelocity(ShooterConfig.SpeakerHeight);
+          desiredVelocity = ShooterConfig.speakerVelocity;
+          //getVelocity(ShooterConfig.SpeakerHeight);
+          System.out.println("shooter vel: " + desiredVelocity);
           break;
         case TRAP:
           desiredAngle = ShooterConfig.kTrapAngle;

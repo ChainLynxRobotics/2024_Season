@@ -178,8 +178,8 @@ public class Shooter extends SubsystemBase {
 
   public Measure<Velocity<Distance>> calculateVelocity(double targetY, Measure<Angle> targetAngle) {
     return m_targetVelocity.mut_replace(
-        Math.sqrt(2 * ShooterConstants.Gravity * targetY)
-            / (Math.sin(targetAngle.in(Units.Degrees))),
+        Math.abs(Math.sqrt(2 * ShooterConstants.Gravity * targetY)
+            / (Math.sin(targetAngle.in(Units.Degrees)))),
         Units.MetersPerSecond);
   }
 

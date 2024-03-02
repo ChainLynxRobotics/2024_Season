@@ -9,6 +9,7 @@ public class Shoot extends Command {
 
   public Shoot(Indexer indexer, boolean reverse) {
     m_indexer = indexer;
+    m_reverse = reverse;
 
     addRequirements(m_indexer);
   }

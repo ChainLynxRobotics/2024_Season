@@ -25,16 +25,14 @@ import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.vision.Vision;
 import frc.utils.Vector;
 
 public class RobotContainer {
   private Joystick m_operatorController;
 
   private POVButton m_autoAim;
-  private POVButton m_speakerAim;
+  private POVButton m_trapAim;
 
-  private Vision m_vision;
   private Shooter m_shooter;
   private Intake m_intake;
   private Drivetrain m_robotDrive;
@@ -49,7 +47,6 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_shooter = new Shooter();
-    m_vision = new Vision();
     m_intake = new Intake();
     m_robotDrive = new Drivetrain();
     m_indexer = new Indexer();
@@ -74,7 +71,7 @@ public class RobotContainer {
   private void configureBindings() {
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
-    m_speakerAim = new POVButton(m_operatorController, 90);
+    m_trapAim = new POVButton(m_operatorController, 90);
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
@@ -104,9 +101,10 @@ public class RobotContainer {
         .whileTrue(new Shoot(m_indexer, true));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .whileTrue(new Aim(m_shooter, FieldElement.AMP));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
+        .whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
 
-    m_speakerAim.whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
-    m_autoAim.whileTrue(new Aim(m_shooter, m_vision));
+    m_trapAim.whileTrue(new Aim(m_shooter, FieldElement.TRAP));
 
     // triggers for extending and retracting shield manually
     // don't extend shield
