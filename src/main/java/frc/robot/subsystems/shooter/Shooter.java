@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -22,6 +23,7 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_angleMotorLeader;
   private CANSparkMax m_angleMotorFollower;
   private SparkPIDController m_anglePIDController;
+  private AbsoluteEncoder m_angleEncoder;
 
   private CANSparkMax m_topFlywheelMotor;
 
@@ -86,6 +88,7 @@ public class Shooter extends SubsystemBase {
         new CANSparkMax(ShooterConstants.kAngleMotorFollowerId, MotorType.kBrushless);
     // sets follower motor to run inversely to the leader
     m_angleMotorFollower.follow(m_angleMotorLeader, true);
+    m_angleEncoder = m_angleMotorLeader.getAbsoluteEncoder();
 
     m_anglePIDController = m_angleMotorLeader.getPIDController();
     m_anglePIDController.setP(RobotConfig.ShooterConfig.kAngleControlP);
@@ -169,7 +172,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Measure<Angle> getCurrentAngle() {
-    return m_shooterAngle.mut_replace(m_angleMotorLeader.getEncoder().getPosition(), Units.Revolutions);
+    return m_shooterAngle.mut_replace(m_angleEncoder.getPosition(), Units.Revolutions);
   }
 
   public void stopAngleMotor() {
