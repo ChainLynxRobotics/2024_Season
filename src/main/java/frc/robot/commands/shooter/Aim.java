@@ -5,6 +5,7 @@ import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
@@ -17,11 +18,13 @@ public class Aim extends Command {
   private final FieldElement m_type;
   private Measure<Angle> desiredAngle;
   private double desiredVelocity;
+  private Timer timer;
 
   public Aim(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
     m_vision = new Vision();
     m_type = type;
+    timer = new Timer();
 
     addRequirements(m_shooter);
   }
@@ -35,6 +38,7 @@ public class Aim extends Command {
 
   @Override
   public void initialize() {
+    timer.start();
     if (m_type == null) {
       if (m_vision.getHasTarget()) {
         double desiredAngle =
@@ -72,8 +76,14 @@ public class Aim extends Command {
     }
   }
 
+  @Override
+  public void execute() {
+    m_shooter.setFF(Math.cos(m_shooter.getCurrentAngle().in(Units.Radians))*ShooterConfig.kAngleControlFF);
+  }
+
   public boolean isFinished() {
-    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude()) && m_shooter.isAtFlywheelSetpoint(desiredVelocity);
+    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude()) && m_shooter.isAtFlywheelSetpoint(desiredVelocity) ||
+    timer.get() > ShooterConfig.kAimTimeout;
   }
 
   public double getVelocity(double elementHeight) {

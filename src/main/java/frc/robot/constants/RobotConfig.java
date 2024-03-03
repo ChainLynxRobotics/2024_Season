@@ -88,6 +88,8 @@ public class RobotConfig {
 
     public static final long kReleaseTime = 5000;
     public static final long kShieldTime = 2; // seconds
+    public static final double kAimTimeout = 2;
+
     public static final double kShieldDefaultSpeed = 0.5;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
     public static final Measure<Angle> kAngleError = Units.Rotations.of(0.5 / 360);
