@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkPIDController.ArbFFUnits;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -39,6 +40,7 @@ public class Shooter extends SubsystemBase {
   private MutableMeasure<Angle> m_shieldPosition;
   private MutableMeasure<Velocity<Distance>> m_targetVelocity;
   private MutableMeasure<Angle> m_shooterAngle;
+  private MutableMeasure<Angle> m_targetAngle;
 
   public Shooter() {
 
@@ -89,7 +91,8 @@ public class Shooter extends SubsystemBase {
     // sets follower motor to run inversely to the leader
     m_angleMotorFollower.follow(m_angleMotorLeader, true);
     m_angleEncoder = m_angleMotorLeader.getAbsoluteEncoder();
-    m_angleEncoder.setZeroOffset(0);
+    SmartDashboard.putNumber("absolute encoder pos", m_angleEncoder.getPosition());
+    m_angleEncoder.setZeroOffset(0); //TODO figure out what angle is zero
 
     m_anglePIDController = m_angleMotorLeader.getPIDController();
     m_anglePIDController.setP(RobotConfig.ShooterConfig.kAngleControlP);
@@ -102,8 +105,9 @@ public class Shooter extends SubsystemBase {
         RobotConfig.ShooterConfig.kAngleControlMaxOutput);
     m_anglePIDController.setIZone(ShooterConfig.kAngleControlIZone);
 
-    m_shooterAngle = MutableMeasure.zero(Units.Degrees);
+
     m_shooterAngle = MutableMeasure.mutable(getCurrentAngle());
+    m_targetAngle = MutableMeasure.zero(Units.Rotations);
     m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
     m_shooterSpeed = MutableMeasure.zero(Units.RPM);
     m_shieldPosition = MutableMeasure.zero(Units.Rotations);
@@ -167,9 +171,20 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  // sets the target angle the shooter should be at
+  // sets the target angle the shooter should be at, called only once
   public void setAngle(Measure<Angle> targetAngle) {
+    m_targetAngle.mut_replace(targetAngle);
     m_anglePIDController.setReference(targetAngle.in(Units.Rotations), CANSparkBase.ControlType.kPosition);
+  }
+
+  //called periodically
+  public void setFF(double ff) {
+    m_anglePIDController.setReference(
+      m_targetAngle.in(Units.Rotations),
+      CANSparkBase.ControlType.kPosition,
+      0,
+      ff,
+      ArbFFUnits.kPercentOut);
   }
 
   public Measure<Angle> getCurrentAngle() {
