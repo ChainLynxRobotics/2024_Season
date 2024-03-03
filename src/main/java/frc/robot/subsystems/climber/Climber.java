@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.ClimberConstants;
 
@@ -19,6 +21,9 @@ public class Climber extends SubsystemBase {
         new CANSparkMax(ClimberConstants.CLIMBER_CONTROLLER_ID1, MotorType.kBrushless);
     followerController =
         new CANSparkMax(ClimberConstants.CLIMBER_CONTROLLER_ID2, MotorType.kBrushless);
+
+    leaderController.setIdleMode(IdleMode.kBrake);
+    followerController.setIdleMode(IdleMode.kBrake);
 
     followerController.follow(leaderController);
 
