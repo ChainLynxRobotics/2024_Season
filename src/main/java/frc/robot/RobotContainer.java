@@ -142,7 +142,10 @@ public class RobotContainer {
 
   // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false).withTimeout(3));
+    NamedCommands.registerCommand("shootSpeaker",
+      new Aim(m_shooter, FieldElement.SPEAKER).withTimeout(3)
+      .andThen(new Shoot(m_indexer, false)).withTimeout(3));
     NamedCommands.registerCommand("scoreAmp", doNothing());
     NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
   }
