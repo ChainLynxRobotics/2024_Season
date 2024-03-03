@@ -16,13 +16,6 @@ public class StowShooter extends Command {
   }
 
   @Override
-<<<<<<< HEAD
-  public void initialize() {}
-
-  @Override
-  public void execute() {
-    m_shooter.setAngle(Units.Degrees.of(ShooterConfig.kShooterStowAngle));
-=======
   public void initialize() {
     m_shooter.setAngle(Units.Degrees.of(ShooterConfig.kShooterStowAngle));
   }
@@ -30,7 +23,6 @@ public class StowShooter extends Command {
   @Override
   public void execute() {
     m_shooter.setFF(Math.cos(m_shooter.getCurrentAngle().in(Units.Radians))*ShooterConfig.kAngleControlFF);
->>>>>>> b148e52d3bdbe5d24ad3569f4d855f3c25394258
   }
 
   @Override
@@ -40,8 +32,4 @@ public class StowShooter extends Command {
   public boolean isFinished() {
     return m_shooter.isAtAngleSetpoint(ShooterConfig.kShooterStowAngle);
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> b148e52d3bdbe5d24ad3569f4d855f3c25394258
