@@ -67,6 +67,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    new Trigger(() -> m_operatorController.getRawButton(11))
+      .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
