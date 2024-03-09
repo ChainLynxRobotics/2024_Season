@@ -90,23 +90,21 @@ public class Shooter extends SubsystemBase {
         new CANSparkMax(ShooterConstants.kAngleMotorFollowerId, MotorType.kBrushless);
     // sets follower motor to run inversely to the leader
     m_angleMotorFollower.follow(m_angleMotorLeader, true);
-    m_angleEncoder = m_angleMotorLeader.getAbsoluteEncoder();
-    SmartDashboard.putNumber("absolute encoder pos", m_angleEncoder.getPosition());
-    m_angleEncoder.setZeroOffset(0); //TODO figure out what angle is zero
+    m_angleEncoder = m_angleMotorFollower.getAbsoluteEncoder();
+    m_angleEncoder.setZeroOffset(28.6/360*160);
 
     m_anglePIDController = m_angleMotorLeader.getPIDController();
     m_anglePIDController.setP(RobotConfig.ShooterConfig.kAngleControlP);
     m_anglePIDController.setI(RobotConfig.ShooterConfig.kAngleControlI);
     m_anglePIDController.setD(RobotConfig.ShooterConfig.kAngleControlD);
-    m_anglePIDController.setFF(RobotConfig.ShooterConfig.kAngleControlD);
+    m_anglePIDController.setFF(RobotConfig.ShooterConfig.kAngleControlFF);
     m_anglePIDController.setIZone(RobotConfig.ShooterConfig.kAngleControlIZone);
     m_anglePIDController.setOutputRange(
         RobotConfig.ShooterConfig.kAngleControlMinOutput,
         RobotConfig.ShooterConfig.kAngleControlMaxOutput);
-    m_anglePIDController.setIZone(ShooterConfig.kAngleControlIZone);
 
 
-    m_shooterAngle = MutableMeasure.mutable(getCurrentAngle());
+    m_shooterAngle = MutableMeasure.zero(Units.Revolutions);
     m_targetAngle = MutableMeasure.zero(Units.Rotations);
     m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
     m_shooterSpeed = MutableMeasure.zero(Units.RPM);
@@ -169,6 +167,8 @@ public class Shooter extends SubsystemBase {
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
     }
+
+    SmartDashboard.putNumber("angle error", m_targetAngle.magnitude()-m_angleEncoder.getPosition());
   }
 
   // sets the target angle the shooter should be at, called only once

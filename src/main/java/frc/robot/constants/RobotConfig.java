@@ -28,10 +28,10 @@ public class RobotConfig {
 
   public static final class ShooterConfig {
     // Angle controller PID coefficients
-    public static final double kAngleControlP = 0.1;
+    public static final double kAngleControlP = 0.2;
     public static final double kAngleControlI = 0;
     public static final double kAngleControlD = 0;
-    public static final double kAngleControlFF = 0.001;
+    public static final double kAngleControlFF = 0.2;
     public static final double kAngleControlIZone = 0.0001;
     public static final double kAngleControlMinOutput = -1;
     public static final double kAngleControlMaxOutput = 1;

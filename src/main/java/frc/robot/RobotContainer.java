@@ -16,6 +16,7 @@ import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.Aim;
+import frc.robot.commands.shooter.AngleTest;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
@@ -62,11 +63,17 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
+    
+    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     /*m_shooter.setDefaultCommand(
     new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
   }
 
   private void configureBindings() {
+    new Trigger(() -> m_operatorController.getRawButton(5))
+      .whileTrue(new AngleTest(m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
@@ -111,9 +118,6 @@ public class RobotContainer {
     // extend shield
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
-
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
-    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void updateInput() {
