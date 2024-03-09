@@ -182,9 +182,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public double convertToRPM(double velocity) {
-    // 0.0762 meters is diameter of flywheel
-    double circumference = ShooterConstants.FlywheelDiameter * Math.PI * 60;
-    double rpm = velocity / circumference;
+    double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
+    double rpm = velocity / circumference * 60;
     return rpm;
   }
 

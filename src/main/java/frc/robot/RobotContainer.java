@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
@@ -129,10 +132,17 @@ public class RobotContainer {
 
   // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false).withTimeout(3));
+    //timeout doesn't need to be set because it is in a race group with the intake path in the .path file
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
+
     NamedCommands.registerCommand("shootSpeaker",
-      new Aim(m_shooter, FieldElement.SPEAKER).withTimeout(3)
-      .andThen(new Shoot(m_indexer, false)).withTimeout(3));
+      new SequentialCommandGroup(
+        new Aim(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+        new ParallelRaceGroup(
+          new Aim(m_shooter, FieldElement.SPEAKER),
+          new Shoot(m_indexer, false)).withTimeout(3)
+        ));
+
     NamedCommands.registerCommand("scoreAmp", doNothing());
     NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
   }
