@@ -3,13 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.ClimberConfig;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.constants.RobotConstants;
 
-public class ClimberCommand extends Command {
+public class Climb extends Command {
   private final Climber m_climber;
-  private final double m_setpoint;
+  private double m_setpoint;
 
-  public ClimberCommand(Climber climber, double setpoint) {
+  public Climb(Climber climber, double setpoint) {
     m_climber = climber;
     m_setpoint = setpoint;
 
@@ -18,7 +17,7 @@ public class ClimberCommand extends Command {
 
   @Override
   public void execute() {
-    m_climber.setSetpoint(m_setpoint);
+    m_climber.setSetpoint(m_climber.getLeaderPidController(), m_setpoint);
   }
 
   @Override
@@ -28,8 +27,7 @@ public class ClimberCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    double error =
-        Climber.metersToRotations(m_setpoint) - m_climber.getEncoderPosition();
-    return Math.abs(error) <= RobotConstants.ClimberConstants.kSetPointTolerance;
+    double error = Climber.metersToRotations(m_setpoint) - m_climber.getLeaderEncoderPosition();
+    return Math.abs(error) <= ClimberConfig.kSetPointTolerance;
   }
 }

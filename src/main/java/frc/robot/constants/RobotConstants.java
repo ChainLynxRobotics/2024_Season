@@ -6,10 +6,8 @@ package frc.robot.constants;
  */
 public final class RobotConstants {
   public static final class ClimberConstants {
-    public static final int kClimberLeaderID = -1;
-    public static final int kClimberFollowerID = -1;
-
-    public static final double kSetPointTolerance = 0.01;
+    public static final int kClimberLeaderID = 10;
+    public static final int kClimberFollowerID = 11;
 
     public static final double kClimberP = 0.1;
     public static final double kClimberI = 0;
@@ -19,5 +17,16 @@ public final class RobotConstants {
     public static final double kClimberFeedForward = 0;
     public static final double kClimberMaxOutput = 1;
     public static final double kClimberMinOutput = -1;
+  }
+
+  public static final class OIConstants {
+    public static final int kDriverControllerPort = 0;
+    public static final int kOperatorJoystickPort = 1;
+
+    public static final double kDriveDeadband = 0.06;
+    public static final double kMagnitudeDeadband = 0.06;
+    public static final double kDirectionSlewRate = 10; // radians per second
+    public static final double kMagnitudeSlewRate = 90; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 90; // percent per second (1 = 100%)
   }
 }

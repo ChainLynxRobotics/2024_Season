@@ -4,11 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.constants.RobotConstants.OIConstants;
 
 public class RobotContainer {
+  private Joystick m_operatorController;
+
   public RobotContainer() {
+    m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
     configureBindings();
   }
 
