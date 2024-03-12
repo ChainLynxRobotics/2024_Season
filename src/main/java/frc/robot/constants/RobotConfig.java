@@ -6,6 +6,6 @@ package frc.robot.constants;
  */
 public class RobotConfig {
   public static final class ClimberConfig {
-    public static double setpoint = 0;
+    public static final double kStallInput = 0.02;
   }
 }

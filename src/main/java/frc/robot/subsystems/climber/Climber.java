@@ -6,6 +6,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConstants.ClimberConstants;
 
@@ -18,9 +19,9 @@ public class Climber extends SubsystemBase {
 
   public Climber() {
     leaderController =
-        new CANSparkMax(ClimberConstants.CLIMBER_CONTROLLER_ID1, MotorType.kBrushless);
+        new CANSparkMax(ClimberConstants.kClimberLeaderID, MotorType.kBrushless);
     followerController =
-        new CANSparkMax(ClimberConstants.CLIMBER_CONTROLLER_ID2, MotorType.kBrushless);
+        new CANSparkMax(ClimberConstants.kClimberFollowerID, MotorType.kBrushless);
 
     leaderController.setIdleMode(IdleMode.kBrake);
     followerController.setIdleMode(IdleMode.kBrake);
@@ -29,6 +30,7 @@ public class Climber extends SubsystemBase {
 
     m_pidController = leaderController.getPIDController();
     m_encoder = leaderController.getEncoder();
+    m_encoder.setPosition(0);
 
     // set PID coefficients
     m_pidController.setP(ClimberConstants.kClimberP);
@@ -38,10 +40,14 @@ public class Climber extends SubsystemBase {
     m_pidController.setFF(ClimberConstants.kClimberFeedForward);
     m_pidController.setOutputRange(
         ClimberConstants.kClimberMinOutput, ClimberConstants.kClimberMaxOutput);
+
+    SmartDashboard.putNumber("climber encoder rots", m_encoder.getPosition());
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    SmartDashboard.putNumber("climber encoder rots", m_encoder.getPosition());
+  }
 
   public double getEncoderPosition() {
     return m_encoder.getPosition();
@@ -55,6 +61,7 @@ public class Climber extends SubsystemBase {
     return 2 * Math.PI * ClimberConstants.kClimberMotorRadius * rotations;
   }
 
+  //TODO determine climber rot conversion factor empirically
   public static double metersToRotations(double meters) {
     return meters / (2 * Math.PI * ClimberConstants.kClimberMotorRadius);
   }

@@ -6,8 +6,8 @@ package frc.robot.constants;
  */
 public final class RobotConstants {
   public static final class ClimberConstants {
-    public static final int CLIMBER_CONTROLLER_ID1 = -1;
-    public static final int CLIMBER_CONTROLLER_ID2 = -1;
+    public static final int kClimberLeaderID = -1;
+    public static final int kClimberFollowerID = -1;
 
     public static final double kSetPointTolerance = 0.01;
 
