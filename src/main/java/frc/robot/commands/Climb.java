@@ -6,18 +6,16 @@ import frc.robot.subsystems.climber.Climber;
 
 public class Climb extends Command {
   private final Climber m_climber;
-  private double m_setpoint;
 
-  public Climb(Climber climber, double setpoint) {
+  public Climb(Climber climber) {
     m_climber = climber;
-    m_setpoint = setpoint;
 
     addRequirements(climber);
   }
 
   @Override
-  public void execute() {
-    m_climber.setSetpoint(m_climber.getLeaderPidController(), m_setpoint);
+  public void initialize() {
+    m_climber.setMotorSpeed(ClimberConfig.kDefaultSpeed);
   }
 
   @Override
@@ -27,7 +25,6 @@ public class Climb extends Command {
 
   @Override
   public boolean isFinished() {
-    double error = Climber.metersToRotations(m_setpoint) - m_climber.getLeaderEncoderPosition();
-    return Math.abs(error) <= ClimberConfig.kSetPointTolerance;
+    return m_climber.getLeaderEncoderPosition() > ClimberConfig.kUpperRotSoftStop - ClimberConfig.kStopMargin;
   }
 }
