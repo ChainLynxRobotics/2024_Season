@@ -93,11 +93,16 @@ public class RobotConfig {
     public static final double kShieldDefaultSpeed = 0.5;
     public static final double kEncoderRotsToPivotRot = 160;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
-    public static final Measure<Angle> kAngleError = Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
-    public static final Measure<Angle> kSpeakerAngle = Units.Rotations.of(75 / 360 * kEncoderRotsToPivotRot);
-    public static final Measure<Angle> kAmpAngle = Units.Rotations.of(109 / 360 * kEncoderRotsToPivotRot);
-    public static final Measure<Angle> kTrapAngle = Units.Rotations.of(105 / 360 * kEncoderRotsToPivotRot);
-    public static final Measure<Angle> kAdjustAmountDegrees = Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kAngleError =
+        Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kSpeakerAngle =
+        Units.Rotations.of(75 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kAmpAngle =
+        Units.Rotations.of(109 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kTrapAngle =
+        Units.Rotations.of(105 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kAdjustAmountDegrees =
+        Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
 
     public static final double kDefaultAmpVelocity = 1500; // rpm
     public static final double kDefaultTrapVelocity = 2000; // rpm

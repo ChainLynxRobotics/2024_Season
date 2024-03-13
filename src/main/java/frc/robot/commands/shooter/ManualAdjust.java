@@ -42,11 +42,14 @@ public class ManualAdjust extends Command {
 
   @Override
   public void execute() {
-    m_shooter.setFF(Math.cos(Units.rotationsToRadians(m_shooter.getCurrentAngle().magnitude()))*ShooterConfig.kAngleControlFF);
+    m_shooter.setFF(
+        Math.cos(Units.rotationsToRadians(m_shooter.getCurrentAngle().magnitude()))
+            * ShooterConfig.kAngleControlFF);
   }
 
   @Override
   public boolean isFinished() {
-    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude()) || timer.get() > ShooterConfig.kAimTimeout;
+    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude())
+        || timer.get() > ShooterConfig.kAimTimeout;
   }
 }

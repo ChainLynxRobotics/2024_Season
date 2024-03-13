@@ -12,7 +12,7 @@ import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 
-public class Aim extends Command {
+public class SpinFlywheels extends Command {
   private final Shooter m_shooter;
   private final Vision m_vision;
   private final FieldElement m_type;
@@ -20,7 +20,7 @@ public class Aim extends Command {
   private double initTime;
   private Measure<Angle> desiredAngle;
 
-  public Aim(Shooter shooter, FieldElement type) {
+  public SpinFlywheels(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
     m_vision = new Vision();
     m_type = type;
@@ -28,7 +28,7 @@ public class Aim extends Command {
     addRequirements(m_shooter);
   }
 
-  public Aim(Shooter shooter, Vision eyes) {
+  public SpinFlywheels(Shooter shooter, Vision eyes) {
     m_shooter = shooter;
     m_vision = eyes;
     m_type = null;
@@ -75,15 +75,14 @@ public class Aim extends Command {
 
   @Override
   public void execute() {
-    System.out.println("shoot command");
-    double ff = Math.cos(m_shooter.getCurrentAngle().in(Units.Radians))*ShooterConfig.kAngleControlFF;
+    double ff =
+        Math.cos(m_shooter.getCurrentAngle().in(Units.Radians)) * ShooterConfig.kAngleControlFF;
     m_shooter.setFF(ff);
   }
 
-
   public boolean isFinished() {
-    return m_shooter.isAtFlywheelSetpoint(desiredVelocity) ||
-    Math.abs(Timer.getFPGATimestamp() - initTime) > ShooterConfig.kAimTimeout;
+    return m_shooter.isAtFlywheelSetpoint(desiredVelocity)
+        || Math.abs(Timer.getFPGATimestamp() - initTime) > ShooterConfig.kAimTimeout;
   }
 
   public double getVelocity(double elementHeight) {
@@ -95,5 +94,4 @@ public class Aim extends Command {
   public void end(boolean interrupted) {
     m_shooter.stopFlywheel();
   }
-
 }
