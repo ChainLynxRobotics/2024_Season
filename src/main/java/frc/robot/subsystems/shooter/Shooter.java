@@ -113,6 +113,9 @@ public class Shooter extends SubsystemBase {
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
     }
+
+    SmartDashboard.putNumber("amp multiplier", 4/9);
+    SmartDashboard.putNumber("speaker multiplier", 2/9);
   }
 
   public void putAngleOnSmartDashboard() {
@@ -140,6 +143,8 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("amp multiplier", 4/9);
+    SmartDashboard.putNumber("speaker multiplier", 2/9);
     SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
 
     double pval = SmartDashboard.getNumber("flywheel p", 0.1);

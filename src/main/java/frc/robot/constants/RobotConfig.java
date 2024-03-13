@@ -101,7 +101,7 @@ public class RobotConfig {
 
     public static final double kDefaultAmpVelocity = 1500; // rpm
     public static final double kDefaultTrapVelocity = 2000; // rpm
-    public static final double kDefaultSpeakerVelocity = 2500; // rpm
+    public static final double kDefaultSpeakerVelocity = 4000; // rpm
   }
 
   public static class DriveConfig {
@@ -147,7 +147,7 @@ public class RobotConfig {
             new ReplanningConfig());
 
     // 4.45 m/s max speed
-    public static final double kMaxSpeedBase = 4.8;
+    public static final double kMaxSpeedBase = 6;
     public static final double kMaxSpeedScaleFactor = 0.9;
     public static final double kMaxSpeedMetersPerSecond = kMaxSpeedBase * kMaxSpeedScaleFactor;
 

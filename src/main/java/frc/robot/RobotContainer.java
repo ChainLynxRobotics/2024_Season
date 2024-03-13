@@ -18,6 +18,7 @@ import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.Aim;
 import frc.robot.commands.shooter.AngleTest;
 import frc.robot.commands.shooter.Shoot;
+import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
@@ -72,8 +73,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new Trigger(() -> m_operatorController.getRawButton(5))
-      .whileTrue(new AngleTest(m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
@@ -118,6 +117,20 @@ public class RobotContainer {
     // extend shield
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
+
+    new Trigger(() -> m_operatorController.getRawButton(6))
+        .whileTrue(new AngleTest(m_shooter, 1));
+
+    new Trigger(() -> m_operatorController.getRawButton(13))
+        .whileTrue(new StowShooter(m_shooter));
+    
+    //speaker
+    new Trigger(() -> m_operatorController.getRawButton(12))
+        .whileTrue(new AngleTest(m_shooter, 0.3));
+    
+    //amp
+    new Trigger(() -> m_operatorController.getRawButton(11))
+        .whileTrue(new AngleTest(m_shooter,  0.6));
   }
 
   private void updateInput() {
