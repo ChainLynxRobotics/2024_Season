@@ -21,10 +21,15 @@ public class Climber extends SubsystemBase {
     followerController.setIdleMode(IdleMode.kBrake);
 
     followerController.follow(leaderController);
+    followerController.setInverted(true);
     leaderController.getEncoder().setPosition(0);
+    followerController.getEncoder().setPosition(0);
 
     SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
   }
+
+
+
 
   @Override
   public void periodic() {
