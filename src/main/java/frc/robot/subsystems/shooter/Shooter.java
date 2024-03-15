@@ -144,8 +144,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("amp multiplier", 4 / 9);
-    SmartDashboard.putNumber("speaker multiplier", 2 / 9);
     SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
 
     double pval = SmartDashboard.getNumber("flywheel p", 0.1);
@@ -168,7 +166,7 @@ public class Shooter extends SubsystemBase {
         "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
     double flywheelRPM =
         SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter/Flywheel RPM", flywheelRPM);
+    SmartDashboard.putNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();

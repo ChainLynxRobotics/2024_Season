@@ -39,7 +39,7 @@ public class RobotConfig {
     // top Flywheel controller PID coefficients
     public static final double kTopFlywheelP = 0.2;
     public static final double kTopFlywheelI = 0;
-    public static final double kTopFlywheelD = 0.001;
+    public static final double kTopFlywheelD = 0.005;
     public static final double kTopFlywheelFF = 0;
     public static final double kTopFlywheelIZone = 0.0001;
     public static final double kTopFlywheelMinOutput = -1;
@@ -88,7 +88,7 @@ public class RobotConfig {
 
     public static final long kReleaseTime = 5000;
     public static final long kShieldTime = 2; // seconds
-    public static final double kAimTimeout = 2;
+    public static final double kAimTimeout = 20;
 
     public static final double kShieldDefaultSpeed = 0.5;
     public static final double kEncoderRotsToPivotRot = 160;
@@ -106,7 +106,7 @@ public class RobotConfig {
 
     public static final double kDefaultAmpVelocity = 1500; // rpm
     public static final double kDefaultTrapVelocity = 2000; // rpm
-    public static final double kDefaultSpeakerVelocity = 4000; // rpm
+    public static final double kDefaultSpeakerVelocity = 4500; // rpm
   }
 
   public static class DriveConfig {

@@ -5,7 +5,6 @@ import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
@@ -17,7 +16,6 @@ public class SpinFlywheels extends Command {
   private final Vision m_vision;
   private final FieldElement m_type;
   private double desiredVelocity;
-  private double initTime;
   private Measure<Angle> desiredAngle;
 
   public SpinFlywheels(Shooter shooter, FieldElement type) {
@@ -37,7 +35,6 @@ public class SpinFlywheels extends Command {
 
   @Override
   public void initialize() {
-    initTime = Timer.getFPGATimestamp();
     if (m_type == null) {
       if (m_vision.getHasTarget()) {
         double desiredAngle =
@@ -81,8 +78,7 @@ public class SpinFlywheels extends Command {
   }
 
   public boolean isFinished() {
-    return m_shooter.isAtFlywheelSetpoint(desiredVelocity)
-        || Math.abs(Timer.getFPGATimestamp() - initTime) > ShooterConfig.kAimTimeout;
+    return m_shooter.isAtFlywheelSetpoint(desiredVelocity);
   }
 
   public double getVelocity(double elementHeight) {
