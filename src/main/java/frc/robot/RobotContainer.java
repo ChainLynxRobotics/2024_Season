@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
@@ -21,6 +23,7 @@ import frc.robot.commands.shooter.SpinFlywheels;
 import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
+import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
@@ -123,10 +126,10 @@ public class RobotContainer {
         .whileTrue(new StowShooter(m_shooter));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
-        .whileTrue(new PivotMove(m_shooter, 0.3));
+        .whileTrue(new PivotMove(m_shooter, ShooterConfig.kFlushSpeakerPivotScale));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .whileTrue(new PivotMove(m_shooter, 0.55));
+        .whileTrue(new PivotMove(m_shooter, ShooterConfig.kFlushAmpPivotScale));
   }
 
   private void updateInput() {
@@ -140,14 +143,26 @@ public class RobotContainer {
         MathUtil.applyDeadband(-m_driverController.getRightY(), OIConstants.kDriveDeadband));
   }
 
-  // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false).withTimeout(3));
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
+
     NamedCommands.registerCommand("shootSpeaker",
-      new Aim(m_shooter, FieldElement.SPEAKER).withTimeout(3)
-      .andThen(new Shoot(m_indexer, false)).withTimeout(3));
-    NamedCommands.registerCommand("scoreAmp", doNothing());
-    NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
+      new SequentialCommandGroup(
+        new PivotMove(m_shooter, ShooterConfig.kFlushSpeakerPivotScale).withTimeout(1),
+        new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+        new ParallelRaceGroup(
+          new SpinFlywheels(m_shooter, FieldElement.SPEAKER),
+          new Shoot(m_indexer, false)).withTimeout(3)
+        ));
+
+    NamedCommands.registerCommand("shootAmp",
+      new SequentialCommandGroup(
+        new PivotMove(m_shooter, ShooterConfig.kFlushAmpPivotScale).withTimeout(1),
+        new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+        new ParallelRaceGroup(
+          new SpinFlywheels(m_shooter, FieldElement.AMP),
+          new Shoot(m_indexer, false)).withTimeout(3)
+        ));
   }
 
   private Command doNothing() {

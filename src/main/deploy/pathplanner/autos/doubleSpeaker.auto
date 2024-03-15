@@ -18,9 +18,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "intakeMiddle"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "intakeMiddle"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
           }
         },
         {
