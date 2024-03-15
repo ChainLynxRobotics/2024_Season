@@ -2,25 +2,19 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4466945832039815,
-      "y": 5.554458414472386
+      "x": 0.8672303058891838,
+      "y": 7.0
     },
-    "rotation": -178.44015878343384
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "shootSpeaker"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "speakerThenLeave"
+            "pathName": "leave from station 1"
           }
         }
       ]
