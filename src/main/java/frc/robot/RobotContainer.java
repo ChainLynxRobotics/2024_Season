@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.ActuateShield;
-import frc.robot.commands.shooter.Aim;
+import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
+import frc.robot.commands.shooter.SpinFlywheels;
+import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
@@ -62,6 +64,9 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
+    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     /*m_shooter.setDefaultCommand(
     new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
   }
@@ -99,12 +104,12 @@ public class RobotContainer {
         .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
         .whileTrue(new Shoot(m_indexer, true));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .whileTrue(new Aim(m_shooter, FieldElement.AMP));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
-        .whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
+        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.AMP));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
+        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
 
-    m_trapAim.whileTrue(new Aim(m_shooter, FieldElement.TRAP));
+    m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
     // triggers for extending and retracting shield manually
     // don't extend shield
@@ -114,8 +119,14 @@ public class RobotContainer {
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
 
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
+        .whileTrue(new StowShooter(m_shooter));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
+        .whileTrue(new PivotMove(m_shooter, 0.3));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
+        .whileTrue(new PivotMove(m_shooter, 0.55));
   }
 
   private void updateInput() {

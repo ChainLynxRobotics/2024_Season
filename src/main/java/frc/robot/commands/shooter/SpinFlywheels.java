@@ -12,24 +12,23 @@ import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 
-public class Aim extends Command {
+public class SpinFlywheels extends Command {
   private final Shooter m_shooter;
   private final Vision m_vision;
   private final FieldElement m_type;
-  private Measure<Angle> desiredAngle;
   private double desiredVelocity;
-  private Timer timer;
+  private double initTime;
+  private Measure<Angle> desiredAngle;
 
-  public Aim(Shooter shooter, FieldElement type) {
+  public SpinFlywheels(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
     m_vision = new Vision();
     m_type = type;
-    timer = new Timer();
 
     addRequirements(m_shooter);
   }
 
-  public Aim(Shooter shooter, Vision eyes) {
+  public SpinFlywheels(Shooter shooter, Vision eyes) {
     m_shooter = shooter;
     m_vision = eyes;
     m_type = null;
@@ -38,7 +37,7 @@ public class Aim extends Command {
 
   @Override
   public void initialize() {
-    timer.start();
+    initTime = Timer.getFPGATimestamp();
     if (m_type == null) {
       if (m_vision.getHasTarget()) {
         double desiredAngle =
@@ -70,20 +69,20 @@ public class Aim extends Command {
           desiredVelocity = 0;
           break;
       }
-
-      m_shooter.setAngle(desiredAngle);
       m_shooter.runFlywheel(desiredVelocity);
     }
   }
 
   @Override
   public void execute() {
-    m_shooter.setFF(Math.cos(m_shooter.getCurrentAngle().in(Units.Radians))*ShooterConfig.kAngleControlFF);
+    double ff =
+        Math.cos(m_shooter.getCurrentAngle().in(Units.Radians)) * ShooterConfig.kAngleControlFF;
+    m_shooter.setFF(ff);
   }
 
   public boolean isFinished() {
-    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude()) && m_shooter.isAtFlywheelSetpoint(desiredVelocity) ||
-    timer.get() > ShooterConfig.kAimTimeout;
+    return m_shooter.isAtFlywheelSetpoint(desiredVelocity)
+        || Math.abs(Timer.getFPGATimestamp() - initTime) > ShooterConfig.kAimTimeout;
   }
 
   public double getVelocity(double elementHeight) {
@@ -95,5 +94,4 @@ public class Aim extends Command {
   public void end(boolean interrupted) {
     m_shooter.stopFlywheel();
   }
-
 }

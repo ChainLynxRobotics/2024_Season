@@ -22,7 +22,8 @@ public class StowShooter extends Command {
 
   @Override
   public void execute() {
-    m_shooter.setFF(Math.cos(m_shooter.getCurrentAngle().in(Units.Radians))*ShooterConfig.kAngleControlFF);
+    m_shooter.setFF(
+        Math.cos(m_shooter.getCurrentAngle().in(Units.Radians)) * ShooterConfig.kAngleControlFF);
   }
 
   @Override

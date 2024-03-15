@@ -28,10 +28,10 @@ public class RobotConfig {
 
   public static final class ShooterConfig {
     // Angle controller PID coefficients
-    public static final double kAngleControlP = 0.1;
+    public static final double kAngleControlP = 0.2;
     public static final double kAngleControlI = 0;
     public static final double kAngleControlD = 0;
-    public static final double kAngleControlFF = 0.001;
+    public static final double kAngleControlFF = 0.2;
     public static final double kAngleControlIZone = 0.0001;
     public static final double kAngleControlMinOutput = -1;
     public static final double kAngleControlMaxOutput = 1;
@@ -91,16 +91,22 @@ public class RobotConfig {
     public static final double kAimTimeout = 2;
 
     public static final double kShieldDefaultSpeed = 0.5;
+    public static final double kEncoderRotsToPivotRot = 160;
     public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
-    public static final Measure<Angle> kAngleError = Units.Rotations.of(0.5 / 360);
-    public static final Measure<Angle> kSpeakerAngle = Units.Rotations.of(75 / 360);
-    public static final Measure<Angle> kAmpAngle = Units.Rotations.of(109 / 360);
-    public static final Measure<Angle> kTrapAngle = Units.Rotations.of(105 / 360);
-    public static final Measure<Angle> kAdjustAmountDegrees = Units.Rotations.of(0.5 / 360);
+    public static final Measure<Angle> kAngleError =
+        Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kSpeakerAngle =
+        Units.Rotations.of(75 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kAmpAngle =
+        Units.Rotations.of(109 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kTrapAngle =
+        Units.Rotations.of(105 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kAdjustAmountDegrees =
+        Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
 
     public static final double kDefaultAmpVelocity = 1500; // rpm
     public static final double kDefaultTrapVelocity = 2000; // rpm
-    public static final double kDefaultSpeakerVelocity = 2500; // rpm
+    public static final double kDefaultSpeakerVelocity = 4000; // rpm
   }
 
   public static class DriveConfig {
@@ -146,7 +152,7 @@ public class RobotConfig {
             new ReplanningConfig());
 
     // 4.45 m/s max speed
-    public static final double kMaxSpeedBase = 4.8;
+    public static final double kMaxSpeedBase = 6;
     public static final double kMaxSpeedScaleFactor = 0.9;
     public static final double kMaxSpeedMetersPerSecond = kMaxSpeedBase * kMaxSpeedScaleFactor;
 

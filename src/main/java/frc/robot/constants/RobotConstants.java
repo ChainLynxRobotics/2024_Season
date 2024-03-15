@@ -19,17 +19,19 @@ import edu.wpi.first.units.Velocity;
 public final class RobotConstants {
 
   public final class Bindings {
-    public static final int kAimAmp = 4;
-    public static final int kAimSpeaker = 3;
+    public static final int kFlywheelAmp = 4;
+    public static final int kFlywheelSpeaker = 3;
     public static final int kShoot = 1;
     public static final int kShootReverse = 7;
     public static final int kAimTrap = 2;
-    public static final int kStowShooter = 14;
     public static final int kToggleFlywheel = 5;
     public static final int kRetractShield = 10;
     public static final int kExtendShield = 9;
     public static final int kManualAdjustDown = 18;
     public static final int kManualAdjustUp = 19;
+    public static final int kStowShooter = 13;
+    public static final int kAimAmp = 11;
+    public static final int kAimSpeaker = 12;
   }
 
   public static final class VisionConstants {
