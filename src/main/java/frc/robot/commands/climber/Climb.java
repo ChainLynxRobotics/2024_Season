@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.ClimberConfig;
@@ -17,13 +17,13 @@ public class Climb extends Command {
 
   @Override
   public void initialize() {
-    int multiplier = m_reverse ? -1 : 1;
-    m_climber.setMotorSpeed(ClimberConfig.kDefaultSpeed * multiplier);
+    m_climber.setBoth(m_reverse);
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_climber.setMotorSpeed(ClimberConfig.kStallInput);
+    m_climber.stopFollower();
+    m_climber.stopLeader();
   }
 
   @Override

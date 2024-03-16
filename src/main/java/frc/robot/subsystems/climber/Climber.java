@@ -6,12 +6,14 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.RobotConfig.ClimberConfig;
 import frc.robot.constants.RobotConstants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
 
   private CANSparkMax leaderController;
   private CANSparkMax followerController;
+  private int multiplier;
 
   public Climber() {
     leaderController = new CANSparkMax(ClimberConstants.kClimberLeaderID, MotorType.kBrushless);
@@ -20,8 +22,8 @@ public class Climber extends SubsystemBase {
     leaderController.setIdleMode(IdleMode.kBrake);
     followerController.setIdleMode(IdleMode.kBrake);
 
-    //followerController.follow(leaderController);
-    //followerController.setInverted(ClimberConfig.kInverted);
+    multiplier = 1;
+
     leaderController.getEncoder().setPosition(0);
     followerController.getEncoder().setPosition(0);
 
@@ -30,24 +32,27 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
+    SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
     if (leaderController.getEncoder().getPosition() < 0|| 
     leaderController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
       leaderController.set(0);
-    }*/
+      followerController.set(0);
+    }
   }
 
   public double getLeaderEncoderPosition() {
     return leaderController.getEncoder().getPosition();
   }
 
-  public void setMotorSpeed(double speed) {
-    leaderController.set(speed);
+  public void setBoth(boolean reverse) {
+    multiplier = reverse ? -1 : 1;
+    leaderController.set(-0.5 * multiplier);
+    followerController.set(0.5 * multiplier);
   }
 
   public void setLeader(boolean reverse) {
-    int multiplier = reverse ? -1 : 1;
-    leaderController.set(0.3*multiplier);
+    multiplier = reverse ? -1 : 1;
+    leaderController.set(0.7*multiplier);
   }
   
   public void stopLeader() {
@@ -59,8 +64,8 @@ public class Climber extends SubsystemBase {
   }
 
   public void setFollower(boolean reverse) {
-    int multiplier = reverse ? -1 : 1;
-    followerController.set(-0.3*multiplier);
+    multiplier = reverse ? -1 : 1;
+    followerController.set(-0.7*multiplier);
   }
 
   public CANSparkMax getLeader() {
