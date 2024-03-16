@@ -216,7 +216,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void driveChassisSpeeds(ChassisSpeeds spds) {
     Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
-    spdCommanded = spd;
+    spd.div(DriveConfig.kMaxSpeedMetersPerSecond);
     double angVel = spds.omegaRadiansPerSecond;
     move(spd, angVel);
   }
