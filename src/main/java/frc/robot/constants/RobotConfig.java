@@ -14,6 +14,7 @@ public class RobotConfig {
     public static final double kStallInput = 0.02;
     public static final double kUpperRotSoftStop = 5000;
     public static final double kStopMargin = 10;
+    public static final boolean kInverted = true;
     public static final Measure<Distance> buddyClimbExtensionDiff =
         Units.Meters.of(Units.Inches.of(5).in(Units.Meters));
   }

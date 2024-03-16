@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
     followerController.setIdleMode(IdleMode.kBrake);
 
     followerController.follow(leaderController);
-    followerController.setInverted(true);
+    followerController.setInverted(ClimberConfig.kInverted);
     leaderController.getEncoder().setPosition(0);
     followerController.getEncoder().setPosition(0);
 
