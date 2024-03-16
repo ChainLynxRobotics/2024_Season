@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
-import frc.robot.commands.DriveStraight;
+import frc.robot.commands.LeaveFromStationCommand;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.PivotMove;
@@ -68,7 +68,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-    autoChooser.setDefaultOption("test", new RunCommand(null, m_robotDrive));
+    autoChooser.setDefaultOption("simple leave from station", new LeaveFromStationCommand(m_robotDrive, 3));
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     /*m_shooter.setDefaultCommand(
@@ -76,8 +76,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new Trigger(() -> m_driverController.getBButton())
-      .onTrue(new DriveStraight(m_robotDrive, 0.5));
+    /*new Trigger(() -> m_driverController.getBButton())
+      .onTrue(new DriveStraight(m_robotDrive, 0.5));*/
 
     new Trigger(() -> m_operatorController.getRawButton(11))
         .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));

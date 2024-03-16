@@ -134,7 +134,7 @@ public final class RobotConstants {
       public static final double kWheelDiameterMeters = 76.58E-3;
       public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
       // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the
-      // bevel pinion
+      // bevel pinion.
       public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
       public static final double kDriveWheelFreeSpeedRps =
           (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters) / kDrivingMotorReduction;

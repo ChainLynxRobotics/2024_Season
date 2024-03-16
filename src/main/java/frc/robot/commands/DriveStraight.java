@@ -19,17 +19,23 @@ public class DriveStraight extends Command {
 
     @Override
     public void initialize() {
-        initDist = m_drivetrain.getPose().getY();
+        initDist = m_drivetrain.getPose().getX();
     }
 
     @Override
     public void execute() {
-        m_drivetrain.drive(new Vector(0, 0.2), new Vector(), false, false);
+        m_drivetrain.drive(new Vector(0.2, 0), new Vector(), false, false);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        m_drivetrain.drive(new Vector(0, 0), new Vector(0, 0), false, false);
     }
 
 
     @Override
     public boolean isFinished() {
-        return Math.abs(m_drivetrain.getPose().getY() - initDist) > m_distMeters;
+        System.out.println("displacement: " + Math.abs(m_drivetrain.getPose().getX()-initDist));
+        return Math.abs(m_drivetrain.getPose().getX() - initDist) > m_distMeters;
     }
 }
