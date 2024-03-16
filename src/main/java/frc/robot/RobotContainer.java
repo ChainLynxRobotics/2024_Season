@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
@@ -144,6 +145,7 @@ public class RobotContainer {
   }
 
   private void registerCommands() {
+    //timeout doesn't need to be set because it is in a race group with the intake path in the .path file
     NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
 
     NamedCommands.registerCommand("shootSpeaker",

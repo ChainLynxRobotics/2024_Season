@@ -2,19 +2,25 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8525708479988394,
-      "y": 2.037664646757866
+      "x": 1.4466945832039815,
+      "y": 5.554458414472386
     },
-    "rotation": 0
+    "rotation": -178.44015878343384
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "shootSpeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "leave 3"
+            "pathName": "leave from speaker"
           }
         }
       ]
