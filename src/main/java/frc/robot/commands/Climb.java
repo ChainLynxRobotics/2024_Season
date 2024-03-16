@@ -18,9 +18,8 @@ public class Climb extends Command {
   @Override
   public void initialize() {
     int multiplier = m_reverse ? -1 : 1;
-    m_climber.setMotorSpeed(ClimberConfig.kDefaultSpeed*multiplier);
+    m_climber.setMotorSpeed(ClimberConfig.kDefaultSpeed * multiplier);
   }
-
 
   @Override
   public void end(boolean interrupted) {
@@ -29,6 +28,7 @@ public class Climb extends Command {
 
   @Override
   public boolean isFinished() {
-    return m_climber.getLeaderEncoderPosition() > ClimberConfig.kUpperRotSoftStop - ClimberConfig.kStopMargin;
+    return m_climber.getLeaderEncoderPosition()
+        > ClimberConfig.kUpperRotSoftStop - ClimberConfig.kStopMargin;
   }
 }

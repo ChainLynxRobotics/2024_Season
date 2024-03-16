@@ -24,11 +24,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new Trigger(() -> m_operatorController.getRawButton(1))
-      .whileTrue(new Climb(m_climber, false));
+    new Trigger(() -> m_operatorController.getRawButton(1)).whileTrue(new Climb(m_climber, false));
 
-    new Trigger(() -> m_operatorController.getRawButton(2))
-      .whileTrue(new Climb(m_climber, true));
+    new Trigger(() -> m_operatorController.getRawButton(2)).whileTrue(new Climb(m_climber, true));
   }
 
   public Command getAutonomousCommand() {

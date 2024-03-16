@@ -28,13 +28,11 @@ public class Climber extends SubsystemBase {
     SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
   }
 
-
-
-
   @Override
   public void periodic() {
     SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
-    if (leaderController.getEncoder().getPosition() < 0 || leaderController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
+    if (leaderController.getEncoder().getPosition() < 0
+        || leaderController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
       leaderController.set(0);
     }
   }
