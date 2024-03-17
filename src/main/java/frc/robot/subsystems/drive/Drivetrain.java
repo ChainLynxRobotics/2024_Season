@@ -135,7 +135,7 @@ public class Drivetrain extends SubsystemBase {
         this::getPose,
         this::resetOdometry,
         this::getSpeeds,
-        this::driveChassisSpeeds,
+        this::moveChassisSpeeds,
         RobotConfig.DriveConfig.kPathFollowerConfig,
         this::allianceCheck,
         this);
@@ -299,6 +299,14 @@ public class Drivetrain extends SubsystemBase {
   public Pose2d getPose() {
     Pose2d pose = m_odometry.getPoseMeters();
     return pose;
+  }
+
+  public void moveChassisSpeeds(ChassisSpeeds spds) {
+    SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(spds);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**
