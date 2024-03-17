@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
@@ -24,7 +23,6 @@ import frc.robot.commands.shooter.SpinFlywheels;
 import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
-import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
@@ -77,7 +75,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     new Trigger(() -> m_operatorController.getRawButton(11))
-      .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
+        .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
@@ -146,26 +144,27 @@ public class RobotContainer {
 
   // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    //timeout doesn't need to be set because it is in a race group with the intake path in the .path file
+    // timeout doesn't need to be set because it is in a race group with the intake path in the
+    // .path file
     NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
 
-    NamedCommands.registerCommand("shootSpeaker",
-      new SequentialCommandGroup(
-        new PivotMove(m_shooter, 0.55).withTimeout(1),
-        new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
-        new ParallelRaceGroup(
-          new SpinFlywheels(m_shooter, FieldElement.SPEAKER),
-          new Shoot(m_indexer, false)).withTimeout(3)
-        ));
+    NamedCommands.registerCommand(
+        "shootSpeaker",
+        new SequentialCommandGroup(
+            new PivotMove(m_shooter, 0.55).withTimeout(1),
+            new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+            new ParallelRaceGroup(
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
+                .withTimeout(3)));
 
-    NamedCommands.registerCommand("shootAmp",
-      new SequentialCommandGroup(
-        new PivotMove(m_shooter, 0.3).withTimeout(1),
-        new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
-        new ParallelRaceGroup(
-          new SpinFlywheels(m_shooter, FieldElement.AMP),
-          new Shoot(m_indexer, false)).withTimeout(3)
-        ));
+    NamedCommands.registerCommand(
+        "shootAmp",
+        new SequentialCommandGroup(
+            new PivotMove(m_shooter, 0.3).withTimeout(1),
+            new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+            new ParallelRaceGroup(
+                    new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))
+                .withTimeout(3)));
   }
 
   private Command doNothing() {
