@@ -37,9 +37,4 @@ public class Intake extends SubsystemBase {
   public void stop() {
     m_intakeRollerMotor.stopMotor();
   }
-
-  // stops the rollers
-  public void stopFeedNote() {
-    m_intakeRollerMotor.stopMotor();
-  }
 }

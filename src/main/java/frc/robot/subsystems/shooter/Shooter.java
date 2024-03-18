@@ -146,17 +146,17 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
 
-    double pval = SmartDashboard.getNumber("flywheel p", 0.1);
+    double pval = SmartDashboard.getNumber("flywheel p", ShooterConfig.kTopFlywheelP);
     if (pval != m_topFlywheelPIDController.getP()) {
       m_topFlywheelPIDController.setP(pval);
     }
 
-    double ival = SmartDashboard.getNumber("flywheel i", 0.0);
+    double ival = SmartDashboard.getNumber("flywheel i", ShooterConfig.kTopFlywheelI);
     if (pval != m_topFlywheelPIDController.getI()) {
       m_topFlywheelPIDController.setP(ival);
     }
 
-    double dval = SmartDashboard.getNumber("flywheel d", 0.0);
+    double dval = SmartDashboard.getNumber("flywheel d", ShooterConfig.kTopFlywheelD);
     if (pval != m_topFlywheelPIDController.getD()) {
       m_topFlywheelPIDController.setP(dval);
     }
