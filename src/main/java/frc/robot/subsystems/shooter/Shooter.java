@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
 import edu.wpi.first.units.*;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +38,8 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_shieldController;
   private RelativeEncoder m_shieldEncoder;
 
+  private DigitalInput m_lineBreakSensor;
+
   private MutableMeasure<Velocity<Angle>> m_shooterSpeed;
   private MutableMeasure<Angle> m_shieldPosition;
   private MutableMeasure<Velocity<Distance>> m_targetVelocity;
@@ -44,7 +47,6 @@ public class Shooter extends SubsystemBase {
   private MutableMeasure<Angle> m_targetAngle;
 
   public Shooter() {
-
     // Flywheel
     m_topFlywheelMotor =
         new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushless);
@@ -54,6 +56,7 @@ public class Shooter extends SubsystemBase {
         new CANSparkMax(ShooterConstants.kBottomFlywheelMotorId, MotorType.kBrushless);
     m_bottomFlywheelMotor.follow(m_topFlywheelMotor, true);
     m_bottomFlywheelEncoder = m_bottomFlywheelMotor.getEncoder();
+    m_lineBreakSensor = new DigitalInput(ShooterConstants.kLineBreakPort);
 
     // shield
     m_shieldController = new CANSparkMax(ShooterConstants.kShieldMotorId, MotorType.kBrushless);
@@ -114,9 +117,6 @@ public class Shooter extends SubsystemBase {
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
     }
-
-    SmartDashboard.putNumber("amp multiplier", 4 / 9);
-    SmartDashboard.putNumber("speaker multiplier", 2 / 9);
   }
 
   public void putAngleOnSmartDashboard() {
@@ -144,19 +144,20 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
+    SmartDashboard.putBoolean("Shooter/line break", m_lineBreakSensor.get());
+    SmartDashboard.putNumber("Shooter/shield rots", m_shieldController.getEncoder().getPosition());
 
-    double pval = SmartDashboard.getNumber("flywheel p", ShooterConfig.kTopFlywheelP);
+    double pval = SmartDashboard.getNumber("fShooter/flywheel p", ShooterConfig.kTopFlywheelP);
     if (pval != m_topFlywheelPIDController.getP()) {
       m_topFlywheelPIDController.setP(pval);
     }
 
-    double ival = SmartDashboard.getNumber("flywheel i", ShooterConfig.kTopFlywheelI);
+    double ival = SmartDashboard.getNumber("Shooter/flywheel i", ShooterConfig.kTopFlywheelI);
     if (pval != m_topFlywheelPIDController.getI()) {
       m_topFlywheelPIDController.setP(ival);
     }
 
-    double dval = SmartDashboard.getNumber("flywheel d", ShooterConfig.kTopFlywheelD);
+    double dval = SmartDashboard.getNumber("Shooter/flywheel d", ShooterConfig.kTopFlywheelD);
     if (pval != m_topFlywheelPIDController.getD()) {
       m_topFlywheelPIDController.setP(dval);
     }
@@ -173,7 +174,7 @@ public class Shooter extends SubsystemBase {
     }
 
     SmartDashboard.putNumber(
-        "angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
+        "Shooter/angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
   }
 
   // sets the target angle the shooter should be at, called only once

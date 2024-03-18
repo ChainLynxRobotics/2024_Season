@@ -59,6 +59,7 @@ public final class RobotConstants {
     public static final int kShieldMotorId = 18;
     public static final int kAngleMotorLeaderId = 13;
     public static final int kAngleMotorFollowerId = 14;
+    public static final int kLineBreakPort = 6;
     public static final double FlywheelDiameter = 0.0762;
     public static final double ShooterLength = 0.4064;
     public static final double Gravity = 9.81;
@@ -176,9 +177,6 @@ public final class RobotConstants {
   }
 
   public static final class IntakeConstants {
-    public static final int kLineBreakSensor = 0;
-
-    // Roller motor ID
     public static final int kMotorID = 10;
   }
 }
