@@ -62,12 +62,10 @@ public class RobotContainer {
     // new Trigger(() -> m_operatorController.getRawButton(16)).whileTrue(new Climb(m_climber,
     // true));
 
-    // down
     new Trigger(() -> m_operatorController.getRawButton(11))
         .whileTrue(new IndividualClimb(m_climber, true, true));
     new Trigger(() -> m_operatorController.getRawButton(12))
         .whileTrue(new IndividualClimb(m_climber, true, false));
-    // down
     new Trigger(() -> m_operatorController.getRawButton(13))
         .whileTrue(new IndividualClimb(m_climber, false, true));
     new Trigger(() -> m_operatorController.getRawButton(14))
