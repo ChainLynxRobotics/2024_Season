@@ -3,7 +3,6 @@ package frc.robot.subsystems.climber;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig.ClimberConfig;
@@ -33,8 +32,8 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
-    if (leaderController.getEncoder().getPosition() < 0|| 
-    leaderController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
+    if (leaderController.getEncoder().getPosition() < 0
+        || leaderController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
       leaderController.set(0);
       followerController.set(0);
     }
@@ -52,9 +51,9 @@ public class Climber extends SubsystemBase {
 
   public void setLeader(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    leaderController.set(0.7*multiplier);
+    leaderController.set(0.7 * multiplier);
   }
-  
+
   public void stopLeader() {
     leaderController.set(0);
   }
@@ -65,7 +64,7 @@ public class Climber extends SubsystemBase {
 
   public void setFollower(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    followerController.set(-0.7*multiplier);
+    followerController.set(-0.7 * multiplier);
   }
 
   public CANSparkMax getLeader() {

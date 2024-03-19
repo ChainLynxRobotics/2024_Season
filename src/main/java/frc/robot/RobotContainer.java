@@ -56,27 +56,27 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    //new Trigger(() -> m_operatorController.getRawButton(15)).whileTrue(new Climb(m_climber, false));
+    // new Trigger(() -> m_operatorController.getRawButton(15)).whileTrue(new Climb(m_climber,
+    // false));
 
-    //new Trigger(() -> m_operatorController.getRawButton(16)).whileTrue(new Climb(m_climber, true));
+    // new Trigger(() -> m_operatorController.getRawButton(16)).whileTrue(new Climb(m_climber,
+    // true));
 
-    //down
+    // down
     new Trigger(() -> m_operatorController.getRawButton(11))
-      .whileTrue(new IndividualClimb(m_climber, true, true));
+        .whileTrue(new IndividualClimb(m_climber, true, true));
     new Trigger(() -> m_operatorController.getRawButton(12))
-      .whileTrue(new IndividualClimb(m_climber, true, false));
-    //down
+        .whileTrue(new IndividualClimb(m_climber, true, false));
+    // down
     new Trigger(() -> m_operatorController.getRawButton(13))
-      .whileTrue(new IndividualClimb(m_climber, false, true));
+        .whileTrue(new IndividualClimb(m_climber, false, true));
     new Trigger(() -> m_operatorController.getRawButton(14))
-      .whileTrue(new IndividualClimb(m_climber, false, false));
-    
-    //up
-    new Trigger(() -> m_operatorController.getRawButton(15))
-      .whileTrue(new Climb(m_climber, true));
-    //down
-    new Trigger(() -> m_operatorController.getRawButton(16))
-      .whileTrue(new Climb(m_climber, false));
+        .whileTrue(new IndividualClimb(m_climber, false, false));
+
+    // up
+    new Trigger(() -> m_operatorController.getRawButton(15)).whileTrue(new Climb(m_climber, true));
+    // down
+    new Trigger(() -> m_operatorController.getRawButton(16)).whileTrue(new Climb(m_climber, false));
   }
 
   private void updateInput() {
