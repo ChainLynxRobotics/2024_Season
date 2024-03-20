@@ -17,9 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.LeaveFromStationCommand;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
@@ -168,6 +166,7 @@ public class Drivetrain extends SubsystemBase {
   /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
+    updateSwerveModulePositions();
     m_odometry.update(m_gyro.getRotation2d(), m_swerveModulePositions);
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
@@ -197,6 +196,13 @@ public class Drivetrain extends SubsystemBase {
           m_rearRight.getPosition(),
         },
         pose);
+  }
+
+  public void updateSwerveModulePositions() {
+    m_swerveModulePositions[0] = m_frontLeft.getPosition();
+    m_swerveModulePositions[1] = m_frontRight.getPosition();
+    m_swerveModulePositions[2] = m_rearLeft.getPosition();
+    m_swerveModulePositions[3] = m_rearRight.getPosition();
   }
 
   /**

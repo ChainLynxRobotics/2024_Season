@@ -27,17 +27,15 @@ public class ManualAdjust extends Command {
     switch (m_type) {
       case up:
         desiredAngle = m_shooter.getCurrentAngle().plus(ShooterConfig.kAdjustAmountDegrees);
-        m_shooter.setAngle(desiredAngle);
         break;
       case down:
         desiredAngle = m_shooter.getCurrentAngle().minus(ShooterConfig.kAdjustAmountDegrees);
-        m_shooter.setAngle(desiredAngle);
         break;
       default:
         desiredAngle = m_shooter.getCurrentAngle();
-        m_shooter.setAngle(desiredAngle);
         break;
     }
+    m_shooter.setAngle(desiredAngle);
   }
 
   @Override

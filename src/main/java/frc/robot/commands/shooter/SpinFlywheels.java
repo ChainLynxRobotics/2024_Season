@@ -63,7 +63,6 @@ public class SpinFlywheels extends Command {
         default:
           desiredVelocity = 0;
           desiredAngle = Units.Degrees.of(0);
-          desiredVelocity = 0;
           break;
       }
       m_shooter.runFlywheel(desiredVelocity);

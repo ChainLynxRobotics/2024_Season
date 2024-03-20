@@ -9,7 +9,7 @@ public class DriveStraight extends Command {
     private double m_distMeters;
     private double initDist;
 
-    
+
     public DriveStraight(Drivetrain drivetrain, double distMeters) {
         this.m_drivetrain = drivetrain;
         m_distMeters = distMeters;
@@ -35,7 +35,6 @@ public class DriveStraight extends Command {
 
     @Override
     public boolean isFinished() {
-        System.out.println("displacement: " + Math.abs(m_drivetrain.getPose().getX()-initDist));
         return Math.abs(m_drivetrain.getPose().getX() - initDist) > m_distMeters;
     }
 }

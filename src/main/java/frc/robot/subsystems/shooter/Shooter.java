@@ -109,14 +109,9 @@ public class Shooter extends SubsystemBase {
     m_shooterSpeed = MutableMeasure.zero(Units.RPM);
     m_shieldPosition = MutableMeasure.zero(Units.Rotations);
 
-    SmartDashboard.putNumber("angle pos", 0.1);
-
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
     }
-
-    SmartDashboard.putNumber("amp multiplier", 4 / 9);
-    SmartDashboard.putNumber("speaker multiplier", 2 / 9);
   }
 
   public void putAngleOnSmartDashboard() {
