@@ -1,6 +1,5 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig;
 import frc.robot.subsystems.indexer.Indexer;
@@ -34,6 +33,6 @@ public class RunIntake extends Command {
 
   @Override
   public boolean isFinished() {
-    return SmartDashboard.getBoolean("Shooter/line break", false);
+    return m_indexer.getLineBreak();
   }
 }

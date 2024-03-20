@@ -8,7 +8,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
 import edu.wpi.first.units.*;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,8 +37,6 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_shieldController;
   private RelativeEncoder m_shieldEncoder;
 
-  private DigitalInput m_lineBreakSensor;
-
   private MutableMeasure<Velocity<Angle>> m_shooterSpeed;
   private MutableMeasure<Angle> m_shieldPosition;
   private MutableMeasure<Velocity<Distance>> m_targetVelocity;
@@ -56,7 +53,6 @@ public class Shooter extends SubsystemBase {
         new CANSparkMax(ShooterConstants.kBottomFlywheelMotorId, MotorType.kBrushless);
     m_bottomFlywheelMotor.follow(m_topFlywheelMotor, true);
     m_bottomFlywheelEncoder = m_bottomFlywheelMotor.getEncoder();
-    m_lineBreakSensor = new DigitalInput(ShooterConstants.kLineBreakPort);
 
     // shield
     m_shieldController = new CANSparkMax(ShooterConstants.kShieldMotorId, MotorType.kBrushless);
@@ -144,7 +140,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Shooter/line break", m_lineBreakSensor.get());
     SmartDashboard.putNumber("Shooter/shield rots", m_shieldController.getEncoder().getPosition());
 
     double pval = SmartDashboard.getNumber("fShooter/flywheel p", ShooterConfig.kTopFlywheelP);
