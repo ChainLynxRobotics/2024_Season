@@ -14,12 +14,17 @@ import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.LeaveFromStationCommand;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.utils.PathReader;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
@@ -62,6 +67,8 @@ public class Drivetrain extends SubsystemBase {
 
   private SwerveModulePosition[] m_swerveModulePositions;
 
+  private SendableChooser<Command> autoChooser;
+
   /** constructs a new Drivetrain object */
   public Drivetrain() {
     m_frontLeft =
@@ -87,10 +94,6 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightDrivingCanId,
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
-
-    // TODO: initialize this to where we place the robot on the field, will get from auto chosen
-    // from Smart Dashboard
-    m_pose = new Pose2d();
 
     m_swerveModulePositions =
         new SwerveModulePosition[] {
@@ -124,6 +127,13 @@ public class Drivetrain extends SubsystemBase {
             m_pose);
 
     configureAutoBuilder();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.setDefaultOption("LeaveFromStation1", AutoBuilder.buildAuto("LeaveFromStation1"));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    //sets correct initial pose based on current selected auto
+    String cmdName = autoChooser.getSelected().getName();
+    m_pose = PathReader.getInitPose(cmdName);
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
@@ -435,5 +445,9 @@ public class Drivetrain extends SubsystemBase {
   public void zeroHeading() {
     m_headingOffsetRadians = getGyroAngle().in(Units.Radians);
     m_gyro.reset();
+  }
+
+  public SendableChooser<Command> getAutoChooser() {
+    return autoChooser;
   }
 }

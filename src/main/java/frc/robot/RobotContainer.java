@@ -1,21 +1,16 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
-import frc.robot.commands.LeaveFromStationCommand;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.PivotMove;
@@ -46,7 +41,6 @@ public class RobotContainer {
 
   // The driver's controller
   private XboxController m_driverController;
-  private SendableChooser<Command> autoChooser;
 
   private Vector leftInputVec;
   private Vector rightInputVec;
@@ -64,21 +58,10 @@ public class RobotContainer {
     rightInputVec = new Vector();
 
     registerCommands();
-    // adds all autos in deploy dir to chooser
-    autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
-
-    autoChooser.setDefaultOption("simple leave from station", new LeaveFromStationCommand(m_robotDrive, 3));
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    /*m_shooter.setDefaultCommand(
-    new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
   }
 
   private void configureBindings() {
-    /*new Trigger(() -> m_driverController.getBButton())
-      .onTrue(new DriveStraight(m_robotDrive, 0.5));*/
-
     new Trigger(() -> m_operatorController.getRawButton(11))
         .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
     // angle on 8-directional button
@@ -169,9 +152,6 @@ public class RobotContainer {
                 .withTimeout(3)));
   }
 
-  private Command doNothing() {
-    return Commands.none();
-  }
 
   /**
    * Returns true if the intake is pressed; False otherwise.
@@ -201,6 +181,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return m_robotDrive.getAutoChooser().getSelected();
   }
 }
