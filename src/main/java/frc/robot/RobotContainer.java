@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -66,7 +67,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
+    autoChooser.setDefaultOption("do nothing", new PrintCommand("nothing"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     /*m_shooter.setDefaultCommand(
@@ -74,8 +75,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new Trigger(() -> m_operatorController.getRawButton(11))
-        .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);

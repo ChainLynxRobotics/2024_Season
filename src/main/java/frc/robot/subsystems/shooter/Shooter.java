@@ -194,10 +194,6 @@ public class Shooter extends SubsystemBase {
         ArbFFUnits.kPercentOut);
   }
 
-  public void setBasic() {
-    m_angleMotorLeader.set(SmartDashboard.getNumber("angle pos", 0.1));
-  }
-
   public Measure<Angle> getCurrentAngle() {
     return m_shooterAngle.mut_replace(m_angleEncoder.getPosition(), Units.Revolutions);
   }
