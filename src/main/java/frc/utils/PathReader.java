@@ -1,48 +1,30 @@
 package frc.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import frc.utils.Auto.Position;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.IOException;
 
 public class PathReader {
   public static Pose2d getInitPose(String cmdName) {
+    ObjectMapper mapper = new ObjectMapper();
     Rotation2d rot = new Rotation2d();
+    Position pos = new Position();
     double xDist = 0;
     double yDist = 0;
 
+    Auto auto;
     try {
-      String pattern = "\"x\": (\\d+\\.\\d+)|\"y\": (\\d+\\.\\d+)|\"rotation\": (\\d+\\.\\d+)";
-      Pattern p = Pattern.compile(pattern);
-
-      //TODO verify this is the right path
-      BufferedReader r = new BufferedReader(new FileReader(new File("C:/Users/ChainLynx/2024_Season/src/main/deploy/pathplanner/autos/"+cmdName+".auto")));
-      StringBuilder json = new StringBuilder();
-      String line;
-      while ((line = r.readLine()) != null) {
-        json.append(line);
-      }
-
-      Matcher m = p.matcher(json.toString());
-      while (m.find()) {
-        if (m.group(1) != null) {
-          xDist = Double.parseDouble(m.group(1));
-        } else if (m.group(2) != null) {
-          yDist = Double.parseDouble(m.group(2));
-        } else if (m.group(3) != null) {
-          rot = new Rotation2d(Double.parseDouble(m.group(3)));
-        }
-      }
-      r.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      auto =
+          mapper.readValue(
+              new File("src/main/deploy/pathplanner/autos/" + cmdName + ".auto"), Auto.class);
+      rot = new Rotation2d(auto.getStartingPose().getRotation());
+      pos = auto.getStartingPose().getPosition();
+      xDist = pos.getX();
+      yDist = pos.getY();
     } catch (IOException e) {
       e.printStackTrace();
     }

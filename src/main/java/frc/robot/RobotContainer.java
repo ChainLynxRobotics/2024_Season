@@ -152,7 +152,6 @@ public class RobotContainer {
                 .withTimeout(3)));
   }
 
-
   /**
    * Returns true if the intake is pressed; False otherwise.
    *

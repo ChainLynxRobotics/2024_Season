@@ -129,7 +129,7 @@ public class Drivetrain extends SubsystemBase {
     autoChooser.setDefaultOption("LeaveFromStation1", AutoBuilder.buildAuto("LeaveFromStation1"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    //sets correct initial pose based on current selected auto
+    // sets correct initial pose based on current selected auto
     String cmdName = autoChooser.getSelected().getName();
     m_pose = PathReader.getInitPose(cmdName);
 
@@ -318,7 +318,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void moveChassisSpeeds(ChassisSpeeds spds) {
-    SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(spds);
+    SwerveModuleState[] swerveModuleStates =
+        DriveConstants.kDriveKinematics.toSwerveModuleStates(spds);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
