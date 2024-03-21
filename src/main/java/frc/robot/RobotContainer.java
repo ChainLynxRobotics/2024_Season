@@ -12,10 +12,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.IndividualClimb;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.Aim;
@@ -24,12 +23,12 @@ import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.utils.Vector;
-
 
 public class RobotContainer {
   private Joystick m_operatorController;
@@ -114,8 +113,8 @@ public class RobotContainer {
     // extend shield
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
-    
-     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberUp))
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberUp))
         .whileTrue(new IndividualClimb(m_climber, true, true));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberDown))
         .whileTrue(new IndividualClimb(m_climber, true, false));
@@ -161,7 +160,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kIntakeNote
    */
   public boolean getIntakeButton() {
-    return m_operatorController.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
+    return m_operatorController.getRawButton(Bindings.kIntakeNoteButtonID);
   }
 
   /**
@@ -170,8 +169,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID
    */
   public boolean getReverseIntakeButton() {
-    return m_operatorController.getRawButton(
-        RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID);
+    return m_operatorController.getRawButton(Bindings.kReverseIntakeButtonID);
   }
 
   public boolean triggerPressed() {

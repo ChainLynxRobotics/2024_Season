@@ -23,7 +23,6 @@ import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
-
 /** an object representing the Drivetrain of a swerve drive frc robot */
 public class Drivetrain extends SubsystemBase {
   // Create MAXSwerveModules

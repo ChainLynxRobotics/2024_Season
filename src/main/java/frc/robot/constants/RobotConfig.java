@@ -1,6 +1,5 @@
 package frc.robot.constants;
 
-
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -11,7 +10,6 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.SwerveModuleConstants;
-
 
 /**
  * Software config settings (e.g. max speed, PID values). For hardware constants @see
@@ -29,7 +27,7 @@ public class RobotConfig {
     AMP,
     TRAP
   }
-  
+
   public static final class ClimberConfig {
     public static final double kDefaultSpeed = 0.4;
     public static final double kStallInput = 0.02;
