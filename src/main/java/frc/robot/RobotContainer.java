@@ -1,9 +1,12 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -45,6 +48,8 @@ public class RobotContainer {
   private Vector leftInputVec;
   private Vector rightInputVec;
 
+  private SendableChooser<Command> autoChooser;
+
   public RobotContainer() {
     m_shooter = new Shooter();
     m_intake = new Intake();
@@ -59,6 +64,10 @@ public class RobotContainer {
 
     registerCommands();
     configureBindings();
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.setDefaultOption("LeaveFromStation1", AutoBuilder.buildAuto("LeaveFromStation1"));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -180,6 +189,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_robotDrive.getAutoChooser().getSelected();
+    return autoChooser.getSelected();
   }
 }

@@ -14,15 +14,12 @@ import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.DriveConfig;
 import frc.robot.constants.RobotConstants.DriveConstants;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
-import frc.utils.PathReader;
 import frc.utils.SwerveUtils;
 import frc.utils.Vector;
 
@@ -59,13 +56,12 @@ public class Drivetrain extends SubsystemBase {
   private MutableMeasure<Angle> m_heading;
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry;
+  private SwerveDriveOdometry m_odometry;
+  private SwerveDriveKinematics m_kinematics;
   private Pose2d m_pose;
-  private ChassisSpeeds m_relativeSpeeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
 
-  private SendableChooser<Command> autoChooser;
 
   /** constructs a new Drivetrain object */
   public Drivetrain() {
@@ -117,21 +113,15 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevSlewRateTime = m_timer.get();
 
+    m_kinematics = DriveConstants.kDriveKinematics;
     m_odometry =
         new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
+            m_kinematics,
             Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
             m_swerveModulePositions,
             m_pose);
 
     configureAutoBuilder();
-    autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser.setDefaultOption("LeaveFromStation1", AutoBuilder.buildAuto("LeaveFromStation1"));
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    // sets correct initial pose based on current selected auto
-    String cmdName = autoChooser.getSelected().getName();
-    m_pose = PathReader.getInitPose(cmdName);
 
     m_powerDistribution.clearStickyFaults();
     SmartDashboard.putNumber("driveVelocity", 0);
@@ -155,8 +145,9 @@ public class Drivetrain extends SubsystemBase {
    * @return the current speed of the drivetrain
    */
   public ChassisSpeeds getSpeeds() {
-    return m_relativeSpeeds;
+    return m_kinematics.toChassisSpeeds(new SwerveModuleState[] {m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()});
   }
+
 
   /** stops the drivetrain's movement */
   public void stop() {
@@ -172,7 +163,6 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
-    m_relativeSpeeds = getRobotRelativeSpeeds();
     m_pose = m_odometry.getPoseMeters();
 
     SmartDashboard.putNumber("heading", ang - m_headingOffsetRadians);
@@ -280,21 +270,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * returns the current speed of the robot from it's reference frame
-   *
-   * @return the current speed of the robot from it's reference frame
-   */
-  public ChassisSpeeds getRobotRelativeSpeeds() {
-    return DriveConstants.kDriveKinematics.toChassisSpeeds(
-        new SwerveModuleState[] {
-          m_frontLeft.getState(),
-          m_frontRight.getState(),
-          m_rearLeft.getState(),
-          m_rearRight.getState()
-        });
-  }
-
-  /**
    * applies smoothing to the turning input of altDrive
    *
    * @param stickAng the given angle of the driver turning stick
@@ -313,8 +288,7 @@ public class Drivetrain extends SubsystemBase {
    * @return the current position of the robot on the field
    */
   public Pose2d getPose() {
-    Pose2d pose = m_odometry.getPoseMeters();
-    return pose;
+    return m_odometry.getPoseMeters();
   }
 
   public void moveChassisSpeeds(ChassisSpeeds spds) {
@@ -452,9 +426,5 @@ public class Drivetrain extends SubsystemBase {
   public void zeroHeading() {
     m_headingOffsetRadians = getGyroAngle().in(Units.Radians);
     m_gyro.reset();
-  }
-
-  public SendableChooser<Command> getAutoChooser() {
-    return autoChooser;
   }
 }
