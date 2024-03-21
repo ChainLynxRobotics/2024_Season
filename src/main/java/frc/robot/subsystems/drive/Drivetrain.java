@@ -62,7 +62,6 @@ public class Drivetrain extends SubsystemBase {
 
   private SwerveModulePosition[] m_swerveModulePositions;
 
-
   /** constructs a new Drivetrain object */
   public Drivetrain() {
     m_frontLeft =
@@ -145,9 +144,14 @@ public class Drivetrain extends SubsystemBase {
    * @return the current speed of the drivetrain
    */
   public ChassisSpeeds getSpeeds() {
-    return m_kinematics.toChassisSpeeds(new SwerveModuleState[] {m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()});
+    return m_kinematics.toChassisSpeeds(
+        new SwerveModuleState[] {
+          m_frontLeft.getState(),
+          m_frontRight.getState(),
+          m_rearLeft.getState(),
+          m_rearRight.getState()
+        });
   }
-
 
   /** stops the drivetrain's movement */
   public void stop() {
