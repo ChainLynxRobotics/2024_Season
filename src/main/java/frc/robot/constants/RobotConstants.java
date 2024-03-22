@@ -25,7 +25,7 @@ public final class RobotConstants {
     public static final int kShootReverse = 7;
     public static final int kIntakeNoteButtonID = 2;
     public static final int kReverseIntakeButtonID = 6;
-    
+
     public static final int kStowShooter = 8;
     public static final int kAimAmp = 9;
     public static final int kAimSpeaker = 10;
@@ -36,7 +36,6 @@ public final class RobotConstants {
     public static final int kRightClimberDown = 14;
     public static final int kBothClimbersUp = 15;
     public static final int kBothClimbersDown = 16;
-
   }
 
   public static final class VisionConstants {

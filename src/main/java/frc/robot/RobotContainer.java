@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -19,7 +18,6 @@ import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.commands.shooter.SpinFlywheels;
@@ -138,7 +136,7 @@ public class RobotContainer {
         .whileTrue(new Climb(m_climber, true));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersDown))
         .whileTrue(new Climb(m_climber, false));
-    
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
         .whileTrue(new StowShooter(m_shooter));
 
