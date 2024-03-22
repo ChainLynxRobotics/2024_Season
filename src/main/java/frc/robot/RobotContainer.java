@@ -71,8 +71,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new Trigger(() -> m_operatorController.getRawButton(11))
-        .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
@@ -96,17 +94,28 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, false));
-    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, true));
+    new Trigger(this::getIntakeButton).onTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
         .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
         .whileTrue(new Shoot(m_indexer, true));
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.AMP));
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false), new SpinFlywheels(m_shooter, FieldElement.AMP))));
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false),
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER))));
 
     m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
@@ -140,7 +149,7 @@ public class RobotContainer {
   }
 
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, m_indexer, false));
 
     NamedCommands.registerCommand(
         "shootSpeaker",

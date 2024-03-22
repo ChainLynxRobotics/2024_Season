@@ -107,7 +107,7 @@ public class RobotConfig {
     public static final Measure<Angle> kAdjustAmountDegrees =
         Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
 
-    public static final double kDefaultAmpVelocity = 1500; // rpm
+    public static final double kDefaultAmpVelocity = 500; // rpm
     public static final double kDefaultTrapVelocity = 2000; // rpm
     public static final double kDefaultSpeakerVelocity = 4500; // rpm
   }
