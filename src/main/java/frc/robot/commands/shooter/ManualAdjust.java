@@ -39,10 +39,6 @@ public class ManualAdjust extends Command {
         desiredAngle = m_shooter.getCurrentAngle();
         break;
     }
-    
-    m_shooter.setAngle(desiredAngle);
-  }
-
 
     if (timer.get() % 10 == 0) {
       m_shooter.setAngle(desiredAngle);
