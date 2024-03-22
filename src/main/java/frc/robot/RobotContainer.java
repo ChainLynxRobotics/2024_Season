@@ -8,15 +8,20 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.ActuateShield;
-import frc.robot.commands.shooter.Aim;
+import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
+import frc.robot.commands.shooter.SpinFlywheels;
+import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
@@ -62,6 +67,9 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
+    autoChooser.setDefaultOption("do nothing", new PrintCommand("nothing"));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     /*m_shooter.setDefaultCommand(
     new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
   }
@@ -90,19 +98,30 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, false));
-    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, true));
+    new Trigger(this::getIntakeButton).onTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
         .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
         .whileTrue(new Shoot(m_indexer, true));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .whileTrue(new Aim(m_shooter, FieldElement.AMP));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
-        .whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
 
-    m_trapAim.whileTrue(new Aim(m_shooter, FieldElement.TRAP));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false), new SpinFlywheels(m_shooter, FieldElement.AMP))));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false),
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER))));
+
+    m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
     // triggers for extending and retracting shield manually
     // don't extend shield
@@ -112,8 +131,14 @@ public class RobotContainer {
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
         .onTrue(new ActuateShield(m_shooter, true));
 
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
+        .whileTrue(new StowShooter(m_shooter));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
+        .whileTrue(new PivotMove(m_shooter, 0.3));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
+        .whileTrue(new PivotMove(m_shooter, 0.8));
   }
 
   private void updateInput() {
@@ -129,13 +154,27 @@ public class RobotContainer {
 
   // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
-    NamedCommands.registerCommand("scoreAmp", doNothing());
-    NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
-  }
+    // timeout doesn't need to be set because it is in a race group with the intake path in the
+    // .path file
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, m_indexer, false));
 
-  private Command doNothing() {
-    return Commands.none();
+    NamedCommands.registerCommand(
+        "shootSpeaker",
+        new SequentialCommandGroup(
+            new PivotMove(m_shooter, 0.55).withTimeout(1),
+            new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+            new ParallelRaceGroup(
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
+                .withTimeout(3)));
+
+    NamedCommands.registerCommand(
+        "shootAmp",
+        new SequentialCommandGroup(
+            new PivotMove(m_shooter, 0.3).withTimeout(1),
+            new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+            new ParallelRaceGroup(
+                    new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))
+                .withTimeout(3)));
   }
 
   /**

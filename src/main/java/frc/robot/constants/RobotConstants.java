@@ -19,17 +19,19 @@ import edu.wpi.first.units.Velocity;
 public final class RobotConstants {
 
   public final class Bindings {
-    public static final int kAimAmp = 4;
-    public static final int kAimSpeaker = 3;
+    public static final int kFlywheelAmp = 4;
+    public static final int kFlywheelSpeaker = 3;
     public static final int kShoot = 1;
     public static final int kShootReverse = 7;
     public static final int kAimTrap = 2;
-    public static final int kStowShooter = 14;
     public static final int kToggleFlywheel = 5;
     public static final int kRetractShield = 10;
     public static final int kExtendShield = 9;
     public static final int kManualAdjustDown = 18;
     public static final int kManualAdjustUp = 19;
+    public static final int kStowShooter = 13;
+    public static final int kAimAmp = 11;
+    public static final int kAimSpeaker = 12;
   }
 
   public static final class VisionConstants {
@@ -55,8 +57,11 @@ public final class RobotConstants {
     public static final int kTopFlywheelMotorId = 16;
     public static final int kBottomFlywheelMotorId = 17;
     public static final int kShieldMotorId = 18;
-    public static final double FlywheelDiameter = 0.0762;
-    public static final double ShooterLength = 0.4064;
+    public static final int kAngleMotorLeaderId = 13;
+    public static final int kAngleMotorFollowerId = 14;
+    public static final int kLineBreakPort = 6;
+    public static final double FlywheelDiameter = 0.0762; // meters
+    public static final double ShooterLength = 0.4064; // meters
     public static final double Gravity = 9.81;
     public static final Measure<Angle> kShieldExtentionAngle =
         Units.Rotations.of(1); // TODO - Set to number of rotations to fully extend shield
@@ -172,9 +177,6 @@ public final class RobotConstants {
   }
 
   public static final class IntakeConstants {
-    public static final int kLineBreakSensor = 0;
-
-    // Roller motor ID
     public static final int kMotorID = 10;
   }
 }
