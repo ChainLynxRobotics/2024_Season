@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.climber.Climb;
+import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.commands.shooter.SpinFlywheels;
@@ -26,6 +26,7 @@ import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
@@ -38,6 +39,7 @@ public class RobotContainer {
   private POVButton m_autoAim;
   private POVButton m_trapAim;
 
+  private Climber m_climber;
   private Shooter m_shooter;
   private Intake m_intake;
   private Drivetrain m_robotDrive;
@@ -51,6 +53,7 @@ public class RobotContainer {
   private Vector rightInputVec;
 
   public RobotContainer() {
+    m_climber = new Climber();
     m_shooter = new Shooter();
     m_intake = new Intake();
     m_robotDrive = new Drivetrain();
@@ -67,11 +70,8 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-    autoChooser.setDefaultOption("do nothing", new PrintCommand("nothing"));
+    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    /*m_shooter.setDefaultCommand(
-    new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
   }
 
   private void configureBindings() {
@@ -98,7 +98,7 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).onTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, false));
     new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
@@ -123,13 +123,19 @@ public class RobotContainer {
 
     m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
-    // triggers for extending and retracting shield manually
-    // don't extend shield
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
-        .onTrue(new ActuateShield(m_shooter, false));
-    // extend shield
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
-        .onTrue(new ActuateShield(m_shooter, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberUp))
+        .whileTrue(new IndividualClimb(m_climber, true, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberDown))
+        .whileTrue(new IndividualClimb(m_climber, true, false));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberUp))
+        .whileTrue(new IndividualClimb(m_climber, false, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberDown))
+        .whileTrue(new IndividualClimb(m_climber, false, false));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersUp))
+        .whileTrue(new Climb(m_climber, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersDown))
+        .whileTrue(new Climb(m_climber, false));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
         .whileTrue(new StowShooter(m_shooter));
@@ -138,7 +144,7 @@ public class RobotContainer {
         .whileTrue(new PivotMove(m_shooter, 0.3));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .whileTrue(new PivotMove(m_shooter, 0.8));
+        .whileTrue(new PivotMove(m_shooter, 0.69));
   }
 
   private void updateInput() {
@@ -183,7 +189,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kIntakeNote
    */
   public boolean getIntakeButton() {
-    return m_operatorController.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
+    return m_operatorController.getRawButton(Bindings.kIntakeNoteButtonID);
   }
 
   /**
@@ -192,8 +198,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID
    */
   public boolean getReverseIntakeButton() {
-    return m_operatorController.getRawButton(
-        RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID);
+    return m_operatorController.getRawButton(Bindings.kReverseIntakeButtonID);
   }
 
   public boolean triggerPressed() {
