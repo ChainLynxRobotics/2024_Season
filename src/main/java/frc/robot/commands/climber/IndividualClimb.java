@@ -19,9 +19,9 @@ public class IndividualClimb extends Command {
   @Override
   public void initialize() {
     if (m_isRight) {
-      m_climber.setLeader(m_reverse);
+      m_climber.setLeft(m_reverse);
     } else {
-      m_climber.setFollower(m_reverse);
+      m_climber.setRight(m_reverse);
     }
   }
 
@@ -33,9 +33,9 @@ public class IndividualClimb extends Command {
   @Override
   public void end(boolean interrupted) {
     if (m_isRight) {
-      m_climber.stopLeader();
+      m_climber.stopLeft();
     } else {
-      m_climber.stopFollower();
+      m_climber.stopRight();
     }
   }
 }

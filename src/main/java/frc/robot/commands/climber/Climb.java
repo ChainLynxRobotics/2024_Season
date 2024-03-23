@@ -27,13 +27,13 @@ public class Climb extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    m_climber.stopFollower();
-    m_climber.stopLeader();
+    m_climber.stopRight();
+    m_climber.stopLeft();
   }
 
   @Override
   public boolean isFinished() {
-    return m_climber.getLeaderEncoderPosition()
+    return m_climber.getLeftEncoderPosition()
         > ClimberConfig.kUpperRotSoftStop - ClimberConfig.kStopMargin;
   }
 }

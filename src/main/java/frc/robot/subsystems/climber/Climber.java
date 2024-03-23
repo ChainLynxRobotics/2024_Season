@@ -3,6 +3,8 @@ package frc.robot.subsystems.climber;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotConfig.ClimberConfig;
@@ -10,68 +12,82 @@ import frc.robot.constants.RobotConstants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
 
-  private CANSparkMax leaderController;
-  private CANSparkMax followerController;
+  private CANSparkMax leftController;
+  private CANSparkMax rightController;
   private int multiplier;
+  private DigitalInput m_limSwitchLeft;
+  private DigitalInput m_limSwitchRight;
 
   public Climber() {
-    leaderController = new CANSparkMax(ClimberConstants.kClimberLeaderID, MotorType.kBrushless);
-    followerController = new CANSparkMax(ClimberConstants.kClimberFollowerID, MotorType.kBrushless);
+    leftController = new CANSparkMax(ClimberConstants.kClimberLeaderID, MotorType.kBrushless);
+    rightController = new CANSparkMax(ClimberConstants.kClimberFollowerID, MotorType.kBrushless);
 
-    leaderController.setIdleMode(IdleMode.kBrake);
-    followerController.setIdleMode(IdleMode.kBrake);
+    leftController.setIdleMode(IdleMode.kBrake);
+    rightController.setIdleMode(IdleMode.kBrake);
+
+    m_limSwitchLeft = new DigitalInput(8);
+    m_limSwitchRight = new DigitalInput(9);
 
     multiplier = 1;
 
-    leaderController.getEncoder().setPosition(0);
-    followerController.getEncoder().setPosition(0);
+    leftController.getEncoder().setPosition(0);
+    rightController.getEncoder().setPosition(0);
 
-    SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
+    SmartDashboard.putNumber("climber encoder rots", leftController.getEncoder().getPosition());
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("climber encoder rots", leaderController.getEncoder().getPosition());
-    if (leaderController.getEncoder().getPosition() < 0
-        || leaderController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
-      leaderController.set(0);
-      followerController.set(0);
+    SmartDashboard.putNumber("climber encoder rots", leftController.getEncoder().getPosition());
+    if (leftController.getEncoder().getPosition() < 0
+        || leftController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
+      leftController.set(0);
+      rightController.set(0);
+    }
+
+    if (m_limSwitchLeft.get()) {
+      leftController.set(0);
+    }
+
+    if (m_limSwitchRight.get()) {
+      rightController.set(0);
     }
   }
 
-  public double getLeaderEncoderPosition() {
-    return leaderController.getEncoder().getPosition();
+  public double getLeftEncoderPosition() {
+    return leftController.getEncoder().getPosition();
   }
+
 
   public void setBoth(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    leaderController.set(0.5 * multiplier);
-    followerController.set(0.5 * multiplier);
+    leftController.set(0.5 * multiplier);
+    rightController.set(0.5 * multiplier);
   }
 
-  public void setLeader(boolean reverse) {
+  public void setLeft(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    leaderController.set(0.7 * multiplier);
+    leftController.set(0.7 * multiplier);
   }
 
-  public void stopLeader() {
-    leaderController.set(0);
+  public void stopLeft() {
+    leftController.set(0);
   }
 
-  public void stopFollower() {
-    followerController.set(0);
+  public void stopRight() {
+    rightController.set(0);
   }
 
-  public void setFollower(boolean reverse) {
+  public void setRight(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    followerController.set(0.7 * multiplier);
+    rightController.set(0.7 * multiplier);
   }
 
-  public CANSparkMax getLeader() {
-    return leaderController;
+  public CANSparkMax getLeft() {
+    return leftController;
   }
 
-  public CANSparkMax getFollower() {
-    return followerController;
+  public CANSparkMax getRight() {
+    return rightController;
   }
 }
