@@ -98,7 +98,7 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).onTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, false));
     new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
@@ -144,7 +144,7 @@ public class RobotContainer {
         .whileTrue(new PivotMove(m_shooter, 0.3));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .whileTrue(new PivotMove(m_shooter, 0.8));
+        .whileTrue(new PivotMove(m_shooter, 0.69));
   }
 
   private void updateInput() {

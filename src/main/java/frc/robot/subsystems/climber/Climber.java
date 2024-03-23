@@ -25,8 +25,8 @@ public class Climber extends SubsystemBase {
     leftController.setIdleMode(IdleMode.kBrake);
     rightController.setIdleMode(IdleMode.kBrake);
 
-    m_limSwitchLeft = new DigitalInput(8);
-    m_limSwitchRight = new DigitalInput(9);
+    m_limSwitchLeft = new DigitalInput(9);
+    m_limSwitchRight = new DigitalInput(8);
 
     multiplier = 1;
 
@@ -38,20 +38,23 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("left lim switch", m_limSwitchLeft.get());
+    SmartDashboard.putBoolean("right lim switch", m_limSwitchRight.get());
+
     SmartDashboard.putNumber("climber encoder rots", leftController.getEncoder().getPosition());
     if (leftController.getEncoder().getPosition() < 0
         || leftController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
-      leftController.set(0);
-      rightController.set(0);
+      //leftController.set(0);
+      //rightController.set(0);
     }
 
-    if (m_limSwitchLeft.get()) {
+    /*if (!m_limSwitchLeft.get()) {
       leftController.set(0);
     }
 
-    if (m_limSwitchRight.get()) {
+    if (!m_limSwitchRight.get()) {
       rightController.set(0);
-    }
+    }*/
   }
 
   public double getLeftEncoderPosition() {

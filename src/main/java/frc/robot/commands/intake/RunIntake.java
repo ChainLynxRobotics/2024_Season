@@ -33,6 +33,6 @@ public class RunIntake extends Command {
 
   @Override
   public boolean isFinished() {
-    return m_indexer.getLineBreak();
+    return false;
   }
 }
