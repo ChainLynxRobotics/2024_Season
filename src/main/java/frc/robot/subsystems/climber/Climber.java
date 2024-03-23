@@ -3,7 +3,6 @@ package frc.robot.subsystems.climber;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,8 +43,8 @@ public class Climber extends SubsystemBase {
     SmartDashboard.putNumber("climber encoder rots", leftController.getEncoder().getPosition());
     if (leftController.getEncoder().getPosition() < 0
         || leftController.getEncoder().getPosition() > ClimberConfig.kUpperRotSoftStop) {
-      //leftController.set(0);
-      //rightController.set(0);
+      // leftController.set(0);
+      // rightController.set(0);
     }
 
     /*if (!m_limSwitchLeft.get()) {
@@ -60,7 +59,6 @@ public class Climber extends SubsystemBase {
   public double getLeftEncoderPosition() {
     return leftController.getEncoder().getPosition();
   }
-
 
   public void setBoth(boolean reverse) {
     multiplier = reverse ? -1 : 1;

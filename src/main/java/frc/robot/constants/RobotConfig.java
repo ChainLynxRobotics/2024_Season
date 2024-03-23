@@ -164,7 +164,7 @@ public class RobotConfig {
             new ReplanningConfig());
 
     // 4.45 m/s max speed
-    public static final double kMaxSpeedBase = 6;
+    public static final double kMaxSpeedBase = 9;
     public static final double kMaxSpeedScaleFactor = 0.9;
     public static final double kMaxSpeedMetersPerSecond = kMaxSpeedBase * kMaxSpeedScaleFactor;
 
