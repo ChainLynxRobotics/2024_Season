@@ -44,7 +44,6 @@ public class Shooter extends SubsystemBase {
   private MutableMeasure<Angle> m_targetAngle;
 
   public Shooter() {
-
     // Flywheel
     m_topFlywheelMotor =
         new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushless);
@@ -109,14 +108,9 @@ public class Shooter extends SubsystemBase {
     m_shooterSpeed = MutableMeasure.zero(Units.RPM);
     m_shieldPosition = MutableMeasure.zero(Units.Rotations);
 
-    SmartDashboard.putNumber("angle pos", 0.1);
-
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
     }
-
-    SmartDashboard.putNumber("amp multiplier", 4 / 9);
-    SmartDashboard.putNumber("speaker multiplier", 2 / 9);
   }
 
   public void putAngleOnSmartDashboard() {
@@ -144,19 +138,19 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
+    SmartDashboard.putNumber("Shooter/shield rots", m_shieldController.getEncoder().getPosition());
 
-    double pval = SmartDashboard.getNumber("flywheel p", 0.1);
+    double pval = SmartDashboard.getNumber("fShooter/flywheel p", ShooterConfig.kTopFlywheelP);
     if (pval != m_topFlywheelPIDController.getP()) {
       m_topFlywheelPIDController.setP(pval);
     }
 
-    double ival = SmartDashboard.getNumber("flywheel i", 0.0);
+    double ival = SmartDashboard.getNumber("Shooter/flywheel i", ShooterConfig.kTopFlywheelI);
     if (pval != m_topFlywheelPIDController.getI()) {
       m_topFlywheelPIDController.setP(ival);
     }
 
-    double dval = SmartDashboard.getNumber("flywheel d", 0.0);
+    double dval = SmartDashboard.getNumber("Shooter/flywheel d", ShooterConfig.kTopFlywheelD);
     if (pval != m_topFlywheelPIDController.getD()) {
       m_topFlywheelPIDController.setP(dval);
     }
@@ -173,7 +167,7 @@ public class Shooter extends SubsystemBase {
     }
 
     SmartDashboard.putNumber(
-        "angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
+        "Shooter/angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
   }
 
   // sets the target angle the shooter should be at, called only once
@@ -191,10 +185,6 @@ public class Shooter extends SubsystemBase {
         0,
         ff,
         ArbFFUnits.kPercentOut);
-  }
-
-  public void setBasic() {
-    m_angleMotorLeader.set(SmartDashboard.getNumber("angle pos", 0.1));
   }
 
   public Measure<Angle> getCurrentAngle() {

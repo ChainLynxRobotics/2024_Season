@@ -32,7 +32,6 @@ public class PivotMove extends Command {
 
   @Override
   public void execute() {
-    System.out.println("angle movement cmd");
     double ff =
         Math.cos(m_shooter.getCurrentAngle().in(Units.Radians)) * ShooterConfig.kAngleControlFF;
     m_shooter.setFF(ff);

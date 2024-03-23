@@ -8,14 +8,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
-import frc.robot.commands.LeaveFromStationCommand;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.PivotMove;
@@ -46,10 +44,11 @@ public class RobotContainer {
 
   // The driver's controller
   private XboxController m_driverController;
-  private SendableChooser<Command> autoChooser;
 
   private Vector leftInputVec;
   private Vector rightInputVec;
+
+  private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     m_shooter = new Shooter();
@@ -64,23 +63,14 @@ public class RobotContainer {
     rightInputVec = new Vector();
 
     registerCommands();
-    // adds all autos in deploy dir to chooser
-    autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-    autoChooser.setDefaultOption("simple leave from station", new LeaveFromStationCommand(m_robotDrive, 3));
+    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.setDefaultOption("LeaveFromStation1", AutoBuilder.buildAuto("LeaveFromStation1"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    /*m_shooter.setDefaultCommand(
-    new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
   }
 
   private void configureBindings() {
-    /*new Trigger(() -> m_driverController.getBButton())
-      .onTrue(new DriveStraight(m_robotDrive, 0.5));*/
-
-    new Trigger(() -> m_operatorController.getRawButton(11))
-        .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
@@ -104,17 +94,28 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, false));
-    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, true));
+    new Trigger(this::getIntakeButton).onTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
         .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
         .whileTrue(new Shoot(m_indexer, true));
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.AMP));
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false), new SpinFlywheels(m_shooter, FieldElement.AMP))));
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false),
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER))));
 
     m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
@@ -148,7 +149,7 @@ public class RobotContainer {
   }
 
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, m_indexer, false));
 
     NamedCommands.registerCommand(
         "shootSpeaker",
@@ -167,10 +168,6 @@ public class RobotContainer {
             new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))
                 .withTimeout(3)));
-  }
-
-  private Command doNothing() {
-    return Commands.none();
   }
 
   /**
