@@ -45,7 +45,7 @@ public class Climber extends SubsystemBase {
 
   public void setBoth(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    leaderController.set(-0.5 * multiplier);
+    leaderController.set(0.5 * multiplier);
     followerController.set(0.5 * multiplier);
   }
 
@@ -64,7 +64,7 @@ public class Climber extends SubsystemBase {
 
   public void setFollower(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    followerController.set(-0.7 * multiplier);
+    followerController.set(0.7 * multiplier);
   }
 
   public CANSparkMax getLeader() {

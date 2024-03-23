@@ -62,8 +62,8 @@ public final class RobotConstants {
   }
 
   public static final class ClimberConstants {
-    public static final int kClimberLeaderID = 10;
-    public static final int kClimberFollowerID = 11;
+    public static final int kClimberLeaderID = 11;
+    public static final int kClimberFollowerID = 12;
 
     public static final double kClimberP = 0.1;
     public static final double kClimberI = 0;
