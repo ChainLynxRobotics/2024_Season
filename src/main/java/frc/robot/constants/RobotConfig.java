@@ -4,6 +4,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
@@ -15,6 +16,7 @@ import frc.robot.constants.RobotConstants.DriveConstants.SwerveModuleConstants;
  * RobotConstants"
  */
 public class RobotConfig {
+
   public enum AdjustType {
     up,
     down
@@ -24,6 +26,16 @@ public class RobotConfig {
     SPEAKER,
     AMP,
     TRAP
+  }
+
+  public static final class ClimberConfig {
+    public static final double kDefaultSpeed = 0.4;
+    public static final double kStallInput = 0.02;
+    public static final double kUpperRotSoftStop = 5000;
+    public static final double kStopMargin = 10;
+    public static final boolean kInverted = true;
+    public static final Measure<Distance> buddyClimbExtensionDiff =
+        Units.Meters.of(Units.Inches.of(5).in(Units.Meters));
   }
 
   public static final class ShooterConfig {
@@ -154,8 +166,7 @@ public class RobotConfig {
             DriveConstants.kWheelBaseRadius.in(Units.Meters),
             new ReplanningConfig());
 
-    // 4.45 m/s max speed
-    public static final double kMaxSpeedBase = 1.5;
+    public static final double kMaxSpeedBase = 9;
     public static final double kMaxSpeedScaleFactor = 0.9;
     public static final double kMaxSpeedMetersPerSecond = kMaxSpeedBase * kMaxSpeedScaleFactor;
 
@@ -178,10 +189,5 @@ public class RobotConfig {
   public static final class IntakeConfig {
     // In percentage output
     public static final double kDefaultSpeed = 1;
-
-    public static final class Bindings {
-      public static final int kIntakeNoteButtonID = 2;
-      public static final int kReverseIntakeButtonID = 8;
-    }
   }
 }
