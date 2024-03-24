@@ -21,11 +21,6 @@ public class Climb extends Command {
   }
 
   @Override
-  public void execute() {
-    System.out.println("both climb");
-  }
-
-  @Override
   public void end(boolean interrupted) {
     m_climber.stopRight();
     m_climber.stopLeft();

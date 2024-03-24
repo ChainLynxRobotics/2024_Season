@@ -26,11 +26,6 @@ public class IndividualClimb extends Command {
   }
 
   @Override
-  public void execute() {
-    System.out.println("one climb");
-  }
-
-  @Override
   public void end(boolean interrupted) {
     if (m_isRight) {
       m_climber.stopLeft();

@@ -62,13 +62,13 @@ public class Climber extends SubsystemBase {
 
   public void setBoth(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    leftController.set(0.5 * multiplier);
-    rightController.set(0.5 * multiplier);
+    leftController.set(0.9 * multiplier);
+    rightController.set(-0.9 * multiplier);
   }
 
   public void setLeft(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    leftController.set(0.7 * multiplier);
+    leftController.set(0.9 * multiplier);
   }
 
   public void stopLeft() {
@@ -81,7 +81,7 @@ public class Climber extends SubsystemBase {
 
   public void setRight(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    rightController.set(0.7 * multiplier);
+    rightController.set(0.9 * multiplier);
   }
 
   public CANSparkMax getLeft() {
