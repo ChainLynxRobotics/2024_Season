@@ -11,22 +11,22 @@ import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.Vision;
 
-public class Aim extends Command {
+public class SpinFlywheels extends Command {
   private final Shooter m_shooter;
   private final Vision m_vision;
   private final FieldElement m_type;
-  private Measure<Angle> desiredAngle;
   private double desiredVelocity;
+  private Measure<Angle> desiredAngle;
 
-  public Aim(Shooter shooter, FieldElement type) {
+  public SpinFlywheels(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
-    m_vision = new Vision();
+    m_vision = null;
     m_type = type;
 
     addRequirements(m_shooter);
   }
 
-  public Aim(Shooter shooter, Vision eyes) {
+  public SpinFlywheels(Shooter shooter, Vision eyes) {
     m_shooter = shooter;
     m_vision = eyes;
     m_type = null;
@@ -50,17 +50,15 @@ public class Aim extends Command {
       switch (m_type) {
         case AMP:
           desiredAngle = ShooterConfig.kAmpAngle;
-          desiredVelocity = ShooterConfig.ampVelocity;
+          desiredVelocity = ShooterConfig.kDefaultAmpVelocity;
           break;
         case SPEAKER:
           desiredAngle = ShooterConfig.kSpeakerAngle;
-          desiredVelocity = ShooterConfig.speakerVelocity;
-          // getVelocity(ShooterConfig.SpeakerHeight);
-          System.out.println("shooter vel: " + desiredVelocity);
+          desiredVelocity = ShooterConfig.kDefaultSpeakerVelocity;
           break;
         case TRAP:
           desiredAngle = ShooterConfig.kTrapAngle;
-          desiredVelocity = ShooterConfig.trapVelocity;
+          desiredVelocity = ShooterConfig.kDefaultTrapVelocity;
           break;
         default:
           desiredVelocity = 0;
@@ -71,6 +69,17 @@ public class Aim extends Command {
     }
   }
 
+  @Override
+  public void execute() {
+    double ff =
+        Math.cos(m_shooter.getCurrentAngle().in(Units.Radians)) * ShooterConfig.kAngleControlFF;
+    m_shooter.setFF(ff);
+  }
+
+  public boolean isFinished() {
+    return m_shooter.isAtFlywheelSetpoint(desiredVelocity);
+  }
+
   public double getVelocity(double elementHeight) {
     return m_shooter.convertToRPM(
         m_shooter.calculateVelocity(elementHeight, desiredAngle).magnitude());
@@ -79,10 +88,5 @@ public class Aim extends Command {
   @Override
   public void end(boolean interrupted) {
     m_shooter.stopFlywheel();
-  }
-
-  @Override
-  public boolean isFinished() {
-    return m_shooter.isAtFlywheelSetpoint(desiredVelocity);
   }
 }

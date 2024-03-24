@@ -1,12 +1,13 @@
 package frc.robot.subsystems.shooter;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkPIDController.ArbFFUnits;
 import edu.wpi.first.units.*;
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +21,12 @@ import frc.robot.constants.RobotConstants.ShooterConstants;
  */
 public class Shooter extends SubsystemBase {
   /** 1. create motor and pid controller objects */
+  private CANSparkMax m_angleMotorLeader;
+
+  private CANSparkMax m_angleMotorFollower;
+  private SparkPIDController m_anglePIDController;
+  private AbsoluteEncoder m_angleEncoder;
+
   private CANSparkMax m_topFlywheelMotor;
 
   private CANSparkMax m_bottomFlywheelMotor;
@@ -33,9 +40,10 @@ public class Shooter extends SubsystemBase {
   private MutableMeasure<Velocity<Angle>> m_shooterSpeed;
   private MutableMeasure<Angle> m_shieldPosition;
   private MutableMeasure<Velocity<Distance>> m_targetVelocity;
+  private MutableMeasure<Angle> m_shooterAngle;
+  private MutableMeasure<Angle> m_targetAngle;
 
   public Shooter() {
-
     // Flywheel
     m_topFlywheelMotor =
         new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushless);
@@ -74,6 +82,34 @@ public class Shooter extends SubsystemBase {
 
     m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
 
+    // Angle
+    m_angleMotorLeader =
+        new CANSparkMax(ShooterConstants.kAngleMotorLeaderId, MotorType.kBrushless);
+    m_angleMotorFollower =
+        new CANSparkMax(ShooterConstants.kAngleMotorFollowerId, MotorType.kBrushless);
+    // sets follower motor to run inversely to the leader
+    m_angleMotorFollower.follow(m_angleMotorLeader, true);
+    m_angleEncoder = m_angleMotorFollower.getAbsoluteEncoder();
+    m_angleEncoder.setZeroOffset(28.6 / 360 * 160);
+
+    m_anglePIDController = m_angleMotorLeader.getPIDController();
+    m_anglePIDController.setP(RobotConfig.ShooterConfig.kAngleControlP);
+    m_anglePIDController.setI(RobotConfig.ShooterConfig.kAngleControlI);
+    m_anglePIDController.setD(RobotConfig.ShooterConfig.kAngleControlD);
+    m_anglePIDController.setFF(RobotConfig.ShooterConfig.kAngleControlFF);
+    m_anglePIDController.setIZone(RobotConfig.ShooterConfig.kAngleControlIZone);
+    m_anglePIDController.setOutputRange(
+        RobotConfig.ShooterConfig.kAngleControlMinOutput,
+        RobotConfig.ShooterConfig.kAngleControlMaxOutput);
+
+    m_shooterAngle = MutableMeasure.zero(Units.Revolutions);
+    m_targetAngle = MutableMeasure.zero(Units.Rotations);
+    m_targetVelocity = MutableMeasure.zero(Units.MetersPerSecond);
+    m_shooterSpeed = MutableMeasure.zero(Units.RPM);
+    m_shieldPosition = MutableMeasure.zero(Units.Rotations);
+
+    SmartDashboard.putNumber("angle pos", 0.1);
+
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
     }
@@ -104,39 +140,42 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
-    if (DriverStation.isTest()) {
-      testPeriodic();
-    }
-
-    double pval = SmartDashboard.getNumber("flywheel p", 0.1);
-    if (pval != m_topFlywheelPIDController.getP()) {
-      m_topFlywheelPIDController.setP(pval);
-    }
-
-    double ival = SmartDashboard.getNumber("flywheel i", 0.0);
-    if (pval != m_topFlywheelPIDController.getI()) {
-      m_topFlywheelPIDController.setP(ival);
-    }
-
-    double dval = SmartDashboard.getNumber("flywheel d", 0.0);
-    if (pval != m_topFlywheelPIDController.getD()) {
-      m_topFlywheelPIDController.setP(dval);
-    }
-
-    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
-    SmartDashboard.putNumber(
-        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
     double flywheelRPM =
         SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter/Flywheel RPM", flywheelRPM);
+    SmartDashboard.putNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
 
     if (m_topFlywheelEncoder.getVelocity() != flywheelRPM) {
       flywheelRPM = m_topFlywheelEncoder.getVelocity();
     }
+
+    SmartDashboard.putNumber(
+        "Shooter/angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
   }
 
-  void testPeriodic() {}
+  // sets the target angle the shooter should be at, called only once
+  public void setAngle(Measure<Angle> targetAngle) {
+    m_targetAngle.mut_replace(targetAngle);
+    m_anglePIDController.setReference(
+        targetAngle.in(Units.Rotations), CANSparkBase.ControlType.kPosition);
+  }
+
+  // called periodically
+  public void setFF(double ff) {
+    m_anglePIDController.setReference(
+        m_targetAngle.in(Units.Rotations),
+        CANSparkBase.ControlType.kPosition,
+        0,
+        ff,
+        ArbFFUnits.kPercentOut);
+  }
+
+  public Measure<Angle> getCurrentAngle() {
+    return m_shooterAngle.mut_replace(m_angleEncoder.getPosition(), Units.Revolutions);
+  }
+
+  public void stopAngleMotor() {
+    m_angleMotorLeader.stopMotor();
+  }
 
   public double degreesToRotations(double angle) {
     double rotation = angle / 360;
@@ -177,14 +216,13 @@ public class Shooter extends SubsystemBase {
     return m_targetVelocity.mut_replace(
         Math.abs(
             Math.sqrt(2 * ShooterConstants.Gravity * targetY)
-                / (Math.sin(targetAngle.in(Units.Degrees)))),
+                / (Math.sin(targetAngle.magnitude()))),
         Units.MetersPerSecond);
   }
 
   public double convertToRPM(double velocity) {
-    // 0.0762 meters is diameter of flywheel
-    double circumference = ShooterConstants.FlywheelDiameter * Math.PI * 60;
-    double rpm = velocity / circumference;
+    double circumference = ShooterConstants.FlywheelDiameter * Math.PI;
+    double rpm = velocity / circumference * 60;
     return rpm;
   }
 
@@ -201,8 +239,17 @@ public class Shooter extends SubsystemBase {
     return m_shieldPosition.mut_replace(m_shieldEncoder.getPosition(), Units.Rotations);
   }
 
+  public void setShieldPosition(double position) {
+    m_shieldController.getEncoder().setPosition(position);
+  }
+
   public void stopShieldMotor() {
     m_shieldController.stopMotor();
+  }
+
+  public boolean isAtAngleSetpoint(double setpoint) {
+    return Math.abs(m_angleMotorLeader.getEncoder().getPosition() - setpoint)
+        < ShooterConfig.kAngleError.magnitude();
   }
 
   public boolean isAtFlywheelSetpoint(double setpoint) {

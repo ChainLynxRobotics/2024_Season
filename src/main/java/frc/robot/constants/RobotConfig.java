@@ -4,6 +4,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
@@ -15,6 +16,7 @@ import frc.robot.constants.RobotConstants.DriveConstants.SwerveModuleConstants;
  * RobotConstants"
  */
 public class RobotConfig {
+
   public enum AdjustType {
     up,
     down
@@ -26,20 +28,30 @@ public class RobotConfig {
     TRAP
   }
 
+  public static final class ClimberConfig {
+    public static final double kDefaultSpeed = 0.4;
+    public static final double kStallInput = 0.02;
+    public static final double kUpperRotSoftStop = 5000;
+    public static final double kStopMargin = 10;
+    public static final boolean kInverted = true;
+    public static final Measure<Distance> buddyClimbExtensionDiff =
+        Units.Meters.of(Units.Inches.of(5).in(Units.Meters));
+  }
+
   public static final class ShooterConfig {
     // Angle controller PID coefficients
-    public static final double kAngleControlP = 0;
+    public static final double kAngleControlP = 0.2;
     public static final double kAngleControlI = 0;
     public static final double kAngleControlD = 0;
-    public static final double kAngleControlFF = 0;
-    public static final double kAngleControlIZone = 0;
-    public static final double kAngleControlMinOutput = 0;
-    public static final double kAngleControlMaxOutput = 0;
+    public static final double kAngleControlFF = 0.2;
+    public static final double kAngleControlIZone = 0.0001;
+    public static final double kAngleControlMinOutput = -1;
+    public static final double kAngleControlMaxOutput = 1;
 
     // top Flywheel controller PID coefficients
     public static final double kTopFlywheelP = 0.2;
     public static final double kTopFlywheelI = 0;
-    public static final double kTopFlywheelD = 0.001;
+    public static final double kTopFlywheelD = 0.005;
     public static final double kTopFlywheelFF = 0;
     public static final double kTopFlywheelIZone = 0.0001;
     public static final double kTopFlywheelMinOutput = -1;
@@ -88,18 +100,25 @@ public class RobotConfig {
 
     public static final long kReleaseTime = 5000;
     public static final long kShieldTime = 2; // seconds
-    public static final double kShieldDefaultSpeed = 0.5;
-    public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
-    public static final Measure<Angle> kAngleError = Units.Radians.of(0.5 * Math.PI / 180);
-    public static final Measure<Angle> kSpeakerAngle = Units.Radians.of(75 * Math.PI / 180);
-    public static final Measure<Angle> kAmpAngle = Units.Radians.of(109 * Math.PI / 180);
-    public static final Measure<Angle> kTrapAngle = Units.Radians.of(105 * Math.PI / 180);
-    public static final Measure<Angle> kAdjustAmountDegrees = Units.Radians.of(0.5 * Math.PI / 180);
+    public static final double kAimTimeout = 20;
 
-    // TODO placeholders
-    public static final double ampVelocity = 1500; // rpm
-    public static final double trapVelocity = 2000; // rpm
-    public static final double speakerVelocity = 2500;
+    public static final double kShieldDefaultSpeed = 0.5;
+    public static final double kEncoderRotsToPivotRot = 160;
+    public static final Measure<Velocity<Angle>> kFlywheelError = Units.RPM.of(1);
+    public static final Measure<Angle> kAngleError =
+        Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kSpeakerAngle =
+        Units.Rotations.of(75 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kAmpAngle =
+        Units.Rotations.of(109 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kTrapAngle =
+        Units.Rotations.of(105 / 360 * kEncoderRotsToPivotRot);
+    public static final Measure<Angle> kAdjustAmountDegrees =
+        Units.Rotations.of(0.5 / 360 * kEncoderRotsToPivotRot);
+
+    public static final double kDefaultAmpVelocity = 500; // rpm
+    public static final double kDefaultTrapVelocity = 2000; // rpm
+    public static final double kDefaultSpeakerVelocity = 4500; // rpm
   }
 
   public static class DriveConfig {
@@ -145,7 +164,7 @@ public class RobotConfig {
             new ReplanningConfig());
 
     // 4.45 m/s max speed
-    public static final double kMaxSpeedBase = 4.8;
+    public static final double kMaxSpeedBase = 9;
     public static final double kMaxSpeedScaleFactor = 0.9;
     public static final double kMaxSpeedMetersPerSecond = kMaxSpeedBase * kMaxSpeedScaleFactor;
 
@@ -168,10 +187,5 @@ public class RobotConfig {
   public static final class IntakeConfig {
     // In percentage output
     public static final double kDefaultSpeed = 1;
-
-    public static final class Bindings {
-      public static final int kIntakeNoteButtonID = 2;
-      public static final int kReverseIntakeButtonID = 8;
-    }
   }
 }
