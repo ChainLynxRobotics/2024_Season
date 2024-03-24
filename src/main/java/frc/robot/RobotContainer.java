@@ -79,8 +79,8 @@ public class RobotContainer {
         "Shoot and leave straight from corner subwoofer",
         new SequentialCommandGroup(
             NamedCommands.getCommand("shootSpeaker"),
-            new WaitCommand(1),
-            new DriveStraight(m_robotDrive, 1.5, 0.1, Units.degreesToRadians(180), true)));
+            new WaitCommand(2),
+            new DriveStraight(m_robotDrive, 3, 0.1, Units.degreesToRadians(150), true)));
     autoChooser.setDefaultOption("Do Nothing", Commands.none());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
