@@ -3,6 +3,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -78,9 +80,9 @@ public class RobotContainer {
         new SequentialCommandGroup(
             NamedCommands.getCommand("shootSpeaker"),
             new WaitCommand(1),
-            new DriveStraight(m_robotDrive, 1.5, 0.1, Math.PI / 2, true)));
+            new DriveStraight(m_robotDrive, 1.5, 0.1, Units.degreesToRadians(180), true)));
     autoChooser.setDefaultOption("Do Nothing", Commands.none());
-    
+
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -96,6 +98,7 @@ public class RobotContainer {
               // update the values of leftInputVec and rightInputVec to the values of the controller
               // I'm avoiding re-instantiting Vectors to save memory
               updateInput();
+              if(DriverStation.isAutonomous()) return;
               m_robotDrive.drive(
                   leftInputVec,
                   rightInputVec,
@@ -177,7 +180,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "shootSpeaker",
         new SequentialCommandGroup(
-            new PivotMove(m_shooter, 0.55).withTimeout(1),
+            new PivotMove(m_shooter, 0.3).withTimeout(1), // Multiplier is 30% of max encoder rotations (160)
             new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
             new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))

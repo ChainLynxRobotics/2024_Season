@@ -320,7 +320,7 @@ public class Drivetrain extends SubsystemBase {
    * @param rot the angular velocity to rotate the drivetrain in radians/s
    * @param rateLimit whether or not to use slew rate limiting
    */
-  private void move(Vector spdVec, double rot, boolean rateLimit) {
+  public void move(Vector spdVec, double rot, boolean rateLimit) {
     m_currentRotationRadians = rot;
 
     spdCommanded.setX(spdVec.x());

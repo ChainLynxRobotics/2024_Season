@@ -62,8 +62,8 @@ public class Climber extends SubsystemBase {
 
   public void setBoth(boolean reverse) {
     multiplier = reverse ? -1 : 1;
-    leftController.set(0.5 * multiplier);
-    rightController.set(0.5 * multiplier);
+    leftController.set(0.9 * multiplier);
+    rightController.set(-0.9 * multiplier);
   }
 
   public void setLeft(boolean reverse) {
