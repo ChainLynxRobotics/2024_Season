@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 0.8525708479988394,
-      "y": 7.124496534707355
+      "y": 2.037664646757866
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "leave 1"
+            "pathName": "leave from station 3"
           }
         }
       ]

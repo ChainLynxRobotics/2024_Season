@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.DriveStraight;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
@@ -24,6 +24,7 @@ import frc.robot.commands.shooter.SpinFlywheels;
 import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
+import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.climber.Climber;
@@ -47,10 +48,11 @@ public class RobotContainer {
 
   // The driver's controller
   private XboxController m_driverController;
-  private SendableChooser<Command> autoChooser;
 
   private Vector leftInputVec;
   private Vector rightInputVec;
+
+  private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     m_climber = new Climber();
@@ -66,11 +68,10 @@ public class RobotContainer {
     rightInputVec = new Vector();
 
     registerCommands();
-    // adds all autos in deploy dir to chooser
-    autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
+    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.setDefaultOption("single shoot", NamedCommands.getCommand("shootSpeaker"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -141,10 +142,10 @@ public class RobotContainer {
         .whileTrue(new StowShooter(m_shooter));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
-        .whileTrue(new PivotMove(m_shooter, 0.3));
+        .whileTrue(new PivotMove(m_shooter, ShooterConfig.kFlushSpeakerPivotScale));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .whileTrue(new PivotMove(m_shooter, 0.69));
+        .whileTrue(new PivotMove(m_shooter, ShooterConfig.kFlushAmpPivotScale));
   }
 
   private void updateInput() {
@@ -158,27 +159,25 @@ public class RobotContainer {
         MathUtil.applyDeadband(-m_driverController.getRightY(), OIConstants.kDriveDeadband));
   }
 
-  // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    // timeout doesn't need to be set because it is in a race group with the intake path in the
-    // .path file
     NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, m_indexer, false));
 
     NamedCommands.registerCommand(
         "shootSpeaker",
         new SequentialCommandGroup(
-            new PivotMove(m_shooter, 0.55).withTimeout(1),
+            new PivotMove(m_shooter, ShooterConfig.kFlushSpeakerPivotScale).withTimeout(1),
             new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
-            new ParallelRaceGroup(
+            new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
-                .withTimeout(3)));
+                .withTimeout(3),
+            new DriveStraight(m_robotDrive, 1).withTimeout(1.5)));
 
     NamedCommands.registerCommand(
         "shootAmp",
         new SequentialCommandGroup(
-            new PivotMove(m_shooter, 0.3).withTimeout(1),
+            new PivotMove(m_shooter, ShooterConfig.kFlushAmpPivotScale).withTimeout(1),
             new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
-            new ParallelRaceGroup(
+            new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))
                 .withTimeout(3)));
   }

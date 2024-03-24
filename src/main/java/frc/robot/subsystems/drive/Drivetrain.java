@@ -56,9 +56,9 @@ public class Drivetrain extends SubsystemBase {
   private MutableMeasure<Angle> m_heading;
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry;
+  private SwerveDriveOdometry m_odometry;
+  private SwerveDriveKinematics m_kinematics;
   private Pose2d m_pose;
-  private ChassisSpeeds m_relativeSpeeds;
 
   private SwerveModulePosition[] m_swerveModulePositions;
 
@@ -88,10 +88,6 @@ public class Drivetrain extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
-    // TODO: initialize this to where we place the robot on the field, will get from auto chosen
-    // from Smart Dashboard
-    m_pose = new Pose2d();
-
     m_swerveModulePositions =
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
@@ -116,10 +112,13 @@ public class Drivetrain extends SubsystemBase {
     m_timer.start();
     m_prevSlewRateTime = m_timer.get();
 
+    m_kinematics = DriveConstants.kDriveKinematics;
+    m_pose = new Pose2d();
+
     m_odometry =
         new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
-            Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+            m_kinematics,
+            Rotation2d.fromRadians(Units.Degrees.of(m_gyro.getAngle()).in(Units.Radians)),
             m_swerveModulePositions,
             m_pose);
 
@@ -147,7 +146,13 @@ public class Drivetrain extends SubsystemBase {
    * @return the current speed of the drivetrain
    */
   public ChassisSpeeds getSpeeds() {
-    return m_relativeSpeeds;
+    return m_kinematics.toChassisSpeeds(
+        new SwerveModuleState[] {
+          m_frontLeft.getState(),
+          m_frontRight.getState(),
+          m_rearLeft.getState(),
+          m_rearRight.getState()
+        });
   }
 
   /** stops the drivetrain's movement */
@@ -158,12 +163,12 @@ public class Drivetrain extends SubsystemBase {
   /** runs the periodic functionality of the drivetrain */
   @Override
   public void periodic() {
+    updateSwerveModulePositions();
     m_odometry.update(m_gyro.getRotation2d(), m_swerveModulePositions);
     double ang = getGyroAngle().in(Units.Radians);
     SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
-    m_relativeSpeeds = getRobotRelativeSpeeds();
     m_pose = m_odometry.getPoseMeters();
 
     SmartDashboard.putNumber("heading", ang - m_headingOffsetRadians);
@@ -189,6 +194,13 @@ public class Drivetrain extends SubsystemBase {
         pose);
   }
 
+  public void updateSwerveModulePositions() {
+    m_swerveModulePositions[0] = m_frontLeft.getPosition();
+    m_swerveModulePositions[1] = m_frontRight.getPosition();
+    m_swerveModulePositions[2] = m_rearLeft.getPosition();
+    m_swerveModulePositions[3] = m_rearRight.getPosition();
+  }
+
   /**
    * drives the drivatrain using the given inputs the magnitude of the joystick components shouldn't
    * be > 1 (x^2 + y^2 <= 1)
@@ -209,11 +221,6 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  /**
-   * moves the divetrain based on the given ChassisSpeeds
-   *
-   * @param spds the target speeds of the drivetrain chassis
-   */
   public void driveChassisSpeeds(ChassisSpeeds spds) {
     Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
     spdCommanded = spd;
@@ -264,21 +271,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * returns the current speed of the robot from it's reference frame
-   *
-   * @return the current speed of the robot from it's reference frame
-   */
-  public ChassisSpeeds getRobotRelativeSpeeds() {
-    return DriveConstants.kDriveKinematics.toChassisSpeeds(
-        new SwerveModuleState[] {
-          m_frontLeft.getState(),
-          m_frontRight.getState(),
-          m_rearLeft.getState(),
-          m_rearRight.getState()
-        });
-  }
-
-  /**
    * applies smoothing to the turning input of altDrive
    *
    * @param stickAng the given angle of the driver turning stick
@@ -296,9 +288,16 @@ public class Drivetrain extends SubsystemBase {
    *
    * @return the current position of the robot on the field
    */
-  private Pose2d getPose() {
-    Pose2d pose = m_odometry.getPoseMeters();
-    return pose;
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
+  public void moveChassisSpeeds(ChassisSpeeds spds) {
+    SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(spds);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**

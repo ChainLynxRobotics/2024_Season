@@ -118,7 +118,7 @@ public final class RobotConstants {
     // Distance between centers of right and left wheels on robot
     public static final Measure<Distance> kWheelBase = Units.Inches.of(22.5);
 
-    public static final Measure<Distance> kWheelBaseRadius = Units.Meters.of(0.404);
+    public static final Measure<Distance> kWheelBaseRadius = Units.Inches.of(16);
 
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics =
@@ -155,10 +155,10 @@ public final class RobotConstants {
 
       // Calculations required for driving motor conversion factors and feed forward
       public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-      public static final double kWheelDiameterMeters = 0.0762;
+      public static final double kWheelDiameterMeters = 76.58E-3;
       public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
       // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the
-      // bevel pinion
+      // bevel pinion.
       public static final double kDrivingMotorReduction =
           (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
       public static final double kDriveWheelFreeSpeedRps =

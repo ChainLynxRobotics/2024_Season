@@ -48,6 +48,9 @@ public class RobotConfig {
     public static final double kAngleControlMinOutput = -1;
     public static final double kAngleControlMaxOutput = 1;
 
+    public static final double kFlushAmpPivotScale = 0.55;
+    public static final double kFlushSpeakerPivotScale = 0.3;
+
     // top Flywheel controller PID coefficients
     public static final double kTopFlywheelP = 0.2;
     public static final double kTopFlywheelI = 0;
@@ -163,7 +166,6 @@ public class RobotConfig {
             DriveConstants.kWheelBaseRadius.in(Units.Meters),
             new ReplanningConfig());
 
-    // 4.45 m/s max speed
     public static final double kMaxSpeedBase = 9;
     public static final double kMaxSpeedScaleFactor = 0.9;
     public static final double kMaxSpeedMetersPerSecond = kMaxSpeedBase * kMaxSpeedScaleFactor;
