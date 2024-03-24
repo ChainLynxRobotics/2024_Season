@@ -338,6 +338,8 @@ public class Drivetrain extends SubsystemBase {
 
     double rotDelivered = m_currentRotationRadians * DriveConfig.kMaxAngularSpeed;
 
+    System.out.println(spdCommanded);
+
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -351,6 +353,16 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  /**
+   * Force stops all drivetrain motors, overriding PID
+   */
+  public void stopAll() {
+    m_frontLeft.stop();
+    m_frontRight.stop();
+    m_rearLeft.stop();
+    m_rearRight.stop();
   }
 
   /**

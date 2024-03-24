@@ -114,6 +114,14 @@ public class MAXSwerveModule {
   }
 
   /**
+   * Sends a force stop command to both turning and driving motors
+   */
+  public void stop() {
+    this.m_drivingSparkMax.stopMotor();
+    this.m_turningSparkMax.stopMotor();
+  }
+
+  /**
    * Returns the current state of the module.
    *
    * @return The current state of the module.

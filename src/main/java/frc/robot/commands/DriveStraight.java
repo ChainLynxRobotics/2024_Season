@@ -48,6 +48,6 @@ public class DriveStraight extends Command {
 
   @Override
   public void end(boolean isInterupted) {
-    m_drive.move(new Vector(), 0);
+    m_drive.stopAll();
   }
 }
