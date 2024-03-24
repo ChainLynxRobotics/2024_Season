@@ -44,7 +44,6 @@ public class Shooter extends SubsystemBase {
   private MutableMeasure<Angle> m_targetAngle;
 
   public Shooter() {
-
     // Flywheel
     m_topFlywheelMotor =
         new CANSparkMax(ShooterConstants.kTopFlywheelMotorId, MotorType.kBrushless);
@@ -139,26 +138,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("shield rots", m_shieldController.getEncoder().getPosition());
-
-    double pval = SmartDashboard.getNumber("flywheel p", 0.1);
-    if (pval != m_topFlywheelPIDController.getP()) {
-      m_topFlywheelPIDController.setP(pval);
-    }
-
-    double ival = SmartDashboard.getNumber("flywheel i", 0.0);
-    if (pval != m_topFlywheelPIDController.getI()) {
-      m_topFlywheelPIDController.setP(ival);
-    }
-
-    double dval = SmartDashboard.getNumber("flywheel d", 0.0);
-    if (pval != m_topFlywheelPIDController.getD()) {
-      m_topFlywheelPIDController.setP(dval);
-    }
-
-    SmartDashboard.putNumber("Shooter/top flywheel output", m_topFlywheelMotor.getAppliedOutput());
-    SmartDashboard.putNumber(
-        "Shooter/bottom flywheel output", m_bottomFlywheelMotor.getAppliedOutput());
     double flywheelRPM =
         SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
@@ -168,7 +147,7 @@ public class Shooter extends SubsystemBase {
     }
 
     SmartDashboard.putNumber(
-        "angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
+        "Shooter/angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
   }
 
   // sets the target angle the shooter should be at, called only once
@@ -186,10 +165,6 @@ public class Shooter extends SubsystemBase {
         0,
         ff,
         ArbFFUnits.kPercentOut);
-  }
-
-  public void setBasic() {
-    m_angleMotorLeader.set(SmartDashboard.getNumber("angle pos", 0.1));
   }
 
   public Measure<Angle> getCurrentAngle() {

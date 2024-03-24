@@ -24,6 +24,10 @@ public class ManualAdjust extends Command {
   @Override
   public void initialize() {
     timer.start();
+  }
+
+  @Override
+  public void execute() {
     switch (m_type) {
       case up:
         desiredAngle = m_shooter.getCurrentAngle().plus(ShooterConfig.kAdjustAmountDegrees);
@@ -35,11 +39,11 @@ public class ManualAdjust extends Command {
         desiredAngle = m_shooter.getCurrentAngle();
         break;
     }
-    m_shooter.setAngle(desiredAngle);
-  }
 
-  @Override
-  public void execute() {
+    if (timer.get() % 10 == 0) {
+      m_shooter.setAngle(desiredAngle);
+    }
+
     m_shooter.setFF(
         Math.cos(Units.rotationsToRadians(m_shooter.getCurrentAngle().magnitude()))
             * ShooterConfig.kAngleControlFF);
@@ -47,7 +51,6 @@ public class ManualAdjust extends Command {
 
   @Override
   public boolean isFinished() {
-    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude())
-        || timer.get() > ShooterConfig.kAimTimeout;
+    return m_shooter.isAtAngleSetpoint(desiredAngle.magnitude());
   }
 }

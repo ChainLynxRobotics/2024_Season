@@ -220,18 +220,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * moves the divetrain based on the given ChassisSpeeds
-   *
-   * @param spds the target speeds of the drivetrain chassis
-   */
-  public void driveChassisSpeeds(ChassisSpeeds spds) {
-    Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
-    spd.div(DriveConfig.kMaxSpeedMetersPerSecond);
-    double angVel = spds.omegaRadiansPerSecond;
-    move(spd, angVel);
-  }
-
-  /**
    * moves the drivetrain using the main turning mode
    *
    * @param xSpeed the proportion of the robot's max velocity to move in the x direction
@@ -296,8 +284,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void moveChassisSpeeds(ChassisSpeeds spds) {
-    SwerveModuleState[] swerveModuleStates =
-        DriveConstants.kDriveKinematics.toSwerveModuleStates(spds);
+    SwerveModuleState[] swerveModuleStates = m_kinematics.toSwerveModuleStates(spds);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);

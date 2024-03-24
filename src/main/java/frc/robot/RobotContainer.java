@@ -14,8 +14,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.climber.Climb;
+import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.shooter.ActuateShield;
 import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.commands.shooter.SpinFlywheels;
@@ -25,6 +26,7 @@ import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
@@ -37,6 +39,7 @@ public class RobotContainer {
   private POVButton m_autoAim;
   private POVButton m_trapAim;
 
+  private Climber m_climber;
   private Shooter m_shooter;
   private Intake m_intake;
   private Drivetrain m_robotDrive;
@@ -51,6 +54,7 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
+    m_climber = new Climber();
     m_shooter = new Shooter();
     m_intake = new Intake();
     m_robotDrive = new Drivetrain();
@@ -71,8 +75,6 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    new Trigger(() -> m_operatorController.getRawButton(11))
-        .whileTrue(new RunCommand(() -> m_shooter.setBasic(), m_shooter));
     // angle on 8-directional button
     m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
@@ -96,27 +98,44 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, false));
-    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, true));
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
         .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
         .whileTrue(new Shoot(m_indexer, true));
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.AMP));
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false), new SpinFlywheels(m_shooter, FieldElement.AMP))));
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false),
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER))));
 
     m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
-    // triggers for extending and retracting shield manually
-    // don't extend shield
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
-        .onTrue(new ActuateShield(m_shooter, false));
-    // extend shield
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
-        .onTrue(new ActuateShield(m_shooter, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberUp))
+        .whileTrue(new IndividualClimb(m_climber, true, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberDown))
+        .whileTrue(new IndividualClimb(m_climber, true, false));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberUp))
+        .whileTrue(new IndividualClimb(m_climber, false, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberDown))
+        .whileTrue(new IndividualClimb(m_climber, false, false));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersUp))
+        .whileTrue(new Climb(m_climber, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersDown))
+        .whileTrue(new Climb(m_climber, false));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
         .whileTrue(new StowShooter(m_shooter));
@@ -140,7 +159,7 @@ public class RobotContainer {
   }
 
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, m_indexer, false));
 
     NamedCommands.registerCommand(
         "shootSpeaker",
@@ -167,7 +186,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kIntakeNote
    */
   public boolean getIntakeButton() {
-    return m_operatorController.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
+    return m_operatorController.getRawButton(Bindings.kIntakeNoteButtonID);
   }
 
   /**
@@ -176,8 +195,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID
    */
   public boolean getReverseIntakeButton() {
-    return m_operatorController.getRawButton(
-        RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID);
+    return m_operatorController.getRawButton(Bindings.kReverseIntakeButtonID);
   }
 
   public boolean triggerPressed() {

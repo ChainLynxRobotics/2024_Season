@@ -20,7 +20,7 @@ public class SpinFlywheels extends Command {
 
   public SpinFlywheels(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
-    m_vision = new Vision();
+    m_vision = null;
     m_type = type;
 
     addRequirements(m_shooter);
