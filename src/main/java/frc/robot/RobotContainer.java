@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
@@ -74,7 +73,6 @@ public class RobotContainer {
     autoChooser = new SendableChooser<Command>();
     configureBindings();
 
-    
     autoChooser.addOption(
         "Shoot and leave straight from corner subwoofer",
         new SequentialCommandGroup(
@@ -98,7 +96,7 @@ public class RobotContainer {
               // update the values of leftInputVec and rightInputVec to the values of the controller
               // I'm avoiding re-instantiting Vectors to save memory
               updateInput();
-              if(DriverStation.isAutonomous()) return;
+              if (DriverStation.isAutonomous()) return;
               m_robotDrive.drive(
                   leftInputVec,
                   rightInputVec,
@@ -120,19 +118,10 @@ public class RobotContainer {
         .whileTrue(new Shoot(m_indexer, true));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
-        .whileTrue(
-            new SequentialCommandGroup(
-                new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
-                new ParallelCommandGroup(
-                    new Shoot(m_indexer, false), new SpinFlywheels(m_shooter, FieldElement.AMP))));
+        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.AMP));
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
-        .whileTrue(
-            new SequentialCommandGroup(
-                new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
-                new ParallelCommandGroup(
-                    new Shoot(m_indexer, false),
-                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER))));
+        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
 
     m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
@@ -180,7 +169,8 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "shootSpeaker",
         new SequentialCommandGroup(
-            new PivotMove(m_shooter, 0.3).withTimeout(1), // Multiplier is 30% of max encoder rotations (160)
+            new PivotMove(m_shooter, 0.3)
+                .withTimeout(1), // Multiplier is 30% of max encoder rotations (160)
             new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
             new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
