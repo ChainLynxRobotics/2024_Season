@@ -113,10 +113,12 @@ public class Drivetrain extends SubsystemBase {
     m_prevSlewRateTime = m_timer.get();
 
     m_kinematics = DriveConstants.kDriveKinematics;
+    m_pose = new Pose2d();
+
     m_odometry =
         new SwerveDriveOdometry(
             m_kinematics,
-            Rotation2d.fromRadians(-getGyroAngle().in(Units.Radians)),
+            Rotation2d.fromRadians(Units.Degrees.of(m_gyro.getAngle()).in(Units.Radians)),
             m_swerveModulePositions,
             m_pose);
 
@@ -132,7 +134,7 @@ public class Drivetrain extends SubsystemBase {
         this::getPose,
         this::resetOdometry,
         this::getSpeeds,
-        this::moveChassisSpeeds,
+        this::driveChassisSpeeds,
         RobotConfig.DriveConfig.kPathFollowerConfig,
         this::allianceCheck,
         this);
@@ -217,6 +219,13 @@ public class Drivetrain extends SubsystemBase {
     } else {
       mainDrive(spdVec, rotVec.x());
     }
+  }
+
+  public void driveChassisSpeeds(ChassisSpeeds spds) {
+    Vector spd = new Vector(spds.vxMetersPerSecond, spds.vyMetersPerSecond);
+    spdCommanded = spd;
+    double angVel = spds.omegaRadiansPerSecond;
+    move(spd, angVel);
   }
 
   /**

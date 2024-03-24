@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.DriveStraight;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
@@ -70,7 +71,7 @@ public class RobotContainer {
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser.setDefaultOption("LeaveFromStation1", AutoBuilder.buildAuto("LeaveFromStation1"));
+    autoChooser.setDefaultOption("single shoot", NamedCommands.getCommand("shootSpeaker"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -168,7 +169,8 @@ public class RobotContainer {
             new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
             new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
-                .withTimeout(3)));
+                .withTimeout(3),
+            new DriveStraight(m_robotDrive, 1).withTimeout(1.5)));
 
     NamedCommands.registerCommand(
         "shootAmp",
