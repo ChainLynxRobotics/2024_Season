@@ -15,7 +15,7 @@ public class RunIntake extends Command {
     m_indexer = indexer;
     m_reversed = reversed;
 
-    addRequirements(intake);
+    addRequirements(m_intake, m_indexer);
   }
 
   @Override

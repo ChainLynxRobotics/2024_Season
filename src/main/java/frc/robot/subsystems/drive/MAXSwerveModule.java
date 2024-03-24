@@ -113,9 +113,7 @@ public class MAXSwerveModule {
     this.m_drivingEncoder.setPosition(0);
   }
 
-  /**
-   * Sends a force stop command to both turning and driving motors
-   */
+  /** Sends a force stop command to both turning and driving motors */
   public void stop() {
     this.m_drivingSparkMax.stopMotor();
     this.m_turningSparkMax.stopMotor();

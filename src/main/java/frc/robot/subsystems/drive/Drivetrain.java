@@ -355,9 +355,7 @@ public class Drivetrain extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
-  /**
-   * Force stops all drivetrain motors, overriding PID
-   */
+  /** Force stops all drivetrain motors, overriding PID */
   public void stopAll() {
     m_frontLeft.stop();
     m_frontRight.stop();

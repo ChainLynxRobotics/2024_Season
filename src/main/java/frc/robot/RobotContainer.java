@@ -78,7 +78,11 @@ public class RobotContainer {
         new SequentialCommandGroup(
             NamedCommands.getCommand("shootSpeaker"),
             new WaitCommand(2),
-            new DriveStraight(m_robotDrive, 3, 0.25, Units.degreesToRadians(150), true)));
+            new DriveStraight(m_robotDrive, 
+                1.0, // 66 inches per second at 150 degrees at 0.25 driveProp
+                0.25, 
+                Units.degreesToRadians(150), 
+                true)));
     autoChooser.setDefaultOption("Do Nothing", Commands.none());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
