@@ -80,7 +80,11 @@ public class RobotContainer {
         new SequentialCommandGroup(
             NamedCommands.getCommand("shootSpeaker"),
             new WaitCommand(1),
-            new DriveStraight(m_robotDrive, 1.5, 0.1, Units.degreesToRadians(180), true)));
+            new DriveStraight(m_robotDrive, 1.5, 0.1, Units.degreesToRadians(150), true)));
+    autoChooser.addOption(
+        "Shoot once",
+        new SequentialCommandGroup(
+            NamedCommands.getCommand("shootSpeaker")));  
     autoChooser.setDefaultOption("Do Nothing", Commands.none());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
