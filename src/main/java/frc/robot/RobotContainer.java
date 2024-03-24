@@ -8,13 +8,15 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.DriveStraight;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
@@ -67,10 +69,18 @@ public class RobotContainer {
 
     registerCommands();
     // adds all autos in deploy dir to chooser
-    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = new SendableChooser<Command>();
     configureBindings();
 
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
+    
+    autoChooser.addOption(
+        "Shoot and leave straight from corner subwoofer",
+        new SequentialCommandGroup(
+            NamedCommands.getCommand("shootSpeaker"),
+            new WaitCommand(1),
+            new DriveStraight(m_robotDrive, 1.5, 0.1, Math.PI / 2, true)));
+    autoChooser.setDefaultOption("Do Nothing", Commands.none());
+    
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -169,7 +179,7 @@ public class RobotContainer {
         new SequentialCommandGroup(
             new PivotMove(m_shooter, 0.55).withTimeout(1),
             new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
-            new ParallelRaceGroup(
+            new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
                 .withTimeout(3)));
 
@@ -178,7 +188,7 @@ public class RobotContainer {
         new SequentialCommandGroup(
             new PivotMove(m_shooter, 0.3).withTimeout(1),
             new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
-            new ParallelRaceGroup(
+            new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))
                 .withTimeout(3)));
   }
