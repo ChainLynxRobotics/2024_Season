@@ -2,8 +2,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,12 +34,10 @@ import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.utils.Vector;
 
 public class RobotContainer {
   private Joystick m_operatorController;
 
-  private POVButton m_autoAim;
   private POVButton m_trapAim;
 
   private Climber m_climber;
@@ -52,9 +50,6 @@ public class RobotContainer {
   private XboxController m_driverController;
   private SendableChooser<Command> autoChooser;
 
-  private Vector leftInputVec;
-  private Vector rightInputVec;
-
   public RobotContainer() {
     m_climber = new Climber();
     m_shooter = new Shooter();
@@ -64,9 +59,6 @@ public class RobotContainer {
 
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
-
-    leftInputVec = new Vector();
-    rightInputVec = new Vector();
 
     registerCommands();
     // adds all autos in deploy dir to chooser
@@ -78,10 +70,11 @@ public class RobotContainer {
         new SequentialCommandGroup(
             NamedCommands.getCommand("shootSpeaker"),
             new WaitCommand(2),
-            new DriveStraight(m_robotDrive, 
+            new DriveStraight(
+                m_robotDrive,
                 1.0, // 66 inches per second at 150 degrees at 0.25 driveProp
-                0.25, 
-                Units.degreesToRadians(150), 
+                0.25,
+                Units.degreesToRadians(150),
                 true)));
     autoChooser.setDefaultOption("Do Nothing", Commands.none());
 
@@ -90,23 +83,19 @@ public class RobotContainer {
 
   private void configureBindings() {
     // angle on 8-directional button
-    m_autoAim = new POVButton(m_operatorController, 0);
     m_trapAim = new POVButton(m_operatorController, 90);
     m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> {
-              // update the values of leftInputVec and rightInputVec to the values of the controller
-              // I'm avoiding re-instantiting Vectors to save memory
-              updateInput();
-              if (DriverStation.isAutonomous()) return;
-              m_robotDrive.drive(
-                  leftInputVec,
-                  rightInputVec,
-                  m_driverController.getRightBumper(),
-                  m_driverController.getAButton());
-            },
+            () ->
+                m_robotDrive.drive(
+                    -MathUtil.applyDeadband(
+                        m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband(
+                        m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband(
+                        m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                    true,
+                    true),
             m_robotDrive));
 
     new Trigger(() -> triggerPressed())
@@ -153,18 +142,6 @@ public class RobotContainer {
         .whileTrue(new PivotMove(m_shooter, 0.69));
   }
 
-  private void updateInput() {
-    leftInputVec.setX(
-        MathUtil.applyDeadband(-m_driverController.getLeftY(), OIConstants.kDriveDeadband));
-    leftInputVec.setY(
-        MathUtil.applyDeadband(-m_driverController.getLeftX(), OIConstants.kDriveDeadband));
-    rightInputVec.setX(
-        MathUtil.applyDeadband(-m_driverController.getRightX(), OIConstants.kDriveDeadband));
-    rightInputVec.setY(
-        MathUtil.applyDeadband(-m_driverController.getRightY(), OIConstants.kDriveDeadband));
-  }
-
-  // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
     // timeout doesn't need to be set because it is in a race group with the intake path in the
     // .path file
@@ -214,6 +191,14 @@ public class RobotContainer {
       return true;
     }
     return false;
+  }
+
+  public void initializeOdometry(Pose2d pose) {
+    m_robotDrive.initializeOdometry(pose);
+  }
+
+  public SendableChooser<Command> getAutoChooser() {
+    return autoChooser;
   }
 
   public Command getAutonomousCommand() {

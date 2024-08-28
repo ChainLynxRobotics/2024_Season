@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,7 +23,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("Match Time Left", 0);
     CameraServer.startAutomaticCapture();
-    }
+  }
 
   @Override
   public void robotPeriodic() {
@@ -40,8 +42,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    Command selectedAuto = m_robotContainer.getAutoChooser().getSelected();
+    PathPlannerPath trajectory = PathPlannerPath.fromPathFile(selectedAuto.getName());
+    Pose2d startingPose = trajectory.getPathPoses().get(0);
+    m_robotContainer.initializeOdometry(
+        startingPose); // set drivetrain pose to start of auto path to avoid drifting
 
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }

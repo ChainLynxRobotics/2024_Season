@@ -111,6 +111,7 @@ public final class RobotConstants {
     public static final int kRearRightTurningCanId = 7;
 
     public static final int kGyroId = 9;
+    public static final boolean kGyroReversed = false;
 
     // Chassis configuration
     public static final Measure<Distance> kTrackWidth = Units.Inches.of(22.5);

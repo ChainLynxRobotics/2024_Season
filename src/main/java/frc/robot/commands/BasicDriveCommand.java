@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
 import frc.robot.subsystems.drive.Drivetrain;
-import frc.utils.Vector;
 
 public class BasicDriveCommand extends Command {
   private Drivetrain m_drive;
@@ -32,18 +31,10 @@ public class BasicDriveCommand extends Command {
       SmartDashboard.putBoolean("slow mode", true);
     }
 
-    Vector lStickPos =
-        new Vector(
-            MathUtil.applyDeadband(-m_controller.getLeftY(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(-m_controller.getLeftX(), OIConstants.kDriveDeadband));
-    Vector rStickPos =
-        new Vector(
-            MathUtil.applyDeadband(-m_controller.getRightX(), OIConstants.kDriveDeadband),
-            MathUtil.applyDeadband(-m_controller.getRightY(), OIConstants.kDriveDeadband));
-
     m_drive.drive(
-        lStickPos.mult(m_multiplier),
-        rStickPos,
+        -MathUtil.applyDeadband(m_controller.getLeftY() * m_multiplier, OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_controller.getLeftX() * m_multiplier, OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_controller.getRightX(), OIConstants.kDriveDeadband),
         m_controller.getRightBumper(),
         m_controller.getAButton());
   }
