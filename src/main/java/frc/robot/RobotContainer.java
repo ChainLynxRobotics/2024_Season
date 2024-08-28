@@ -193,8 +193,8 @@ public class RobotContainer {
     return false;
   }
 
-  public void initializeOdometry(Pose2d pose) {
-    m_robotDrive.initializeOdometry(pose);
+  public void resetOdometry(Pose2d pose) {
+    m_robotDrive.resetOdometry(pose);
   }
 
   public SendableChooser<Command> getAutoChooser() {

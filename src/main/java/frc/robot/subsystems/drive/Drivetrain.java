@@ -97,12 +97,6 @@ public class Drivetrain extends SubsystemBase {
     m_rotLimiter = new SlewRateLimiter(OIConstants.kRotationalSlewRate);
 
     m_pose = new Pose2d();
-    initializeOdometry(m_pose);
-
-    configureAutoBuilder();
-  }
-
-  public void initializeOdometry(Pose2d pose) {
     m_odometry =
         new SwerveDriveOdometry(
             DriveConstants.kDriveKinematics,
@@ -113,7 +107,9 @@ public class Drivetrain extends SubsystemBase {
               m_rearLeft.getPosition(),
               m_rearRight.getPosition()
             },
-            pose);
+            m_pose);
+
+    configureAutoBuilder();
   }
 
   @Override

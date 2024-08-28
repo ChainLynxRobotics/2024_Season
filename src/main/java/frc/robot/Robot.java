@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
     Command selectedAuto = m_robotContainer.getAutoChooser().getSelected();
     PathPlannerPath trajectory = PathPlannerPath.fromPathFile(selectedAuto.getName());
     Pose2d startingPose = trajectory.getPathPoses().get(0);
-    m_robotContainer.initializeOdometry(
+    m_robotContainer.resetOdometry(
         startingPose); // set drivetrain pose to start of auto path to avoid drifting
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
