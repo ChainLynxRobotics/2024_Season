@@ -34,8 +34,12 @@ import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
+import monologue.Annotations.Log;
+import monologue.LogLevel;
+import monologue.Logged;
+import monologue.Monologue;
 
-public class RobotContainer {
+public class RobotContainer implements Logged {
   private Joystick m_operatorController;
 
   private POVButton m_trapAim;
@@ -48,6 +52,8 @@ public class RobotContainer {
 
   // The driver's controller
   private XboxController m_driverController;
+
+  @Log.NT(level = LogLevel.OVERRIDE_FILE_ONLY)
   private SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
@@ -79,6 +85,8 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Do Nothing", Commands.none());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    Monologue.setupMonologue(this, "Robot", false, false);
   }
 
   private void configureBindings() {
@@ -140,6 +148,32 @@ public class RobotContainer {
 
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
         .whileTrue(new PivotMove(m_shooter, 0.69));
+  }
+
+  public void periodic() {
+    this.log("drivetrain/heading", m_robotDrive.getHeading());
+    this.log("drivetrain/pose", m_robotDrive.getPose());
+
+    this.log("climber/leftPos", m_climber.getLeft().getEncoder().getPosition());
+    this.log("climber/rightPos", m_climber.getRight().getEncoder().getPosition());
+
+    this.log("indexer/linebreak", m_indexer.getLineBreak());
+
+    this.log(
+        "shooter/angleRadians", m_shooter.getCurrentAngle().in(edu.wpi.first.units.Units.Radians));
+    this.log("shooter/speedRPM", m_shooter.getCurrentRPM().baseUnitMagnitude());
+    this.log(
+        "shooter/flywheelController/P",
+        m_shooter.getPidController().getP(),
+        LogLevel.NOT_FILE_ONLY);
+    this.log(
+        "shooter/flywheelController/I",
+        m_shooter.getPidController().getI(),
+        LogLevel.NOT_FILE_ONLY);
+    this.log(
+        "shooter/flywheelController/D",
+        m_shooter.getPidController().getD(),
+        LogLevel.NOT_FILE_ONLY);
   }
 
   private void registerCommands() {

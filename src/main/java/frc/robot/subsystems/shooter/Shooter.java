@@ -256,4 +256,8 @@ public class Shooter extends SubsystemBase {
     return Math.abs(m_topFlywheelEncoder.getPosition() - setpoint)
         < ShooterConfig.kFlywheelError.magnitude();
   }
+
+  public SparkPIDController getPidController() {
+    return m_topFlywheelPIDController;
+  }
 }

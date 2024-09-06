@@ -38,9 +38,6 @@ public class Drivetrain extends SubsystemBase {
   private final PowerDistribution m_powerDistribution;
 
   private double m_prevAngleRadians;
-  private double m_rightAngGoalRadians;
-  private double m_turnDirRadians;
-  private double m_headingOffsetRadians;
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -130,11 +127,6 @@ public class Drivetrain extends SubsystemBase {
     m_prevAngleRadians = ang;
     m_relativeSpeeds = getRobotRelativeSpeeds();
     m_pose = m_odometry.getPoseMeters();
-
-    SmartDashboard.putNumber("heading", ang - m_headingOffsetRadians);
-
-    SmartDashboard.putNumber("right stick angle", m_rightAngGoalRadians);
-    SmartDashboard.putNumber("turn direction", m_turnDirRadians);
   }
 
   private void configureAutoBuilder() {
