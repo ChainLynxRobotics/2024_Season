@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import monologue.Monologue;
+import java.io.File;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -47,7 +48,14 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Command selectedAuto = m_robotContainer.getAutoChooser().getSelected();
-    PathPlannerPath trajectory = PathPlannerPath.fromPathFile(selectedAuto.getName());
+    PathPlannerPath trajectory;
+    File f = new File("./src/main/deploy/pathplanner/paths/" + selectedAuto.getName());
+    if (f.exists() && f.canRead()) {
+      trajectory = PathPlannerPath.fromPathFile(selectedAuto.getName());
+    } else {
+      trajectory = PathPlannerPath.fromPathFile("leave 1");
+    }
+
     Pose2d startingPose = trajectory.getPathPoses().get(0);
     m_robotContainer.resetOdometry(
         startingPose); // set drivetrain pose to start of auto path to avoid drifting

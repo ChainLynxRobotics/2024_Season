@@ -1,6 +1,10 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
@@ -70,6 +74,8 @@ public class RobotContainer implements Logged {
     // adds all autos in deploy dir to chooser
     autoChooser = new SendableChooser<Command>();
     configureBindings();
+
+    autoChooser.addOption("LeaveFromMid", AutoBuilder.buildAuto("LeaveFromMid"));
 
     autoChooser.addOption(
         "Shoot and leave straight from corner subwoofer",
