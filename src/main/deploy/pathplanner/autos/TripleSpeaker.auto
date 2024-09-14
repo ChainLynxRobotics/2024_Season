@@ -2,65 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7939330164374621,
-      "y": 7.051199245255634
+      "x": 0.7,
+      "y": 4.0
     },
-    "rotation": 0
+    "rotation": 125.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "top grab piece 1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeFromFloor"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "amp from piece 1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "scoreAmp"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "amp grab piece 2 from the left"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeFromFloor"
-                }
-              }
-            ]
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -68,9 +18,65 @@
           }
         },
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "mid grab piece 3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "leave from piece 2"
+            "pathName": "piece 3 to shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "scoreSpeaker"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "shoot close to grab piece 2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeFromFloor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "piece 2 to shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "leave from 2nd score"
           }
         }
       ]

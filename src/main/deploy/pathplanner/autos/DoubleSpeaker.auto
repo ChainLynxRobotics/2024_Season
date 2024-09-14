@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6619978954243629,
-      "y": 2.15494030988062
+      "x": 0.7,
+      "y": 4.0
     },
-    "rotation": 0
+    "rotation": 125.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootSpeaker"
+          }
+        },
         {
           "type": "race",
           "data": {
@@ -18,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "bottom grab piece 2 unobtrusively"
+                  "pathName": "mid grab piece 3"
                 }
               },
               {
@@ -33,19 +39,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "amp from piece 2"
+            "pathName": "piece 3 to shoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "scoreAmp"
+            "name": "scoreSpeaker"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "leave from amp"
+            "pathName": "leave 2"
           }
         }
       ]

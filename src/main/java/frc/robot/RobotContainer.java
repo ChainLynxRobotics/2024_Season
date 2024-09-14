@@ -2,8 +2,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -75,7 +73,15 @@ public class RobotContainer implements Logged {
     autoChooser = new SendableChooser<Command>();
     configureBindings();
 
+    autoChooser.addOption("LeaveFromTop", AutoBuilder.buildAuto("LeaveFromTop"));
     autoChooser.addOption("LeaveFromMid", AutoBuilder.buildAuto("LeaveFromMid"));
+    autoChooser.addOption("LeaveFromBottom", AutoBuilder.buildAuto("LeaveFromBottom"));
+    autoChooser.addOption("DoubleSpeaker", AutoBuilder.buildAuto("DoubleSpeaker"));
+    autoChooser.addOption("TripleSpeaker", AutoBuilder.buildAuto("TripleSpeaker"));
+    autoChooser.addOption("AmpThenSpeakerFromTop", AutoBuilder.buildAuto("AmpThenSpeakerFromTop"));
+    autoChooser.addOption("doAllTheThingsFromBottom", AutoBuilder.buildAuto("doAllTheThingsFromBottom"));
+    autoChooser.addOption("AmpThenSpeakerTwiceFromTop", AutoBuilder.buildAuto("AmpThenSpeakerTwiceFromTop"));
+
 
     autoChooser.addOption(
         "Shoot and leave straight from corner subwoofer",
