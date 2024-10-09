@@ -1,5 +1,6 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig;
 import frc.robot.subsystems.indexer.Indexer;
@@ -21,6 +22,7 @@ public class RunIntake extends Command {
   @Override
   public void initialize() {
     int multiplier = m_reversed ? -1 : 1;
+    SmartDashboard.putBoolean("intaking", !m_reversed);
     m_intake.run(RobotConfig.IntakeConfig.kDefaultSpeed * multiplier);
     m_indexer.startFeedNote(m_reversed);
   }

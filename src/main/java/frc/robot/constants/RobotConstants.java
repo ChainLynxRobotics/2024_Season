@@ -134,8 +134,8 @@ public final class RobotConstants {
       public static final int kDriverControllerPort = 0;
       public static final int kOperatorJoystickPort = 1;
 
-      public static final double kDriveDeadband = 0.06;
-      public static final double kMagnitudeDeadband = 0.06;
+      public static final double kDriveDeadband = 0.15;
+      public static final double kMagnitudeDeadband = 0.15;
       public static final double kDirectionSlewRate = 10; // radians per second
       public static final double kMagnitudeSlewRate = 90; // percent per second (1 = 100%)
       public static final double kRotationalSlewRate = 90; // percent per second (1 = 100%)

@@ -3,6 +3,7 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
@@ -23,6 +24,7 @@ public class SpinFlywheels extends Command {
 
   @Override
   public void initialize() {
+    SmartDashboard.putBoolean("flywheels running", true);
     switch (m_type) {
       case AMP:
         desiredAngle = ShooterConfig.kAmpAngle;
@@ -52,6 +54,7 @@ public class SpinFlywheels extends Command {
   }
 
   public boolean isFinished() {
+    SmartDashboard.putBoolean("flywheels running", false);
     return m_shooter.isAtFlywheelSetpoint(desiredVelocity);
   }
 
