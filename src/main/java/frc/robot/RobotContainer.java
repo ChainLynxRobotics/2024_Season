@@ -108,12 +108,12 @@ public class RobotContainer implements Logged {
         new RunCommand(
             () ->
                 m_robotDrive.drive(
-                    -MathUtil.applyDeadband(
-                        m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                    -MathUtil.applyDeadband(
-                        m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                    -MathUtil.applyDeadband(
-                        m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                    MathUtil.applyDeadband(
+                        -m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                    MathUtil.applyDeadband(
+                        -m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                    MathUtil.applyDeadband(
+                        -m_driverController.getRightX(), OIConstants.kDriveDeadband),
                     true,
                     true),
             m_robotDrive));
