@@ -38,6 +38,7 @@ public class Drivetrain extends SubsystemBase {
   private final PowerDistribution m_powerDistribution;
 
   private double m_prevAngleRadians;
+  private double m_absoluteHeading;
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -93,6 +94,7 @@ public class Drivetrain extends SubsystemBase {
     m_magLimiter = new SlewRateLimiter(OIConstants.kMagnitudeSlewRate);
     m_rotLimiter = new SlewRateLimiter(OIConstants.kRotationalSlewRate);
 
+    m_absoluteHeading = 0.0;
     m_pose = new Pose2d();
     m_odometry =
         new SwerveDriveOdometry(
@@ -122,7 +124,9 @@ public class Drivetrain extends SubsystemBase {
         });
 
     double ang = m_gyro.getAngle();
-    SmartDashboard.putNumber("delta heading", ang - m_prevAngleRadians);
+    SmartDashboard.putNumber("gyro/relative heading", ang);
+    SmartDashboard.putNumber("gyro/absolute heading", m_absoluteHeading);
+    SmartDashboard.putNumber("gyro/delta heading", ang - m_prevAngleRadians);
 
     m_prevAngleRadians = ang;
     m_relativeSpeeds = getRobotRelativeSpeeds();
@@ -139,7 +143,6 @@ public class Drivetrain extends SubsystemBase {
         this::allianceCheck,
         this);
   }
-
 
   private void driveChassisSpeeds(ChassisSpeeds speeds) {
     drive(
@@ -187,6 +190,9 @@ public class Drivetrain extends SubsystemBase {
    */
   public void drive(
       double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+    SmartDashboard.putNumber(
+        "drive/mag power",
+        Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2)) / DriveConfig.kMaxSpeedBase);
 
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -294,7 +300,12 @@ public class Drivetrain extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
+    m_absoluteHeading += m_gyro.getAngle();
     m_gyro.reset();
+  }
+
+  public double getAbsoluteHeading() {
+    return m_absoluteHeading;
   }
 
   /**

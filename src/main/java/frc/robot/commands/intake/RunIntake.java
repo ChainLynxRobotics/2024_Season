@@ -29,6 +29,7 @@ public class RunIntake extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putBoolean("intaking", false);
     m_intake.stop();
     m_indexer.stopFeedNote();
   }

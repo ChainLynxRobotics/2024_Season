@@ -109,8 +109,8 @@ public class Shooter extends SubsystemBase {
     m_shieldPosition = MutableMeasure.zero(Units.Rotations);
 
     SmartDashboard.putNumber("angle pos", 0.1);
-    SmartDashboard.putBoolean("shooter speaker", Math.abs(m_angleEncoder.getPosition() - ShooterConfig.kSpeakerAngle.baseUnitMagnitude()) < ShooterConfig.kAngleError.baseUnitMagnitude() ? false : true);
     SmartDashboard.putBoolean("flywheels running", false);
+    SmartDashboard.putBoolean("shooting speaker", false);
 
     if (DriverStation.isTest()) {
       putAngleOnSmartDashboard();
@@ -142,7 +142,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("shooter speaker", Math.abs(m_angleEncoder.getPosition() - ShooterConfig.kSpeakerAngle.baseUnitMagnitude()) < ShooterConfig.kAngleError.baseUnitMagnitude() ? false : true);
     double flywheelRPM =
         SmartDashboard.getNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter/Flywheel RPM", m_topFlywheelEncoder.getVelocity());

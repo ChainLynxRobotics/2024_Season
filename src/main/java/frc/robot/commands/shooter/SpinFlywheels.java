@@ -25,6 +25,9 @@ public class SpinFlywheels extends Command {
   @Override
   public void initialize() {
     SmartDashboard.putBoolean("flywheels running", true);
+    if (m_type == FieldElement.SPEAKER) {
+      SmartDashboard.putBoolean("shooting speaker", true);
+    }
     switch (m_type) {
       case AMP:
         desiredAngle = ShooterConfig.kAmpAngle;
@@ -54,7 +57,6 @@ public class SpinFlywheels extends Command {
   }
 
   public boolean isFinished() {
-    SmartDashboard.putBoolean("flywheels running", false);
     return m_shooter.isAtFlywheelSetpoint(desiredVelocity);
   }
 
@@ -65,6 +67,8 @@ public class SpinFlywheels extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putBoolean("flywheels running", false);
+    SmartDashboard.putBoolean("shooting speaker", false);
     m_shooter.stopFlywheel();
   }
 }
