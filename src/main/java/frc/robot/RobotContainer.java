@@ -213,7 +213,7 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand(
         "shootAmp",
         new SequentialCommandGroup(
-            new PivotMove(m_shooter, 0.3).withTimeout(1),
+            new PivotMove(m_shooter, 0.69).withTimeout(1),
             new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
             new ParallelCommandGroup(
                     new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))

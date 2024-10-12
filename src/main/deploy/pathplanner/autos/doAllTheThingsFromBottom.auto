@@ -89,7 +89,7 @@
         {
           "type": "named",
           "data": {
-            "name": "scoreAmp"
+            "name": "shootAmp"
           }
         },
         {
