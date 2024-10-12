@@ -1,9 +1,10 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.units.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
@@ -22,31 +23,36 @@ public class SpinFlywheels extends Command {
     addRequirements(m_shooter);
   }
 
+  public SpinFlywheels(Shooter shooter) {
+    m_shooter = shooter;
+    m_type = null;
+    addRequirements(m_shooter);
+  }
+
   @Override
   public void initialize() {
-    SmartDashboard.putBoolean("flywheels running", true);
-    if (m_type == FieldElement.SPEAKER) {
-      SmartDashboard.putBoolean("shooting speaker", true);
+    if (m_type == null) {
+    } else {
+      switch (m_type) {
+        case AMP:
+          desiredAngle = ShooterConfig.kAmpAngle;
+          desiredVelocity = ShooterConfig.kDefaultAmpVelocity;
+          break;
+        case SPEAKER:
+          desiredAngle = ShooterConfig.kSpeakerAngle;
+          desiredVelocity = ShooterConfig.kDefaultSpeakerVelocity;
+          break;
+        case TRAP:
+          desiredAngle = ShooterConfig.kTrapAngle;
+          desiredVelocity = ShooterConfig.kDefaultTrapVelocity;
+          break;
+        default:
+          desiredVelocity = 0;
+          desiredAngle = Units.Degrees.of(0);
+          break;
+      }
+      m_shooter.runFlywheel(desiredVelocity);
     }
-    switch (m_type) {
-      case AMP:
-        desiredAngle = ShooterConfig.kAmpAngle;
-        desiredVelocity = ShooterConfig.kDefaultAmpVelocity;
-        break;
-      case SPEAKER:
-        desiredAngle = ShooterConfig.kSpeakerAngle;
-        desiredVelocity = ShooterConfig.kDefaultSpeakerVelocity;
-        break;
-      case TRAP:
-        desiredAngle = ShooterConfig.kTrapAngle;
-        desiredVelocity = ShooterConfig.kDefaultTrapVelocity;
-        break;
-      default:
-        desiredVelocity = 0;
-        desiredAngle = Units.Degrees.of(0);
-        break;
-    }
-    m_shooter.runFlywheel(desiredVelocity);
   }
 
   @Override
@@ -67,8 +73,6 @@ public class SpinFlywheels extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putBoolean("flywheels running", false);
-    SmartDashboard.putBoolean("shooting speaker", false);
     m_shooter.stopFlywheel();
   }
 }
