@@ -9,44 +9,29 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.vision.Vision;
 
 public class SpinFlywheels extends Command {
   private final Shooter m_shooter;
-  private final Vision m_vision;
   private final FieldElement m_type;
   private double desiredVelocity;
   private Measure<Angle> desiredAngle;
 
   public SpinFlywheels(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
-    m_vision = null;
     m_type = type;
 
     addRequirements(m_shooter);
   }
 
-  public SpinFlywheels(Shooter shooter, Vision eyes) {
+  public SpinFlywheels(Shooter shooter) {
     m_shooter = shooter;
-    m_vision = eyes;
     m_type = null;
-    addRequirements(m_shooter, m_vision);
+    addRequirements(m_shooter);
   }
 
   @Override
   public void initialize() {
-    if (m_type == null) {
-      if (m_vision.getHasTarget()) {
-        double desiredAngle =
-            Units.Degrees.of(m_vision.getBestTarget().getPitch()).in(Units.Radians);
-        Measure<Velocity<Distance>> desiredVelocity =
-            m_shooter.calculateVelocity(
-                m_vision.getDistToTarget() * Math.atan(desiredAngle),
-                Units.Radians.of(desiredAngle));
 
-        m_shooter.runFlywheel(m_shooter.convertToRPM(desiredVelocity.magnitude()));
-      }
-    } else {
       switch (m_type) {
         case AMP:
           desiredAngle = ShooterConfig.kAmpAngle;
@@ -67,7 +52,7 @@ public class SpinFlywheels extends Command {
       }
       m_shooter.runFlywheel(desiredVelocity);
     }
-  }
+
 
   @Override
   public void execute() {
