@@ -70,7 +70,12 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
+    autoChooser.setDefaultOption("shoot and leave ", 
+        new SequentialCommandGroup(
+            NamedCommands.getCommand("shootSpeaker"),
+            new RunCommand(() -> m_robotDrive.drive(new Vector(-0.2, 0), new Vector(), false, false), m_robotDrive).withTimeout(3)));
+        
+    autoChooser.addOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -167,7 +172,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "shootSpeaker",
         new SequentialCommandGroup(
-            new PivotMove(m_shooter, 0.55).withTimeout(1),
+            new PivotMove(m_shooter, 0.3).withTimeout(1),
             new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
             new ParallelRaceGroup(
                     new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
@@ -176,7 +181,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "shootAmp",
         new SequentialCommandGroup(
-            new PivotMove(m_shooter, 0.3).withTimeout(1),
+            new PivotMove(m_shooter, 0.69).withTimeout(1),
             new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
             new ParallelRaceGroup(
                     new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))

@@ -1,10 +1,8 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.units.Angle;
-import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConfig.ShooterConfig;
@@ -32,27 +30,26 @@ public class SpinFlywheels extends Command {
   @Override
   public void initialize() {
 
-      switch (m_type) {
-        case AMP:
-          desiredAngle = ShooterConfig.kAmpAngle;
-          desiredVelocity = ShooterConfig.kDefaultAmpVelocity;
-          break;
-        case SPEAKER:
-          desiredAngle = ShooterConfig.kSpeakerAngle;
-          desiredVelocity = ShooterConfig.kDefaultSpeakerVelocity;
-          break;
-        case TRAP:
-          desiredAngle = ShooterConfig.kTrapAngle;
-          desiredVelocity = ShooterConfig.kDefaultTrapVelocity;
-          break;
-        default:
-          desiredVelocity = 0;
-          desiredAngle = Units.Degrees.of(0);
-          break;
-      }
-      m_shooter.runFlywheel(desiredVelocity);
+    switch (m_type) {
+      case AMP:
+        desiredAngle = ShooterConfig.kAmpAngle;
+        desiredVelocity = ShooterConfig.kDefaultAmpVelocity;
+        break;
+      case SPEAKER:
+        desiredAngle = ShooterConfig.kSpeakerAngle;
+        desiredVelocity = ShooterConfig.kDefaultSpeakerVelocity;
+        break;
+      case TRAP:
+        desiredAngle = ShooterConfig.kTrapAngle;
+        desiredVelocity = ShooterConfig.kDefaultTrapVelocity;
+        break;
+      default:
+        desiredVelocity = 0;
+        desiredAngle = Units.Degrees.of(0);
+        break;
     }
-
+    m_shooter.runFlywheel(desiredVelocity);
+  }
 
   @Override
   public void execute() {
