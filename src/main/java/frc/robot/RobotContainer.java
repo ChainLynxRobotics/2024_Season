@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.BasicDriveCommand;
 import frc.robot.commands.DriveStraight;
 import frc.robot.commands.climber.Climb;
 import frc.robot.commands.climber.IndividualClimb;
@@ -124,9 +123,6 @@ public class RobotContainer implements Logged {
               m_robotDrive.drive(xSpeed, ySpeed, rot, true, true, m_driverController.getAButton());
             },
             m_robotDrive));
-
-    new Trigger(() -> triggerPressed())
-        .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
     new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, false));
