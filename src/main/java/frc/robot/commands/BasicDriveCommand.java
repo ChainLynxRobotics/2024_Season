@@ -36,6 +36,7 @@ public class BasicDriveCommand extends Command {
         -MathUtil.applyDeadband(m_controller.getLeftX() * m_multiplier, OIConstants.kDriveDeadband),
         -MathUtil.applyDeadband(m_controller.getRightX(), OIConstants.kDriveDeadband),
         m_controller.getRightBumper(),
-        m_controller.getAButton());
+        true,
+        false);
   }
 }

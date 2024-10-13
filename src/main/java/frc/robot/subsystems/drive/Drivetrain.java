@@ -150,7 +150,8 @@ public class Drivetrain extends SubsystemBase {
         speeds.vyMetersPerSecond,
         speeds.omegaRadiansPerSecond,
         false,
-        true);
+        true,
+        false);
   }
 
   /**
@@ -189,7 +190,17 @@ public class Drivetrain extends SubsystemBase {
    * @param rateLimit Whether to enable rate limiting for smoother control.
    */
   public void drive(
-      double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+      double xSpeed,
+      double ySpeed,
+      double rot,
+      boolean fieldRelative,
+      boolean rateLimit,
+      boolean resetGyro) {
+
+    if (resetGyro) {
+      zeroHeading();
+    }
+
     SmartDashboard.putNumber(
         "drive/mag power",
         Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2)) / DriveConfig.kMaxSpeedBase);

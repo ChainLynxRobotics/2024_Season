@@ -121,7 +121,7 @@ public class RobotContainer implements Logged {
               SmartDashboard.putNumber("drive/controller left y", xSpeed);
               SmartDashboard.putNumber("drive/controller right x", rot);
 
-              m_robotDrive.drive(xSpeed, ySpeed, rot, true, true);
+              m_robotDrive.drive(xSpeed, ySpeed, rot, true, true, m_driverController.getAButton());
             },
             m_robotDrive));
 
