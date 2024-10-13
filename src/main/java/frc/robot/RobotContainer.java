@@ -8,19 +8,25 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.climber.Climb;
+import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.shooter.ActuateShield;
-import frc.robot.commands.shooter.Aim;
+import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
+import frc.robot.commands.shooter.SpinFlywheels;
+import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
 import frc.robot.constants.RobotConstants.Bindings;
 import frc.robot.constants.RobotConstants.DriveConstants.OIConstants;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
@@ -33,6 +39,7 @@ public class RobotContainer {
   private POVButton m_autoAim;
   private POVButton m_trapAim;
 
+  private Climber m_climber;
   private Shooter m_shooter;
   private Intake m_intake;
   private Drivetrain m_robotDrive;
@@ -46,6 +53,7 @@ public class RobotContainer {
   private Vector rightInputVec;
 
   public RobotContainer() {
+    m_climber = new Climber();
     m_shooter = new Shooter();
     m_intake = new Intake();
     m_robotDrive = new Drivetrain();
@@ -62,8 +70,13 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
 
-    /*m_shooter.setDefaultCommand(
-    new RunCommand(() -> m_shooter.runFlywheel(ShooterConfig.kDefaultFlywheelRPM), m_shooter));*/
+    autoChooser.setDefaultOption("shoot and leave ", 
+        new SequentialCommandGroup(
+            NamedCommands.getCommand("shootSpeaker"),
+            new RunCommand(() -> m_robotDrive.drive(new Vector(-0.2, 0), new Vector(), false, false), m_robotDrive).withTimeout(3)));
+        
+    autoChooser.addOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -90,30 +103,53 @@ public class RobotContainer {
         .whileTrue(new BasicDriveCommand(m_robotDrive, m_driverController));
 
     // RunIntake constructor boolean is whether or not the intake should run reversed.
-    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, false));
-    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, true));
+    new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
         .whileTrue(new Shoot(m_indexer, false));
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
         .whileTrue(new Shoot(m_indexer, true));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
-        .whileTrue(new Aim(m_shooter, FieldElement.AMP));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false), new SpinFlywheels(m_shooter, FieldElement.AMP))));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
+        .whileTrue(
+            new SequentialCommandGroup(
+                new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+                new ParallelCommandGroup(
+                    new Shoot(m_indexer, false),
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER))));
+
+    m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberUp))
+        .whileTrue(new IndividualClimb(m_climber, true, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberDown))
+        .whileTrue(new IndividualClimb(m_climber, true, false));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberUp))
+        .whileTrue(new IndividualClimb(m_climber, false, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberDown))
+        .whileTrue(new IndividualClimb(m_climber, false, false));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersUp))
+        .whileTrue(new Climb(m_climber, true));
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersDown))
+        .whileTrue(new Climb(m_climber, false));
+
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
+        .whileTrue(new StowShooter(m_shooter));
+
     new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
-        .whileTrue(new Aim(m_shooter, FieldElement.SPEAKER));
+        .whileTrue(new PivotMove(m_shooter, 0.3));
 
-    m_trapAim.whileTrue(new Aim(m_shooter, FieldElement.TRAP));
-
-    // triggers for extending and retracting shield manually
-    // don't extend shield
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kExtendShield))
-        .onTrue(new ActuateShield(m_shooter, false));
-    // extend shield
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRetractShield))
-        .onTrue(new ActuateShield(m_shooter, true));
-
-    autoChooser.setDefaultOption("Leave Top", AutoBuilder.buildAuto("LeaveFromTop"));
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
+        .whileTrue(new PivotMove(m_shooter, 0.69));
   }
 
   private void updateInput() {
@@ -129,13 +165,27 @@ public class RobotContainer {
 
   // TODO: fill in placeholder commands with actual functionality
   private void registerCommands() {
-    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, false));
-    NamedCommands.registerCommand("scoreAmp", doNothing());
-    NamedCommands.registerCommand("aimAndScoreSpeaker", doNothing());
-  }
+    // timeout doesn't need to be set because it is in a race group with the intake path in the
+    // .path file
+    NamedCommands.registerCommand("intakeFromFloor", new RunIntake(m_intake, m_indexer, false));
 
-  private Command doNothing() {
-    return Commands.none();
+    NamedCommands.registerCommand(
+        "shootSpeaker",
+        new SequentialCommandGroup(
+            new PivotMove(m_shooter, 0.3).withTimeout(1),
+            new SpinFlywheels(m_shooter, FieldElement.SPEAKER).withTimeout(1.5),
+            new ParallelRaceGroup(
+                    new SpinFlywheels(m_shooter, FieldElement.SPEAKER), new Shoot(m_indexer, false))
+                .withTimeout(3)));
+
+    NamedCommands.registerCommand(
+        "shootAmp",
+        new SequentialCommandGroup(
+            new PivotMove(m_shooter, 0.69).withTimeout(1),
+            new SpinFlywheels(m_shooter, FieldElement.AMP).withTimeout(1.5),
+            new ParallelRaceGroup(
+                    new SpinFlywheels(m_shooter, FieldElement.AMP), new Shoot(m_indexer, false))
+                .withTimeout(3)));
   }
 
   /**
@@ -144,7 +194,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kIntakeNote
    */
   public boolean getIntakeButton() {
-    return m_operatorController.getRawButton(RobotConfig.IntakeConfig.Bindings.kIntakeNoteButtonID);
+    return m_operatorController.getRawButton(Bindings.kIntakeNoteButtonID);
   }
 
   /**
@@ -153,8 +203,7 @@ public class RobotContainer {
    * @see RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID
    */
   public boolean getReverseIntakeButton() {
-    return m_operatorController.getRawButton(
-        RobotConfig.IntakeConfig.Bindings.kReverseIntakeButtonID);
+    return m_operatorController.getRawButton(Bindings.kReverseIntakeButtonID);
   }
 
   public boolean triggerPressed() {
