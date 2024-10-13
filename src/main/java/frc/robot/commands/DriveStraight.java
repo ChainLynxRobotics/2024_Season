@@ -37,7 +37,7 @@ public class DriveStraight extends Command {
 
   @Override
   public void execute() {
-    m_drive.drive(m_driveProp, 0, 0, false, true);
+    m_drive.drive(m_driveProp, 0, 0, false, true, false);
   }
 
   @Override
