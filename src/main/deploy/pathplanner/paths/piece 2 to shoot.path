@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.70522770675171,
-        "y": 5.425059854749339
+        "x": 2.7312637623081013,
+        "y": 5.406699318569165
       },
       "isLocked": false,
       "linkedName": "shooty2"
@@ -20,8 +20,8 @@
         "y": 6.3962319730195025
       },
       "prevControl": {
-        "x": 1.7926085852171705,
-        "y": 6.253175006350014
+        "x": 1.8319205088640325,
+        "y": 6.208440748407034
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,25 +31,29 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.75,
-      "rotationDegrees": -147.37192115165738,
-      "rotateFast": true
+      "rotationDegrees": -147.37192115165738
     }
   ],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -148.49358608000915,
-    "rotateFast": false
+    "rotation": -148.49358608000915
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
   "useDefaultConstraints": false
 }

@@ -90,7 +90,7 @@ public class Shooter extends SubsystemBase {
     // sets follower motor to run inversely to the leader
     m_angleMotorFollower.follow(m_angleMotorLeader, true);
     m_angleEncoder = m_angleMotorFollower.getAbsoluteEncoder();
-    m_angleEncoder.setZeroOffset(28.6 / 360 * 160);
+    m_angleEncoder.setZeroOffset(0.01); // 28.6 / 360 * 160);
 
     m_anglePIDController = m_angleMotorLeader.getPIDController();
     m_anglePIDController.setP(RobotConfig.ShooterConfig.kAngleControlP);
@@ -152,6 +152,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber(
         "Shooter/angle error", m_targetAngle.magnitude() - m_angleEncoder.getPosition());
+    SmartDashboard.putNumber("Shooter/angle", m_angleEncoder.getPosition());
   }
 
   // sets the target angle the shooter should be at, called only once

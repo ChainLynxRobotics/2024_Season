@@ -18,8 +18,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveStraight;
-import frc.robot.commands.climber.Climb;
-import frc.robot.commands.climber.IndividualClimb;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
@@ -41,6 +39,7 @@ import monologue.Monologue;
 
 public class RobotContainer implements Logged {
   private Joystick m_operatorController;
+  private XboxController m_operatorController2;
 
   private POVButton m_trapAim;
 
@@ -65,6 +64,7 @@ public class RobotContainer implements Logged {
 
     m_driverController = new XboxController(OIConstants.kDriverControllerPort);
     m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
+    m_operatorController2 = new XboxController(OIConstants.kOperatorJoystickPort);
 
     registerCommands();
     // adds all autos in deploy dir to chooser
@@ -128,41 +128,59 @@ public class RobotContainer implements Logged {
     new Trigger(this::getIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, false));
     new Trigger(this::getReverseIntakeButton).whileTrue(new RunIntake(m_intake, m_indexer, true));
     // just shoot on trigger
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
-        .whileTrue(new Shoot(m_indexer, false));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
-        .whileTrue(new Shoot(m_indexer, true));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kShoot))
+    //     .whileTrue(new Shoot(m_indexer, false));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kShootReverse))
+    //     .whileTrue(new Shoot(m_indexer, true));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.AMP));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelAmp))
+    //     .whileTrue(new SpinFlywheels(m_shooter, FieldElement.AMP));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
-        .whileTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kFlywheelSpeaker))
+    //     .whileTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
 
     m_trapAim.whileTrue(new SpinFlywheels(m_shooter, FieldElement.TRAP));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberUp))
-        .whileTrue(new IndividualClimb(m_climber, true, true));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberDown))
-        .whileTrue(new IndividualClimb(m_climber, true, false));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberUp))
-        .whileTrue(new IndividualClimb(m_climber, false, true));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberDown))
-        .whileTrue(new IndividualClimb(m_climber, false, false));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberUp))
+    //     .whileTrue(new IndividualClimb(m_climber, true, true));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kRightClimberDown))
+    //     .whileTrue(new IndividualClimb(m_climber, true, false));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberUp))
+    //     .whileTrue(new IndividualClimb(m_climber, false, true));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kLeftClimberDown))
+    //     .whileTrue(new IndividualClimb(m_climber, false, false));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersUp))
-        .whileTrue(new Climb(m_climber, true));
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersDown))
-        .whileTrue(new Climb(m_climber, false));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersUp))
+    //     .whileTrue(new Climb(m_climber, true));
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kBothClimbersDown))
+    //     .whileTrue(new Climb(m_climber, false));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kStowShooter))
+    //     .whileTrue(new StowShooter(m_shooter));
+
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
+    //     .whileTrue(new PivotMove(m_shooter, 0.3));
+
+    // new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
+    //     .whileTrue(new PivotMove(m_shooter, 0.69));
+    // new Trigger(() -> m_operatorController.ge)
+
+    new Trigger(() -> m_operatorController2.getRawButton(2))
         .whileTrue(new StowShooter(m_shooter));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimSpeaker))
+    new Trigger(() -> m_operatorController2.getRawButton(6))
         .whileTrue(new PivotMove(m_shooter, 0.3));
 
-    new Trigger(() -> m_operatorController.getRawButton(Bindings.kAimAmp))
+    new Trigger(() -> m_operatorController2.getRawButton(5))
         .whileTrue(new PivotMove(m_shooter, 0.69));
+
+    new Trigger(() -> m_operatorController2.getRawButton(4))
+        .onTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
+
+    new Trigger(() -> m_operatorController2.getRawButton(1))
+        .whileTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(() -> m_operatorController2.getRawButton(3))
+        .whileTrue(new RunIntake(m_intake, m_indexer, false));
   }
 
   public void periodic() {
