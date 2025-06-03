@@ -172,6 +172,7 @@ public class Shooter extends SubsystemBase {
         ArbFFUnits.kPercentOut);
   }
 
+
   public Measure<Angle> getCurrentAngle() {
     return m_shooterAngle.mut_replace(m_angleEncoder.getPosition(), Units.Revolutions);
   }
@@ -200,9 +201,12 @@ public class Shooter extends SubsystemBase {
     m_topFlywheelPIDController.setReference(targetRPM, CANSparkBase.ControlType.kVelocity);
   }
 
+  public void runSetBackward() {
+    m_topFlywheelMotor.set(-0.4);
+  }
+
   public void stopFlywheel() {
     m_topFlywheelMotor.stopMotor();
-    ;
   }
 
   public void zeroEncoders() {

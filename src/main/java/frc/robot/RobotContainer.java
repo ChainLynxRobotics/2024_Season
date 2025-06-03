@@ -22,6 +22,7 @@ import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.shooter.PivotMove;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.commands.shooter.SpinFlywheels;
+import frc.robot.commands.shooter.StopShooter;
 import frc.robot.commands.shooter.StowShooter;
 import frc.robot.constants.RobotConfig;
 import frc.robot.constants.RobotConfig.FieldElement;
@@ -62,9 +63,9 @@ public class RobotContainer implements Logged {
     m_robotDrive = new Drivetrain();
     m_indexer = new Indexer();
 
-    m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+    m_driverController = new XboxController(0);
     m_operatorController = new Joystick(OIConstants.kOperatorJoystickPort);
-    m_operatorController2 = new XboxController(OIConstants.kOperatorJoystickPort);
+    m_operatorController2 = new XboxController(1);
 
     registerCommands();
     // adds all autos in deploy dir to chooser
@@ -169,18 +170,21 @@ public class RobotContainer implements Logged {
         .whileTrue(new StowShooter(m_shooter));
 
     new Trigger(() -> m_operatorController2.getRawButton(6))
-        .whileTrue(new PivotMove(m_shooter, 0.3));
+        .whileTrue(new PivotMove(m_shooter, 0.25));
 
     new Trigger(() -> m_operatorController2.getRawButton(5))
         .whileTrue(new PivotMove(m_shooter, 0.69));
 
     new Trigger(() -> m_operatorController2.getRawButton(4))
-        .onTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER));
-
+        .onTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER, false));
+    new Trigger(() -> m_operatorController2.getRawAxis(2) > 0.5)
+        .onTrue(new SpinFlywheels(m_shooter, FieldElement.SPEAKER, true).withTimeout(1));
     new Trigger(() -> m_operatorController2.getRawButton(1))
         .whileTrue(new RunIntake(m_intake, m_indexer, false));
     new Trigger(() -> m_operatorController2.getRawButton(3))
         .whileTrue(new RunIntake(m_intake, m_indexer, false));
+    new Trigger(() -> m_operatorController2.getRawAxis(3) > 0.5)
+        .onTrue(new StopShooter(m_shooter));
   }
 
   public void periodic() {

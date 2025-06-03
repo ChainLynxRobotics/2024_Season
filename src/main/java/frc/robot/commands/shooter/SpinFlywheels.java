@@ -13,6 +13,15 @@ public class SpinFlywheels extends Command {
   private final FieldElement m_type;
   private double desiredVelocity;
   private Measure<Angle> desiredAngle;
+  private boolean reverse;
+
+  public SpinFlywheels(Shooter shooter, FieldElement type, boolean reverse) {
+    m_shooter = shooter;
+    m_type = type;
+    this.reverse = reverse;
+
+    addRequirements(m_shooter);
+  }
 
   public SpinFlywheels(Shooter shooter, FieldElement type) {
     m_shooter = shooter;
@@ -49,7 +58,11 @@ public class SpinFlywheels extends Command {
           desiredAngle = Units.Degrees.of(0);
           break;
       }
-      m_shooter.runFlywheel(desiredVelocity);
+      if(reverse) {
+        m_shooter.runSetBackward();
+      } else {
+        m_shooter.runFlywheel(desiredVelocity);
+      }
     }
   }
 

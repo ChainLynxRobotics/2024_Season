@@ -118,7 +118,7 @@ public class RobotConfig {
 
     public static final double kDefaultAmpVelocity = 500; // rpm
     public static final double kDefaultTrapVelocity = 2000; // rpm
-    public static final double kDefaultSpeakerVelocity = 4500; // rpm
+    public static final double kDefaultSpeakerVelocity = 6500; // rpm
   }
 
   public static class DriveConfig {
